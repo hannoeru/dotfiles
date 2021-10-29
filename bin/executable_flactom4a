@@ -1,3 +1,3 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 for i in *.flac; do ffmpeg -i "$i" -vn -c:a libfdk_aac -profile:a aac_low -b:a 320k -ar:a 44100 "$(basename "$i" .flac).m4a"; done;

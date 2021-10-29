@@ -55,9 +55,9 @@ alias t="nr test"
 alias cva="pnpm dlx create-vite"
 
 #docker
-alias dsa="docker stop $(docker ps -q)"
-alias drma="docker rm $(docker ps -q)"
-alias drmia="docker rmi $(docker images -q)"
+alias dsa="docker ps -q | xargs docker stop"
+alias drma="docker ps -q | xargs docker rm"
+alias drmia="docker images -q | xargs docker rmi"
 
 #docker compose
 alias dc="docker compose"

@@ -61,10 +61,9 @@ HIST_STAMPS="yyyy/mm/dd"
 plugins=(
   alias-finder
   brew
-  common-aliases
-  dotenv
   docker
   docker-compose
+  evalcache
   git
   gitfast
   osx
@@ -93,13 +92,5 @@ fi
 # prompt_context(){}
 
 {{- if (eq .chezmoi.os "darwin") }}
-# Init HomeBrew
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-
-  autoload -Uz compinit
-  compinit
-fi
-
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 {{- end }}

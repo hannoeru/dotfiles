@@ -50,10 +50,8 @@ export DOCKER_HOST="ssh://ubuntu@docker.local"
 export PYENV_ROOT=/usr/local/var/pyenv
 add_to_path "$PYENV_ROOT/shims"
 
-if command -v pyenv > /dev/null; then
+if which pyenv > /dev/null 2>&1; then
     eval "$(pyenv init -)"
-fi
-if command -v pyenv-virtualenv-init > /dev/null; then
     eval "$(pyenv virtualenv-init -)";
 fi
 
@@ -131,7 +129,7 @@ export CLICOLOR=1
 export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
 # Configure Editor
-if command -v nvim > /dev/null; then
+if which nvim >/dev/null 2>&1; then
     export EDITOR='nvim'
 else
     export EDITOR='vim'
@@ -142,8 +140,11 @@ fi
 #
 
 export RBENV_ROOT="$HOME/.rbenv"
-eval "$(rbenv init -)"
 add_to_path "$RBENV_ROOT/bin"
+
+if which rbenv > /dev/null 2>&1; then
+  eval "$(rbenv init -)"
+fi
 
 #
 # Misc Software
