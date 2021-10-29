@@ -17,8 +17,7 @@ alias sshlink='ssh-copy-id -i ~/.ssh/id_rsa.pub'
 alias sshconfig='nano ~/.ssh/config'
 
 #mqtt
-alias led_scheme='mosquitto_pub -h 192.168.25.9 -u {{- (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").username.value }} -P {{- (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").password.value }}
- -t jp/home/han/tasmota_54E3D3/cmnd/Scheme -m'
+alias led_scheme='mosquitto_pub -h 192.168.25.9 -u {{- (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").username.value }} -P {{- (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").password.value }} -t jp/home/han/tasmota_54E3D3/cmnd/Scheme -m'
 
 # Shortcuts
 alias dl="cd ~/Downloads"
