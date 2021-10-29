@@ -67,8 +67,8 @@ add_to_path "$GOPATH/bin"
 # JAVA
 #
 
-export JAVA_HOME=$(/usr/libexec/java_home -v 14)
-add_to_path "$JAVA_HOME/bin"
+export JENV_ROOT="$HOME/.jenv"
+add_to_path "$JENV_ROOT/bin"
 
 #
 # Android
@@ -126,13 +126,6 @@ fi
 
 export RBENV_ROOT="$HOME/.rbenv"
 add_to_path "$RBENV_ROOT/bin"
-
-#
-# Java
-#
-
-export JENV_ROOT="$HOME/.jenv"
-add_to_path "$JENV_ROOT/bin"
 
 #
 # Platform IO
