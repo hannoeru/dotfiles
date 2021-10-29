@@ -128,10 +128,16 @@ export RBENV_ROOT="$HOME/.rbenv"
 add_to_path "$RBENV_ROOT/bin"
 
 #
+# Java
+#
+
+export JENV_ROOT="$HOME/.jenv"
+add_to_path "$JENV_ROOT/bin"
+
+#
 # Platform IO
 #
 
-# PlatformIO
 export PIOROOT=$HOME/.platformio
 add_to_path "$PIOROOT/penv/bin"
 
