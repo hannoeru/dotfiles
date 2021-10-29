@@ -1,0 +1,93 @@
+function alias_if_exists() {
+  # Does the alias only if the aliased program is installed
+    if command -v $2 > /dev/null; then
+        alias "$1"="$2"
+    fi
+}
+
+# Better defaults
+# alias ncdu='ncdu --confirm-quit --color dark'
+alias crontab="VIM_CRONTAB=true crontab"
+alias_if_exists 'diff' 'colordiff'
+alias_if_exists 'ag' 'rg'
+alias_if_exists 'vim' 'nvim'
+
+# ssh
+alias sshlink='ssh-copy-id -i ~/.ssh/id_rsa.pub'
+alias sshconfig='nano ~/.ssh/config'
+
+#mqtt
+alias led_scheme='mosquitto_pub -h 192.168.25.9 -u hanlee -P removed -t jp/home/han/tasmota_54E3D3/cmnd/Scheme -m'
+
+# Shortcuts
+alias dl="cd ~/Downloads"
+alias p="cd ~/Project"
+alias up="cd ../"
+alias la="ls -a"
+alias lla="ls -al"
+alias l="ls"
+alias wine="wine64"
+alias brewup='brew update; brew upgrade; brew prune; brew cleanup'
+
+ffmpegFlacToM4A () {
+    for i in *.flac; do ffmpeg -i "$i" -vn -c:a libfdk_aac -profile:a aac_low -b:a 320k -ar:a 44100 "$(basename "$i" .flac).m4a"; done;
+}
+alias flactom4a="ffmpegFlacToM4A"
+
+# alias nmap="docker run --rm -it bytesizedalex/nmap"
+
+# npm to pnpm
+alias -g npx="pnpm dlx"
+# alias npm="pnpm"
+alias u="pnpm update"
+alias nad="pnpm add -D"
+alias na="pnpm add"
+alias pnpmu="pnpm i -g pnpm"
+
+# update npm deps
+alias udeps="taze major -rwu"
+
+# run npm bin
+alias nbr='PATH=$(npm bin):$PATH'
+
+# vite
+alias d="nr dev"
+alias b="nr build"
+alias s="nr serve"
+alias t="nr test"
+alias cva="pnpm dlx create-vite"
+
+#docker
+alias dsa="docker stop $(docker ps -q)"
+alias drma="docker rm $(docker ps -q)"
+alias drmia="docker rmi $(docker images -q)"
+
+#docker compose
+alias dc="docker compose"
+alias dce="docker compose exec"
+alias dcl="docker compose logs"
+alias dcps="docker compose ps"
+alias dcup="docker compose up -d"
+alias dcd="docker compose down"
+alias dcb="docker compose build"
+alias dckill="docker compose kill"
+
+#python
+alias py="python $1"
+alias prp="pipenv run python $1"
+alias ps="pipenv shell"
+alias pi="pipenv install $1"
+alias pu="pipenv uninstall $1"
+alias pg="pipenv graph"
+alias pr="pipenv --rm"
+
+# Open Files
+
+# Azure CLI files
+alias -s azcli=code
+# Markdown files
+alias -s md=code
+# JSON files
+alias -s json=code
+# bulk association
+alias -s {cs,ts,html}=code

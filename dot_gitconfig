@@ -1,0 +1,37 @@
+[user]
+  name = hanlee
+  email = me@hanlee.co
+  signingkey = 17C81448D8058286
+[core]
+  editor = code --wait
+  excludesfile = ~/.config/git/ignore
+  autocrlf = input
+  safecrlf = true
+  pager = git-split-diffs --color | less -RFX
+[filter "lfs"]
+  process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+[pull]
+  rebase = false
+[rebase]
+  autosquash = true
+  autostash = true
+[commit]
+  gpgsign = true
+[gpg]
+  program = gpg
+[init]
+  defaultBranch = main
+[alias]
+  co = checkout
+  ci = commit
+  st = status
+  br = branch
+  hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+  type = cat-file -t
+  dump = cat-file -p
+  ac = commit -am
+[push]
+  default = current

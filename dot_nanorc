@@ -1,0 +1,11 @@
+# Settings
+set autoindent    #インテンドを揃える
+set backup        #[file name]~で保存
+set cutfromcursor #切取を現在地から行末までに
+set linenumbers   #左端に行表示
+set multibuffer   #^Rで新しいファイル編集に
+set zap           #指定範囲を削除可能に
+#set nohelp       #暗記したら(画面の有効活用)
+
+# syntax highlights
+include "~/.nano/*.nanorc"
