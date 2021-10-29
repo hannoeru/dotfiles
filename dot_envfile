@@ -17,8 +17,6 @@ add_to_path "/usr/local/sbin"
 add_to_path "$HOME/bin"
 # Custom scripts
 add_to_path "$HOME/.local/bin"
-# Node.js
-# add_to_path "$HOME/.nodebrew/current/bin"
 # OpenSSL
 add_to_path "/uer/local/opt/openssl/bin"
 # gettext
@@ -50,30 +48,19 @@ export DOCKER_HOST="ssh://ubuntu@docker.local"
 export PYENV_ROOT=/usr/local/var/pyenv
 add_to_path "$PYENV_ROOT/shims"
 
-if which pyenv > /dev/null 2>&1; then
-    _evalcache pyenv init -
-    _evalcache pyenv virtualenv-init -
-fi
-
 
 #
 # Deno
 #
 
-# Set deno dir
 export DENO_DIR=$HOME/.deno
-
-# Add to path
 add_to_path "$HOME/.deno/bin"
 
 #
 # Golang
 #
 
-# Add GOPATH
 export GOPATH="$HOME/go"
-
-# Add to PATH
 add_to_path "$GOPATH/bin"
 
 #
@@ -81,7 +68,6 @@ add_to_path "$GOPATH/bin"
 #
 
 export JAVA_HOME=$(/usr/libexec/java_home -v 14)
-
 add_to_path "$JAVA_HOME/bin"
 
 #
@@ -89,7 +75,6 @@ add_to_path "$JAVA_HOME/bin"
 #
 
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-
 add_to_path "$ANDROID_HOME/bin"
 
 #
@@ -142,12 +127,8 @@ fi
 export RBENV_ROOT="$HOME/.rbenv"
 add_to_path "$RBENV_ROOT/bin"
 
-if which rbenv > /dev/null 2>&1; then
-  _evalcache rbenv init -
-fi
-
 #
-# Misc Software
+# Platform IO
 #
 
 # PlatformIO
