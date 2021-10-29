@@ -16,29 +16,26 @@ alias_if_exists 'vim' 'nvim'
 alias sshlink='ssh-copy-id -i ~/.ssh/id_rsa.pub'
 alias sshconfig='nano ~/.ssh/config'
 
+{{ if eq .chezmoi.os "darwin" }}
 #mqtt
 alias led_scheme='mosquitto_pub -h 192.168.25.9 -u {{- (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").username.value }} -P {{- (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").password.value }} -t jp/home/han/tasmota_54E3D3/cmnd/Scheme -m'
+{{ end }}
 
 # Shortcuts
+{{- if eq .chezmoi.os "darwin" }}
 alias dl="cd ~/Downloads"
 alias p="cd ~/Project"
+alias wine="wine64"
+alias brewup='brew update; brew upgrade; brew prune; brew cleanup'
+{{- end }}
 alias up="cd ../"
 alias la="ls -a"
 alias lla="ls -al"
 alias l="ls"
-alias wine="wine64"
-alias brewup='brew update; brew upgrade; brew prune; brew cleanup'
-
-ffmpegFlacToM4A () {
-    for i in *.flac; do ffmpeg -i "$i" -vn -c:a libfdk_aac -profile:a aac_low -b:a 320k -ar:a 44100 "$(basename "$i" .flac).m4a"; done;
-}
-alias flactom4a="ffmpegFlacToM4A"
-
 # alias nmap="docker run --rm -it bytesizedalex/nmap"
 
-# npm to pnpm
+# pnpm
 alias -g npx="pnpm dlx"
-# alias npm="pnpm"
 alias u="pnpm update"
 alias nad="pnpm add -D"
 alias na="pnpm add"
@@ -90,4 +87,4 @@ alias -s md=code
 # JSON files
 alias -s json=code
 # bulk association
-alias -s {cs,ts,html}=code
+alias -s {cs,js,ts,html}=code
