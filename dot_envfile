@@ -51,8 +51,8 @@ export PYENV_ROOT=/usr/local/var/pyenv
 add_to_path "$PYENV_ROOT/shims"
 
 if which pyenv > /dev/null 2>&1; then
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)";
+    _evalcache pyenv init -
+    _evalcache pyenv virtualenv-init -
 fi
 
 
@@ -143,7 +143,7 @@ export RBENV_ROOT="$HOME/.rbenv"
 add_to_path "$RBENV_ROOT/bin"
 
 if which rbenv > /dev/null 2>&1; then
-  eval "$(rbenv init -)"
+  _evalcache rbenv init -
 fi
 
 #
