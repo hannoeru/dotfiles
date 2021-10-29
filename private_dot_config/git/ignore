@@ -20,6 +20,3 @@ Thumbs.db
 venv
 node_modules
 .sass-cache
-
-# RSA keys, just in case
-*rsa*
