@@ -6,5 +6,6 @@ install.sh
 .oh-my-zsh/custom/themes/powerlevel10k/**/*.zwc
 
 {{ if ne .chezmoi.os "darwin" }}
+.ssh
 .config/karabiner
 {{ end }}
