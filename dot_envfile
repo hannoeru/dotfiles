@@ -84,6 +84,14 @@ add_to_path "$ANDROID_HOME/bin"
 # export KUBECONFIG="~/.kube/k3s.yaml"
 
 #
+# Homebrew
+#
+
+if [ -f $(brew --prefix)/etc/brew-wrap ];then
+    source $(brew --prefix)/etc/brew-wrap
+fi
+
+#
 # Google Cloud
 #
 
