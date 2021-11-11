@@ -95,6 +95,11 @@ if [ -f "${HOME}/.iterm2_shell_integration.zsh" ]; then
 fi
 {{- end }}
 
+# init homebrew
+if which rbenv > /dev/null 2>&1; then
+  _evalcache $(brew --prefix)/bin/brew shellenv
+fi
+
 # init pyenv
 if which pyenv > /dev/null 2>&1; then
     _evalcache pyenv init -
