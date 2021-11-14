@@ -38,7 +38,7 @@ add_to_path "$HOME/development/grpc"
 # Docker
 #
 
-export DOCKER_HOST="ssh://ubuntu@docker.local"
+# export DOCKER_HOST="ssh://ubuntu@docker.local"
 
 
 #
