@@ -64,6 +64,13 @@ export GOPATH="$HOME/go"
 add_to_path "$GOPATH/bin"
 
 #
+# Rust
+#
+
+export CARGOPATH="$HOME/.cargo"
+add_to_path "$CARGOPATH/bin"
+
+#
 # JAVA
 #
 
