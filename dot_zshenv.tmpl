@@ -6,6 +6,6 @@ fi
 {{- if (eq .chezmoi.os "darwin") }}
 # Environment setup
 if [ -f ~/.envfile ]; then
-    source ~/.envfile
+  source ~/.envfile
 fi
 {{- end }}
