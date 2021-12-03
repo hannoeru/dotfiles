@@ -13,18 +13,11 @@ function add_to_path() {
 }
 
 add_to_path "/usr/local/bin"
-add_to_path "/usr/local/sbin"
 add_to_path "$HOME/bin"
 # Custom scripts
 add_to_path "$HOME/.local/bin"
 # OpenSSL
-add_to_path "/uer/local/opt/openssl/bin"
-# gettext
-add_to_path "/usr/local/opt/gettext/bin"
-# Flutter SDK
-add_to_path "$HOME/development/flutter/bin"
-# Generate gRPC Web Client
-add_to_path "$HOME/development/grpc"
+add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
 
 #
 # C C++
@@ -40,14 +33,21 @@ add_to_path "$HOME/development/grpc"
 
 # export DOCKER_HOST="ssh://ubuntu@docker.local"
 
+#
+# Node
+#
+
+add_to_path "node_modules/.bin"
 
 #
 # Python
 #
 
-export PYENV_ROOT=/usr/local/var/pyenv
-add_to_path "$PYENV_ROOT/shims"
-
+# init pyenv
+if which pyenv > /dev/null 2>&1; then
+  _evalcache pyenv init -
+  _evalcache pyenv virtualenv-init -
+fi
 
 #
 # Deno
@@ -74,8 +74,19 @@ add_to_path "$CARGOPATH/bin"
 # JAVA
 #
 
-export JENV_ROOT="$HOME/.jenv"
-add_to_path "$JENV_ROOT/bin"
+# init jenv
+if which jenv > /dev/null 2>&1; then
+  _evalcache jenv init -
+fi
+
+#
+# Ruby
+#
+
+# init rbenv
+if which rbenv > /dev/null 2>&1; then
+  _evalcache rbenv init -
+fi
 
 #
 # Android
@@ -94,14 +105,25 @@ add_to_path "$ANDROID_HOME/bin"
 # Google Cloud
 #
 
+gcloud_completion_path="$HOMEBREW_PREFIX/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+gcloud_path_path="$HOMEBREW_PREFIX/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then
-    source ~/google-cloud-sdk/path.zsh.inc 
+if [ -f $gcloud_completion_path ]; then
+  source $gcloud_completion_path
 fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then
-    source ~/google-cloud-sdk/completion.zsh.inc
+if [ -f $gcloud_path_path ]; then
+  source $gcloud_path_path
+fi
+
+#
+# iTerm2
+#
+
+if [ -f "${HOME}/.iterm2_shell_integration.zsh" ]; then
+  source "${HOME}/.iterm2_shell_integration.zsh"
 fi
 
 #
@@ -114,22 +136,9 @@ export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
 # Configure Editor
 if which nvim >/dev/null 2>&1; then
-    export EDITOR='nvim'
+  export EDITOR='nvim'
 else
-    export EDITOR='vim'
+  export EDITOR='vim'
 fi
 
-#
-# Ruby
-#
 
-export RBENV_ROOT="$HOME/.rbenv"
-add_to_path "$RBENV_ROOT/bin"
-
-#
-# LOCAL ENV
-#
-
-if [ -f ~/.local-env ]; then
-    source ~/.local-env
-fi

@@ -66,10 +66,3 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
-# Environment setup
-if [ -f ~/.envfile ]; then
-    source ~/.envfile
-fi
-
-# Ensure path arrays do not contain duplicates.
-typeset -gU cdpath fpath mailpath path

@@ -2,10 +2,3 @@
 if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprofile"
 fi
-
-{{- if (eq .chezmoi.os "darwin") }}
-# Environment setup
-if [ -f ~/.envfile ]; then
-  source ~/.envfile
-fi
-{{- end }}

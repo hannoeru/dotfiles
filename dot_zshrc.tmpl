@@ -90,24 +90,13 @@ if [ -f ~/.p10k.zsh ]; then
   source ~/.p10k.zsh
 fi
 
+
 {{- if (eq .chezmoi.os "darwin") }}
-if [ -f "${HOME}/.iterm2_shell_integration.zsh" ]; then
-  source "${HOME}/.iterm2_shell_integration.zsh"
+# Environment setup
+if [ -f ~/.envfile ]; then
+  source ~/.envfile
 fi
 {{- end }}
 
-# init pyenv
-if which pyenv > /dev/null 2>&1; then
-    _evalcache pyenv init -
-    _evalcache pyenv virtualenv-init -
-fi
-
-# init rbenv
-if which rbenv > /dev/null 2>&1; then
-  _evalcache rbenv init -
-fi
-
-# init jenv
-if which jenv > /dev/null 2>&1; then
-  _evalcache jenv init -
-fi
+# Ensure path arrays do not contain duplicates.
+typeset -gU cdpath fpath mailpath path
