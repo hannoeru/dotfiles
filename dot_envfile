@@ -37,7 +37,7 @@ add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
 # Node
 #
 
-add_to_path "node_modules/.bin"
+add_to_path "./node_modules/.bin"
 
 #
 # Python
