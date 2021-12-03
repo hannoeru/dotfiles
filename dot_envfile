@@ -127,13 +127,6 @@ export RBENV_ROOT="$HOME/.rbenv"
 add_to_path "$RBENV_ROOT/bin"
 
 #
-# Platform IO
-#
-
-export PIOROOT=$HOME/.platformio
-add_to_path "$PIOROOT/penv/bin"
-
-#
 # LOCAL ENV
 #
 
