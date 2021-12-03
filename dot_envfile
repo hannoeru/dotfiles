@@ -8,7 +8,7 @@
 function add_to_path() {
   # Does the alias only if the aliased program is installed
     if [ -d $1 ]; then
-        export PATH="$1:$PATH"
+        export PATH="$PATH:$1"
     fi
 }
 
