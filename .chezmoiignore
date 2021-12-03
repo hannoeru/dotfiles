@@ -7,5 +7,6 @@ install.sh
 
 {{ if ne .chezmoi.os "darwin" }}
 .ssh
+.gitconfig
 .config/karabiner
 {{ end }}
