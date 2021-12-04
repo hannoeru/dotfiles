@@ -9,6 +9,7 @@
 # Homebrew
 #
 
+# init homebrew
 {{ if eq .chezmoi.os "darwin" -}}
 {{   if stat "/opt/homebrew/bin/brew" -}}
 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -16,6 +17,12 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(/usr/local/bin/brew shellenv)"
 {{   end -}}
 {{ end -}}
+
+export HOMEBREW_NO_ENV_HINTS=true
+
+if type brew &>/dev/null; then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
 
 #
 # Browser
