@@ -1,9 +1,6 @@
 #
 # Executes commands at login pre-zshrc.
 #
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
 
 #
 # Homebrew
@@ -59,6 +56,15 @@ if [[ -z "$LANG" ]]; then
 fi
 
 #
+# DEFAULT COLORS/PROGRAMS
+#
+
+# CLI colors
+export CLICOLOR=1
+export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+
+
+#
 # Less
 #
 
@@ -73,3 +79,9 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
+{{- if (eq .chezmoi.os "darwin") }}
+# Environment setup
+if [ -f ~/.envfile ]; then
+  source ~/.envfile
+fi
+{{- end }}

@@ -44,10 +44,9 @@ add_to_path "./node_modules/.bin"
 #
 
 # init pyenv
-if which pyenv > /dev/null 2>&1; then
-  _evalcache pyenv init -
-  _evalcache pyenv virtualenv-init -
-fi
+
+export PYENV_ROOT="$HOME/.pyenv"
+add_to_path "$PYENV_ROOT/shims"
 
 #
 # Deno
@@ -69,24 +68,6 @@ add_to_path "$GOPATH/bin"
 
 export CARGOPATH="$HOME/.cargo"
 add_to_path "$CARGOPATH/bin"
-
-#
-# JAVA
-#
-
-# init jenv
-if which jenv > /dev/null 2>&1; then
-  _evalcache jenv init -
-fi
-
-#
-# Ruby
-#
-
-# init rbenv
-if which rbenv > /dev/null 2>&1; then
-  _evalcache rbenv init -
-fi
 
 #
 # Android
@@ -125,20 +106,3 @@ fi
 if [ -f "${HOME}/.iterm2_shell_integration.zsh" ]; then
   source "${HOME}/.iterm2_shell_integration.zsh"
 fi
-
-#
-# DEFAULT COLORS/PROGRAMS
-#
-
-# CLI colors
-export CLICOLOR=1
-export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
-
-# Configure Editor
-if which nvim >/dev/null 2>&1; then
-  export EDITOR='nvim'
-else
-  export EDITOR='vim'
-fi
-
-
