@@ -106,5 +106,11 @@ if which pyenv > /dev/null 2>&1; then
   _evalcache pyenv virtualenv-init -
 fi
 
+# tabtab source for packages
+# uninstall by removing these lines
+if [ -f ~/.config/tabtab/zsh/__tabtab.zsh ]; then
+ source ~/.config/tabtab/zsh/__tabtab.zsh || true
+fi
+
 # Ensure path arrays do not contain duplicates.
 typeset -gU cdpath fpath mailpath path
