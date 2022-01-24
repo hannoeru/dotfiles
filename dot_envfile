@@ -39,6 +39,14 @@ add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
 add_to_path "./node_modules/.bin"
 
 #
+# PHP
+#
+
+# if [ -e "$HOME/.phpbrew/bashrc" ]; then
+#   source "$HOME/.phpbrew/bashrc"
+# fi
+
+#
 # Python
 #
 
