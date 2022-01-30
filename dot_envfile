@@ -50,8 +50,7 @@ add_to_path "./node_modules/.bin"
 # Python
 #
 
-# init pyenv
-
+# add pyenv path
 export PYENV_ROOT="$HOME/.pyenv"
 add_to_path "$PYENV_ROOT/shims"
 
