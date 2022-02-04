@@ -8,11 +8,6 @@
   autocrlf = input
   safecrlf = true
   pager = git-split-diffs --color | less -RFX
-[filter "lfs"]
-  process = git-lfs filter-process
-  required = true
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
 [pull]
   rebase = false
 [rebase]
@@ -35,3 +30,10 @@
   ac = commit -am
 [push]
   default = current
+[split-diffs]
+  theme-name = github-dark-dim
+[filter "lfs"]
+  process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
