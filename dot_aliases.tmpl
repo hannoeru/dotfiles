@@ -48,19 +48,19 @@ alias udeps="taze major -rwu"
 # run npm bin
 alias nbr='PATH=$(npm bin):$PATH'
 
-# vite
+# Vite
 alias d="nr dev"
 alias b="nr build"
 alias s="nr serve"
 alias t="nr test"
 alias cva="pnpm dlx create-vite"
 
-#docker
+# Docker
 alias dsa="docker ps -q | xargs docker stop"
 alias drma="docker ps -q | xargs docker rm"
 alias drmia="docker images -q | xargs docker rmi"
 
-#docker compose
+# Docker compose
 alias dc="docker compose"
 alias dce="docker compose exec"
 alias dcl="docker compose logs"
@@ -70,14 +70,17 @@ alias dcd="docker compose down"
 alias dcb="docker compose build"
 alias dckill="docker compose kill"
 
-#python
+# Python
 alias py="python $1"
 alias prp="pipenv run python $1"
 alias ps="pipenv shell"
 alias pi="pipenv install $1"
 alias pu="pipenv uninstall $1"
 alias pg="pipenv graph"
-alias pr="pipenv --rm"
+alias prm="pipenv --rm"
+
+# github
+alias pr="gh pr checkout $1"
 
 # Open Files
 
