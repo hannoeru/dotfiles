@@ -30,6 +30,8 @@
   ac = commit -am
 [push]
   default = current
+[rerere]
+  enabled = true
 [split-diffs]
   theme-name = github-dark-dim
 [filter "lfs"]
