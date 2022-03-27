@@ -3,5 +3,7 @@
 
 set -eufo pipefail
 
-chsh -s /usr/bin/zsh
+chsh -s $(brew --prefix)/bin/fish
+
+fisher update
 {{ end -}}
