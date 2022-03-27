@@ -1,0 +1,3 @@
+function led_scheme
+  mosquitto_pub -h 192.168.25.9 -u {{ (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").username.value }} -P {{ (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").password.value }} -t jp/home/han/tasmota_54E3D3/cmnd/Scheme -m $argv[1]
+end

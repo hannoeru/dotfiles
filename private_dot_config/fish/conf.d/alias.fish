@@ -8,24 +8,12 @@ alias vim="nvim"
 alias sshlink="ssh-copy-id -i ~/.ssh/id_rsa.pub"
 alias sshconfig="nano ~/.ssh/config"
 
-{{ if eq .chezmoi.os "darwin" }}
-#mqtt
-alias led_scheme="mosquitto_pub -h 192.168.25.9 -u {{ (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").username.value }} -P {{ (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").password.value }} -t jp/home/han/tasmota_54E3D3/cmnd/Scheme -m"
-{{ end }}
-
-# Shortcuts
-{{- if eq .chezmoi.os "darwin" }}
-alias dl="cd ~/Downloads"
-alias p="cd ~/Project"
-alias wine="wine64"
-alias brewup="brew update; brew upgrade; brew prune; brew cleanup"
-{{- end }}
+# basic
 alias up="cd ../"
 alias la="ls -a"
 alias lla="ls -al"
 alias l="ls"
 alias dotfiles="chezmoi cd"
-# alias nmap="docker run --rm -it bytesizedalex/nmap"
 
 # pnpm
 alias npx="pnpm dlx"
@@ -37,19 +25,21 @@ alias pnpmu="pnpm i -g pnpm"
 # update npm deps
 alias udeps="taze major -rwu"
 
-# Vite
+# npm run
 alias d="nr dev"
 alias b="nr build"
 alias s="nr serve"
 alias t="nr test"
+
+# vite
 alias cva="pnpm dlx create-vite"
 
-# Docker
+# docker
 alias dsa="docker ps -q | xargs docker stop"
 alias drma="docker ps -q | xargs docker rm"
 alias drmia="docker images -q | xargs docker rmi"
 
-# Docker compose
+# docker compose
 alias dc="docker compose"
 alias dce="docker compose exec"
 alias dcl="docker compose logs"
@@ -59,7 +49,7 @@ alias dcd="docker compose down"
 alias dcb="docker compose build"
 alias dckill="docker compose kill"
 
-# Python
+# python
 alias py="python"
 alias prp="pipenv run python"
 alias ps="pipenv shell"

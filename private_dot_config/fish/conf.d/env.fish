@@ -15,9 +15,9 @@ add_to_path "./node_modules/.bin"
 # PHP
 #
 
-if test -d "$HOME/.phpbrew"
-  source "$HOME/.phpbrew/phpbrew.fish"
-end
+# if test -d "$HOME/.phpbrew"
+#   source "$HOME/.phpbrew/phpbrew.fish"
+# end
 
 #
 # Python
@@ -30,7 +30,7 @@ add_to_path "$PYENV_ROOT/shims"
 # Deno
 #
 
-set -gx DENO_DIR $HOME/.deno
+set -gx DENO_DIR "$HOME/.deno"
 add_to_path "$HOME/.deno/bin"
 
 #
