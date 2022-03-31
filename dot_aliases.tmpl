@@ -16,24 +16,12 @@ alias_if_exists 'vim' 'nvim'
 alias sshlink='ssh-copy-id -i ~/.ssh/id_rsa.pub'
 alias sshconfig='nano ~/.ssh/config'
 
-{{ if eq .chezmoi.os "darwin" }}
-#mqtt
-alias led_scheme='mosquitto_pub -h 192.168.25.9 -u {{ (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").username.value }} -P {{ (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").password.value }} -t jp/home/han/tasmota_54E3D3/cmnd/Scheme -m'
-{{ end }}
-
-# Shortcuts
-{{- if eq .chezmoi.os "darwin" }}
-alias dl="cd ~/Downloads"
-alias p="cd ~/Project"
-alias wine="wine64"
-alias brewup='brew update; brew upgrade; brew prune; brew cleanup'
-{{- end }}
+# common
 alias up="cd ../"
 alias la="ls -a"
 alias lla="ls -al"
 alias l="ls"
 alias dotfiles="chezmoi cd"
-# alias nmap="docker run --rm -it bytesizedalex/nmap"
 
 # pnpm
 alias -g npx="pnpm dlx"
@@ -44,9 +32,6 @@ alias pnpmu="pnpm i -g pnpm"
 
 # update npm deps
 alias udeps="taze major -rwu"
-
-# run npm bin
-alias nbr='PATH=$(npm bin):$PATH'
 
 # Vite
 alias d="nr dev"

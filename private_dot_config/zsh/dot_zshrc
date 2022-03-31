@@ -1,8 +1,3 @@
-# Init Powerlevel10k
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -116,21 +111,15 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
 # ALIASES
 if [ -f ~/.aliases ]; then
   source ~/.aliases
 fi
 
-# Skip p10k wizard
-# POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-
-# Load Powerlevel10k Config
-# if [ -f ~/.p10k.zsh ]; then
-#   source ~/.p10k.zsh
-# fi
+# load os specific config
+case $(uname) in
+  "Darwin" ) source $HOME/.config/zsh/config-osx.zsh ;;
+esac
 
 # init rbenv
 if which rbenv > /dev/null 2>&1; then

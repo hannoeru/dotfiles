@@ -1,6 +1,6 @@
 # Environment setup
-if [ -f ~/.env ]; then
-    source ~/.env
+if [ -f ~/.envfile ]; then
+  source ~/.envfile
 fi
 
 # Bash Prompt
@@ -9,5 +9,5 @@ PS1="\[\033[36m\][\[\033[m\]\[\033[34m\]\u@\h\[\033[m\] \[\033[32m\]\W\[\033[m\]
 
 # ALIASES
 if [ -f ~/.aliases ]; then
-    source ~/.aliases
+  source ~/.aliases
 fi

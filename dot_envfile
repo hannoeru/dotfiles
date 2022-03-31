@@ -1,15 +1,8 @@
-# Environment Setup
-# Shell Agnostic. Should work both with bash and zsh
-
-#
-# PATH
-#
-
 function add_to_path() {
   # Does the alias only if the aliased program is installed
-    if [ -d $1 ]; then
-        export PATH="$1:$PATH"
-    fi
+  if [ -d $1 ]; then
+    export PATH="$1:$PATH"
+  fi
 }
 
 add_to_path "$HOME/bin"
@@ -19,32 +12,10 @@ add_to_path "$HOME/.local/bin"
 add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
 
 #
-# C C++
-#
-
-# export LDFLAGS="-L/usr/local/opt/zlib/lib"
-# export CPPFLAGS="-I/usr/local/opt/zlib/include"
-
-
-#
-# Docker
-#
-
-# export DOCKER_HOST="ssh://ubuntu@docker.local"
-
-#
 # Node
 #
 
 add_to_path "./node_modules/.bin"
-
-#
-# PHP
-#
-
-# if [ -e "$HOME/.phpbrew/bashrc" ]; then
-#   source "$HOME/.phpbrew/bashrc"
-# fi
 
 #
 # Python
@@ -83,32 +54,9 @@ export ANDROID_HOME="$HOME/Library/Android/sdk"
 add_to_path "$ANDROID_HOME/bin"
 
 #
-# kubectl
-#
-
-# export KUBECONFIG="~/.kube/k3s.yaml"
-
-#
-# Google Cloud
-#
-
-gcloud_completion_path="$HOMEBREW_PREFIX/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
-gcloud_path_path="$HOMEBREW_PREFIX/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f $gcloud_completion_path ]; then
-  source $gcloud_completion_path
-fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f $gcloud_path_path ]; then
-  source $gcloud_path_path
-fi
-
-#
 # iTerm2
 #
 
-if [ -f "${HOME}/.iterm2_shell_integration.zsh" ]; then
-  source "${HOME}/.iterm2_shell_integration.zsh"
+if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
+  source "$HOME/.iterm2_shell_integration.zsh"
 fi

@@ -1,37 +1,21 @@
-#
-# Executes commands at login pre-zshrc.
-#
-
-#
-# Homebrew
-#
-
 # init homebrew
-{{ if eq .chezmoi.os "darwin" -}}
-{{   if stat "/opt/homebrew/bin/brew" -}}
-eval "$(/opt/homebrew/bin/brew shellenv)"
-{{   else if stat "/usr/local/bin/brew" -}}
-eval "$(/usr/local/bin/brew shellenv)"
-{{   end -}}
-{{ end -}}
+if [ $(uname) = "Darwin" ]; then
+  if [ -e "/opt/homebrew/bin/brew" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [ -e "/usr/local/bin/brew" ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+fi
 
-export HOMEBREW_NO_ENV_HINTS=true
-
+# export HOMEBREW_NO_ENV_HINTS=true
 if type brew &>/dev/null; then
   FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fi
 
-#
-# Browser
-#
-
-if [[ "$OSTYPE" == darwin* ]]; then
+# better defaults
+if [ $(uname) = "Darwin" ]; then
   export BROWSER='open'
 fi
-
-#
-# Editors
-#
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
@@ -47,41 +31,24 @@ fi
 export VISUAL='nano'
 export PAGER='less'
 
-#
 # Language
-#
-
-if [[ -z "$LANG" ]]; then
+if [ -z "$LANG" ]; then
   export LANG='en_US.UTF-8'
 fi
-
-#
-# DEFAULT COLORS/PROGRAMS
-#
 
 # CLI colors
 export CLICOLOR=1
 export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
-
-#
-# Less
-#
-
 # Set the default Less options.
-# Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
-# Remove -X and -F (exit if the content fits on one screen) to enable it.
 export LESS='-F -g -i -M -R -S -w -X -z-4'
-
 # Set the Less input preprocessor.
 # Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
 if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
-{{- if (eq .chezmoi.os "darwin") }}
 # Environment setup
 if [ -f ~/.envfile ]; then
   source ~/.envfile
 fi
-{{- end }}
