@@ -1,4 +1,4 @@
-if (uname) = "Darwin"
+if test (uname) = "Darwin"
   if test -e "/opt/homebrew/bin/brew"
     eval (/opt/homebrew/bin/brew shellenv)
   else if test -e "/usr/local/bin/brew"
