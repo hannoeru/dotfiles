@@ -35,7 +35,7 @@ end
 
 # default colors
 set -gx CLICOLOR 1
-set -gx LSCOLORS gxBxhxDxfxhxhxhxhxcxcx
+set -gx LS_COLORS gxBxhxDxfxhxhxhxhxcxcx
 
 # less
 set -gx LESS "-F -g -i -M -R -S -w -X -z-4"
