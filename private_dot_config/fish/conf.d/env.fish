@@ -9,6 +9,14 @@ add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
 # Node
 #
 
+# npm
+add_to_path "$HOME/.npm-global/bin"
+
+# pnpm
+set -gx PNPM_HOME "$HOME/Library/pnpm"
+add_to_path "$PNPM_HOME"
+
+# local node_modules
 add_to_path "./node_modules/.bin"
 
 #
