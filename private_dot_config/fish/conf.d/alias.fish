@@ -26,10 +26,20 @@ alias pnpmu="pnpm i -g pnpm"
 alias udeps="taze major -rwu"
 
 # npm run
+alias s="nr start"
 alias d="nr dev"
 alias b="nr build"
-alias s="nr serve"
+alias bw="nr build --watch"
 alias t="nr test"
+alias tu="nr test -u"
+alias tw="nr test --watch"
+alias w="nr watch"
+alias p="nr preview"
+alias tc="nr type-check"
+alias lint="nr lint"
+alias lintf="nr lint --fix"
+alias release="nr release"
+alias re="nr release"
 
 # vite
 alias cva="pnpm dlx create-vite"
