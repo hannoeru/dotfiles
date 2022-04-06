@@ -40,6 +40,7 @@ alias lint="nr lint"
 alias lintf="nr lint --fix"
 alias release="nr release"
 alias re="nr release"
+alias sb="nr storybook"
 
 # vite
 alias cva="pnpm dlx create-vite"
