@@ -6,7 +6,6 @@ fi
 
 source /etc/bash_completion.d/azds
 
-{{- if (eq .chezmoi.os "darwin") }}
 if type brew &>/dev/null
 then
   HOMEBREW_PREFIX="$(brew --prefix)"
@@ -20,4 +19,3 @@ then
     done
   fi
 fi
-{{- end }}

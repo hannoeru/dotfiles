@@ -62,6 +62,15 @@ export ANDROID_HOME="$HOME/Library/Android/sdk"
 add_to_path "$ANDROID_HOME/bin"
 
 #
+# Java
+#
+
+export SDKMAN_DIR="$HOME/.sdkman"
+if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+  source "$HOME/.sdkman/bin/sdkman-init.sh"
+fi
+
+#
 # iTerm2
 #
 

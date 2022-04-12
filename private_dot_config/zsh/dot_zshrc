@@ -126,11 +126,6 @@ if which rbenv > /dev/null 2>&1; then
   _evalcache rbenv init -
 fi
 
-# init jenv
-if which jenv > /dev/null 2>&1; then
-  _evalcache jenv init -
-fi
-
 # init pyenv
 if which pyenv > /dev/null 2>&1; then
   eval "$(pyenv init -)"
