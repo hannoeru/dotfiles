@@ -17,14 +17,6 @@ set -gx PNPM_HOME "$HOME/Library/pnpm"
 add_to_path "$PNPM_HOME"
 
 #
-# PHP
-#
-
-# if test -d "$HOME/.phpbrew"
-#   source "$HOME/.phpbrew/phpbrew.fish"
-# end
-
-#
 # Python
 #
 
