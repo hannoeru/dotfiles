@@ -66,8 +66,16 @@ add_to_path "$ANDROID_HOME/bin"
 #
 
 export SDKMAN_DIR="$HOME/.sdkman"
-if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
   source "$HOME/.sdkman/bin/sdkman-init.sh"
+fi
+
+#
+# PHP
+#
+
+if [ -f "$HOME/.phpbrew/bashrc" ]; then
+  source "$HOME/.phpbrew/bashrc"
 fi
 
 #
