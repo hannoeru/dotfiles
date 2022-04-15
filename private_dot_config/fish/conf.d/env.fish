@@ -2,8 +2,12 @@
 fish_add_path "$HOME/bin"
 # Custom scripts
 fish_add_path "$HOME/.local/bin"
-# OpenSSL
+# curl
+fish_add_path "$HOMEBREW_PREFIX/opt/curl/bin"
+# openssl
 fish_add_path "$HOMEBREW_PREFIX/opt/openssl/bin"
+# libressl
+fish_add_path "$HOMEBREW_PREFIX/opt/libressl/bin"
 
 #
 # Node

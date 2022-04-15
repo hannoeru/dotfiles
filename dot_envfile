@@ -8,8 +8,12 @@ function add_to_path() {
 add_to_path "$HOME/bin"
 # Custom scripts
 add_to_path "$HOME/.local/bin"
-# OpenSSL
+# curl
+add_to_path "$HOMEBREW_PREFIX/opt/curl/bin"
+# openssl
 add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
+# libressl
+add_to_path "$HOMEBREW_PREFIX/opt/libressl/bin"
 
 #
 # Node
