@@ -4,7 +4,6 @@ set fish_greeting ""
 set -gx TERM xterm-256color
 
 # theme
-set -g SPACEFISH_DOCKER_SHOW false
 set -g fish_prompt_pwd_dir_length 0
 
 function fish_title

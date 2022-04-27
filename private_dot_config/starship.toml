@@ -1,0 +1,92 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+# Replace the "❯" symbol in the prompt with "➜"
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[✖](bold red)"
+
+[aws]
+format = 'on [$symbol($profile )(\($region\) )]($style)'
+style = "bold blue"
+symbol = " "
+
+[azure]
+format = "on [$symbol($subscription)]($style) "
+symbol = "ﴃ "
+style = "bold blue"
+
+[gcloud]
+disabled = true
+format = "[$symbol$active]($style) "
+symbol = "️ "
+style = "bold yellow"
+
+[buf]
+symbol = " "
+
+[c]
+symbol = " "
+
+[conda]
+symbol = " "
+
+[dart]
+symbol = " "
+
+[directory]
+read_only = " "
+
+[docker_context]
+symbol = " "
+
+[elixir]
+symbol = " "
+
+[elm]
+symbol = " "
+
+[git_branch]
+symbol = " "
+
+[golang]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[hg_branch]
+symbol = " "
+
+[java]
+symbol = " "
+
+[julia]
+symbol = " "
+
+[memory_usage]
+symbol = " "
+
+[nim]
+symbol = " "
+
+[nix_shell]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[package]
+symbol = " "
+
+[python]
+symbol = " "
+
+[spack]
+symbol = "🅢 "
+
+[rust]
+symbol = " "
