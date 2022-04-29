@@ -54,18 +54,19 @@ alias dcup="docker compose up -d"
 alias dcd="docker compose down"
 alias dcb="docker compose build"
 alias dckill="docker compose kill"
+alias docker-compsoe="docker compose $@"
 
 # Python
-alias py="python $1"
-alias prp="pipenv run python $1"
+alias py="python $@"
+alias prp="pipenv run python $@"
 alias ps="pipenv shell"
-alias pi="pipenv install $1"
-alias pu="pipenv uninstall $1"
+alias pi="pipenv install $@"
+alias pu="pipenv uninstall $@"
 alias pg="pipenv graph"
 alias prm="pipenv --rm"
 
 # github
-alias pr="gh pr checkout $1"
+alias pr="gh pr checkout $@"
 
 # Open Files
 

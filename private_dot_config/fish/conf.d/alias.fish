@@ -59,6 +59,7 @@ alias dcup="docker compose up -d"
 alias dcd="docker compose down"
 alias dcb="docker compose build"
 alias dckill="docker compose kill"
+alias docker-compose="docker compose"
 
 # python
 alias py="python"
