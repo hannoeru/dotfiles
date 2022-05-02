@@ -1,13 +1,18 @@
-# Environment setup
+# setup env
 if [ -f ~/.envfile ]; then
   source ~/.envfile
 fi
 
-# Bash Prompt
-PS1="\[\e]0;\u@\h: \W\a\]\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[00;36m\]\W\[\033[00m\]\$ "
-PS1="\[\033[36m\][\[\033[m\]\[\033[34m\]\u@\h\[\033[m\] \[\033[32m\]\W\[\033[m\]\[\033[36m\]]\[\033[m\] $ "
-
-# ALIASES
+# aliases
 if [ -f ~/.aliases ]; then
   source ~/.aliases
 fi
+
+# set PS1
+if [ "$color_prompt" = yes ]; then
+  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+
+eval "$(starship init bash)"

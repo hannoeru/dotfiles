@@ -24,7 +24,7 @@ alias l="ls"
 alias dotfiles="chezmoi cd"
 
 # pnpm
-alias -g npx="pnpm dlx"
+alias npx="pnpm dlx $@"
 alias u="pnpm update"
 alias nad="pnpm add -D"
 alias na="pnpm add"
@@ -70,11 +70,13 @@ alias pr="gh pr checkout $@"
 
 # Open Files
 
-# Azure CLI files
-alias -s azcli=code
-# Markdown files
-alias -s md=code
-# JSON files
-alias -s json=code
-# bulk association
-alias -s {cs,js,ts,html}=code
+if [ -z "$BASH" ]; then
+  # Azure CLI files
+  alias -s azcli=code
+  # Markdown files
+  alias -s md=code
+  # JSON files
+  alias -s json=code
+  # bulk association
+  alias -s {cs,js,ts,html}=code
+fi
