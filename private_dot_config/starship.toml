@@ -13,6 +13,10 @@ error_symbol = "[✖](bold red)"
 format = 'on [$symbol($profile )(\($region\) )]($style)'
 style = "bold blue"
 symbol = " "
+[aws.region_aliases]
+ap-northeast-1 = "jp"
+ap-southeast-2 = "au"
+us-east-1 = "va"
 
 [azure]
 format = "on [$symbol($subscription)]($style) "
