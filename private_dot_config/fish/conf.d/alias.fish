@@ -1,8 +1,8 @@
 # Changing/making/removing directory
-alias ...="../.."
-alias ....="../../.."
-alias .....="../../../.."
-alias ......="../../../../.."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
 
 alias 1="cd -1"
 alias 2="cd -2"
