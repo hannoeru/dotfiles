@@ -7,6 +7,10 @@ alias ......="cd ../../../../.."
 alias md="mkdir -p"
 alias rd="rmdir"
 
+function dir
+  mkdir $argv[1] && cd $argv[1]
+end
+
 # Better defaults
 alias crontab="VIM_CRONTAB=true crontab"
 alias diff="colordiff"
