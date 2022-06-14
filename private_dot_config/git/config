@@ -1,45 +1,47 @@
 [user]
-  name = hanlee
-  email = me@hanlee.co
-  signingkey = 17C81448D8058286
+	name = hanlee
+	email = me@hanlee.co
+	signingkey = 17C81448D8058286
 [core]
-  editor = code --wait
-  excludesfile = ~/.config/git/ignore
-  autocrlf = input
-  safecrlf = true
-  pager = git-split-diffs --color | less -RFX
+	editor = code --wait
+	excludesfile = ~/.config/git/ignore
+	autocrlf = input
+	safecrlf = true
+	pager = git-split-diffs --color | less -RFX
 [pull]
-  rebase = false
+	rebase = false
 [rebase]
-  autosquash = true
-  autostash = true
+	autosquash = true
+	autostash = true
 [commit]
-  gpgsign = true
+	gpgsign = true
 [gpg]
-  program = gpg
+	program = gpg
 [init]
-  defaultBranch = main
+	defaultBranch = main
 [alias]
-  co = checkout
-  ci = commit
-  st = status
-  br = branch
-  hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
-  type = cat-file -t
-  dump = cat-file -p
-  ac = commit -am
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+	type = cat-file -t
+	dump = cat-file -p
+	ac = commit -am
 [push]
-  default = current
+	default = current
 [rerere]
-  enabled = true
+	enabled = true
 [split-diffs]
-  theme-name = github-dark-dim
+	theme-name = github-dark-dim
 [filter "lfs"]
-  process = git-lfs filter-process
-  required = true
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
 [credential]
-  helper = /usr/local/share/gcm-core/git-credential-manager-core
+	helper = /usr/local/share/gcm-core/git-credential-manager-core
 [credential "https://dev.azure.com"]
-  useHttpPath = true
+	useHttpPath = true
+[hub]
+	protocol = ssh

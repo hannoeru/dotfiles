@@ -22,6 +22,7 @@ alias crontab="VIM_CRONTAB=true crontab"
 alias diff="colordiff"
 alias ag="rg"
 alias vim="nvim"
+alias git="hub"
 
 # ssh
 alias sshlink="ssh-copy-id -i ~/.ssh/id_rsa.pub"
