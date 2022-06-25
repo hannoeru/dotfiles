@@ -89,11 +89,3 @@ fi
 if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
   source "$HOME/.iterm2_shell_integration.zsh"
 fi
-
-
-#
-# Docker
-#
-
-# replace docker with podman
-export DOCKER_HOST='unix:///Users/hanlee/.local/share/containers/podman/machine/podman-machine-default/podman.sock'

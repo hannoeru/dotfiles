@@ -54,10 +54,3 @@ fish_add_path "$CARGOPATH/bin"
 
 set -gx ANDROID_HOME "$HOME/Library/Android/sdk"
 fish_add_path "$ANDROID_HOME/bin"
-
-#
-# Docker
-#
-
-# replace docker with podman
-set -gx DOCKER_HOST 'unix:///Users/hanlee/.local/share/containers/podman/machine/podman-machine-default/podman.sock'
