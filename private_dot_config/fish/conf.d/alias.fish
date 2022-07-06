@@ -86,4 +86,10 @@ alias pg="pipenv graph"
 alias prm="pipenv --rm"
 
 # github
-alias pr="gh pr checkout"
+function pr --wraps gh --description 'gh pr list or checkout'
+  if test $argv[1] = "ls"
+    gh pr list
+  else
+    gh pr checkout $argv[1]
+  end
+end
