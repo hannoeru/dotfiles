@@ -1,8 +1,12 @@
-//registry.npmjs.org/:_authToken={{ (index (onepassword "ncpwdcg66lffachhqtfsitfa6q").fields 6).value }}
+prefix=~/.npm-global
+global-dir=~/Library/pnpm/global
 
-prefix=${HOME}/.npm-global
-global-dir=${HOME}/Library/pnpm/global
+init-author-name=Han
+init-author-email=me@hanlee.co
 
 ignore-workspace-root-check=true
-init-author-email=me@hanlee.co
-init-author-name=Han
+
+@justincase-jp:registry="https://npm.pkg.github.com"
+
+//registry.npmjs.org/:_authToken={{ (onepasswordItemFields "ncpwdcg66lffachhqtfsitfa6q").HanMBP.value }}
+//npm.pkg.github.com/:_authToken={{ (onepasswordItemFields "wkjtnqmc7srxyq5rvoctcobl2y").HanMBP.value }}
