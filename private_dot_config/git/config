@@ -49,4 +49,4 @@
 [includeIf "gitdir:~/Project/jic/"]
 	path = ~/Project/jic/.gitconfig
 [hub]
-	protocol = ssh
+	protocol = https
