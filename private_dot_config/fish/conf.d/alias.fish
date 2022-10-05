@@ -90,6 +90,6 @@ function pr --wraps gh --description 'gh pr list or checkout'
   if test $argv[1] = "ls"
     gh pr list
   else
-    gh pr checkout $argv[1]
+    gh pr checkout $argv
   end
 end
