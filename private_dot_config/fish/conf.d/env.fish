@@ -54,3 +54,10 @@ fish_add_path "$CARGOPATH/bin"
 
 set -gx ANDROID_HOME "$HOME/Library/Android/sdk"
 fish_add_path "$ANDROID_HOME/bin"
+
+#
+# bun
+#
+
+set -Ux BUN_INSTALL "/Users/hanlee/.bun"
+fish_add_path "$HOME/.bun/bin"
