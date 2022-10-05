@@ -16,7 +16,7 @@
 [commit]
 	gpgsign = true
 [gpg]
-	program = gpg
+	program = /opt/homebrew/bin/gpg
 [init]
 	defaultBranch = main
 [alias]
@@ -30,6 +30,7 @@
 	ac = commit -am
 [push]
 	default = current
+	autoSetupRemote = true
 [rerere]
 	enabled = true
 [split-diffs]
