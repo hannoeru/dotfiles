@@ -29,6 +29,7 @@ plugins=(
   git
   gitfast
   zsh-autosuggestions
+  zsh-history-substring-search
   zsh-syntax-highlighting
   zsh-z
 )
