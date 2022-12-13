@@ -97,9 +97,9 @@ end
 
 
 function clone --wraps gh --description 'clone github repo'
-  if count $argv > 1
-    gh repo clone "$@" && cd "$(basename "$1" .git)"
+  if count $argv == 1
+    gh repo clone $argv && cd $(basename $argv[1] .git)
   else
-    gh repo clone "$@" && cd "$2"
+    gh repo clone $argv && cd $argv[2]
   end
 end
