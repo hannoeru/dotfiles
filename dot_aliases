@@ -28,16 +28,29 @@ alias npx="pnpm dlx $@"
 alias u="pnpm update"
 alias nad="pnpm add -D"
 alias na="pnpm add"
-alias pnpmu="pnpm i -g pnpm"
 
 # update npm deps
 alias udeps="taze major -rwu"
 
-# Vite
+# npm run
+alias s="nr start"
 alias d="nr dev"
 alias b="nr build"
-alias s="nr serve"
+alias bw="nr build --watch"
 alias t="nr test"
+alias tu="nr test -u"
+alias tw="nr test --watch"
+alias w="nr watch"
+alias p="nr preview"
+alias tc="nr type-check"
+alias lint="nr lint"
+alias lintf="nr lint --fix"
+alias release="nr release"
+alias re="nr release"
+alias sb="nr storybook"
+alias bsb="pnpm build-storybook"
+
+# vite
 alias cva="pnpm dlx create-vite"
 
 # Docker
@@ -66,10 +79,27 @@ alias pg="pipenv graph"
 alias prm="pipenv --rm"
 
 # github
-alias pr="gh pr checkout $@"
+function pr() {
+  if [ $1 = "ls" ]; then
+    gh pr list
+  else
+    gh pr checkout $1
+  fi
+}
+
+function dir() {
+  mkdir $1 && cd $1
+}
+
+function serve() {
+  if [[ -z $1 ]] then
+    live-server dist
+  else
+    live-server $1
+  fi
+}
 
 # Open Files
-
 if [ -z "$BASH" ]; then
   # Azure CLI files
   alias -s azcli=code

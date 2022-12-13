@@ -13,43 +13,8 @@ if which starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
 # Uncomment the following line to disable bi-weekly auto-update checks.
 DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to automatically update without prompting.
-# DISABLE_UPDATE_PROMPT="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# Caution: this setting can cause issues with multiline prompts (zsh 5.7.1 and newer seem to work)
-# See https://github.com/ohmyzsh/ohmyzsh/issues/5765
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # You can set one of the optional three formats:
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
@@ -57,57 +22,28 @@ HIST_STAMPS="yyyy/mm/dd"
 
 # on-my-zsh plugins
 plugins=(
-  alias-finder
-  brew
-  docker
-  docker-compose
   evalcache
+  aliases
+  brew
+  macos
   git
   gitfast
-  git-auto-fetch
-  macos
-  history
+  zsh-autosuggestions
   zsh-syntax-highlighting
+  zsh-z
 )
 
 source $ZSH/oh-my-zsh.sh
 
-# ALIASES
-if [ -f ~/.aliases ]; then
-  source ~/.aliases
-fi
+# load configs
+for file in $HOME/.config/zsh/conf.d/**/*(.); do
+  source $file
+done
 
 # load os specific config
 case $(uname) in
   "Darwin" ) source $HOME/.config/zsh/config-osx.zsh ;;
 esac
-
-# init rbenv
-if which rbenv > /dev/null 2>&1; then
-  _evalcache rbenv init -
-fi
-
-# init pyenv
-if which pyenv > /dev/null 2>&1; then
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
-fi
-
-# init miniconda
-if [ -e $HOME/.pyenv/versions/miniconda3-latest/bin/conda ]; then
-  eval "$('$HOME/.pyenv/versions/miniconda3-latest/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-fi
-
-# init fnm (node version manager)
-if which fnm > /dev/null 2>&1; then
-  eval "$(fnm env --use-on-cd)"
-fi
-
-# tabtab source for packages
-# uninstall by removing these lines
-if [ -f ~/.config/tabtab/zsh/__tabtab.zsh ]; then
-  source ~/.config/tabtab/zsh/__tabtab.zsh || true
-fi
 
 # Ensure path arrays do not contain duplicates.
 typeset -gU cdpath fpath mailpath path

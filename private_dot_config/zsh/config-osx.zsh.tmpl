@@ -5,3 +5,10 @@ alias brewup='brew update; brew upgrade; brew cleanup'
 
 #mqtt
 alias led_scheme='mosquitto_pub -h 192.168.25.9 -u {{ (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").username.value }} -P {{ (onepasswordDetailsFields "ljwvpsxekcif6herrp6gnryzia").password.value }} -t jp/home/han/tasmota_54E3D3/cmnd/Scheme -m'
+
+if which exa > /dev/null 2>&1; then
+  alias l="exa -g --icons"
+  alias ls="l"
+  alias ll="l -l"
+  alias lla="ll -a"
+fi
