@@ -35,6 +35,11 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+# aliases
+if [ -f ~/.aliases ]; then
+  source ~/.aliases
+fi
+
 # load configs
 for file in $HOME/.config/zsh/conf.d/**/*(.); do
   source $file
