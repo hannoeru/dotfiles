@@ -30,7 +30,7 @@ plugins=(
   gitfast
   zsh-autosuggestions
   zsh-syntax-highlighting
-  zsh-history-substring-search
+  zsh-abbr
   zsh-z
 )
 
