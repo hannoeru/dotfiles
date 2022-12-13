@@ -87,6 +87,15 @@ function pr() {
   fi
 }
 
+function clone() {
+  if [[ -z $2 ]] then
+    gh repo clone "$@" && cd "$(basename "$1" .git)"
+  else
+    gh repo clone "$@" && cd "$2"
+  fi
+}
+
+
 function dir() {
   mkdir $1 && cd $1
 }

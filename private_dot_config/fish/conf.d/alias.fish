@@ -94,3 +94,12 @@ function pr --wraps gh --description 'gh pr list or checkout'
     gh pr checkout $argv
   end
 end
+
+
+function clone --wraps gh --description 'clone github repo'
+  if count $argv > 1
+    gh repo clone "$@" && cd "$(basename "$1" .git)"
+  else
+    gh repo clone "$@" && cd "$2"
+  end
+end
