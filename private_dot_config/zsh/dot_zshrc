@@ -26,7 +26,6 @@ plugins=(
   aliases
   brew
   macos
-  git
   gitfast
   zsh-autosuggestions
   zsh-syntax-highlighting
