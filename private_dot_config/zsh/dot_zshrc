@@ -19,11 +19,9 @@ HIST_STAMPS="yyyy/mm/dd"
 
 # on-my-zsh plugins
 plugins=(
-  evalcache
   aliases
   brew
   macos
-  gitfast
   zsh-autosuggestions
   zsh-syntax-highlighting
   zsh-history-substring-search

@@ -34,12 +34,6 @@ url = "https://github.com/olets/zsh-abbr/archive/master.tar.gz"
 exact = true
 stripComponents = 1
 refreshPeriod = "168h"
-[".oh-my-zsh/custom/plugins/evalcache"]
-type = "archive"
-url = "https://github.com/mroth/evalcache/archive/master.tar.gz"
-exact = true
-stripComponents = 1
-refreshPeriod = "168h"
 [".nano"]
 type = "archive"
 url = "https://github.com/scopatz/nanorc/archive/master.tar.gz"
