@@ -16,6 +16,12 @@ url = "https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.g
 exact = true
 stripComponents = 1
 refreshPeriod = "168h"
+[".oh-my-zsh/custom/plugins/zsh-history-substring-search"]
+type = "archive"
+url = "https://github.com/zsh-users/zsh-history-substring-search/archive/master.tar.gz"
+exact = true
+stripComponents = 1
+refreshPeriod = "168h"
 [".oh-my-zsh/custom/plugins/zsh-z"]
 type = "archive"
 url = "https://github.com/agkozak/zsh-z/archive/master.tar.gz"
