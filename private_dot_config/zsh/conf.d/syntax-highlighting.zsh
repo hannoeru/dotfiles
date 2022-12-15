@@ -3,7 +3,6 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern line)
 #################
 #      None     #
 #################
-ZSH_HIGHLIGHT_STYLES[unknown-token]='none'
 #################
 #      cyan     #
 #################
@@ -21,9 +20,10 @@ ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]='fg=cyan'
 #################
 #      red      #
 #################
-ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=161'
-ZSH_HIGHLIGHT_STYLES[redirection]='fg=161'
-ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=161'
+ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=red'
+ZSH_HIGHLIGHT_STYLES[redirection]='fg=red'
+ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=red'
+ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red'
 #################
 #     blue     #
 #################
