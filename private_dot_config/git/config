@@ -1,7 +1,7 @@
 [user]
 	name = hanlee
 	email = me@hanlee.co
-	signingkey = 17C81448D8058286
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOuV2oRxBdZb+hH1+YDZChCCFuwHYDgFFekZtGwKTvjd
 [core]
 	editor = code --wait
 	excludesfile = ~/.config/git/ignore
@@ -16,7 +16,9 @@
 [commit]
 	gpgsign = true
 [gpg]
-	program = /opt/homebrew/bin/gpg
+	format = ssh
+[gpg "ssh"]
+	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 [init]
 	defaultBranch = main
 [alias]
