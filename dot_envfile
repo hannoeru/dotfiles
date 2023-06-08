@@ -14,6 +14,8 @@ add_to_path "$HOMEBREW_PREFIX/opt/curl/bin"
 add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
 # libressl
 add_to_path "$HOMEBREW_PREFIX/opt/libressl/bin"
+# grep
+add_to_path "$HOMEBREW_PREFIX/opt/grep/libexec/gnubin"
 
 #
 # Node

@@ -8,6 +8,8 @@ fish_add_path "$HOMEBREW_PREFIX/opt/curl/bin"
 fish_add_path "$HOMEBREW_PREFIX/opt/openssl/bin"
 # libressl
 fish_add_path "$HOMEBREW_PREFIX/opt/libressl/bin"
+# grep
+fish_add_path "$HOMEBREW_PREFIX/opt/grep/libexec/gnubin"
 
 #
 # Node
