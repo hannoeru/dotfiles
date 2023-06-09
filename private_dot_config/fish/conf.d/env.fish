@@ -10,6 +10,10 @@ fish_add_path "$HOMEBREW_PREFIX/opt/openssl/bin"
 fish_add_path "$HOMEBREW_PREFIX/opt/libressl/bin"
 # grep
 fish_add_path "$HOMEBREW_PREFIX/opt/grep/libexec/gnubin"
+# sed
+fish_add_path "$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin"
+# awk
+fish_add_path "$HOMEBREW_PREFIX/opt/gawk/libexec/gnubin"
 
 #
 # Node

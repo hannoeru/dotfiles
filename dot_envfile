@@ -16,6 +16,10 @@ add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
 add_to_path "$HOMEBREW_PREFIX/opt/libressl/bin"
 # grep
 add_to_path "$HOMEBREW_PREFIX/opt/grep/libexec/gnubin"
+# sed
+add_to_path "$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin"
+# awk
+add_to_path "$HOMEBREW_PREFIX/opt/gawk/libexec/gnubin"
 
 #
 # Node
