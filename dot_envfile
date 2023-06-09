@@ -75,9 +75,9 @@ add_to_path "$ANDROID_HOME/bin"
 # Java
 #
 
-export SDKMAN_DIR="$HOME/.sdkman"
-if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
-  source "$HOME/.sdkman/bin/sdkman-init.sh"
+export SDKMAN_DIR="$HOMEBREW_PREFIX/opt/sdkman-cli/.sdkman"
+if [ -f "$SDKMAN_DIR/bin/sdkman-init.sh" ]; then
+  source "$SDKMAN_DIR/bin/sdkman-init.sh"
 fi
 
 #
