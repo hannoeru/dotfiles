@@ -30,7 +30,7 @@ alias l="ls"
 alias dotfiles="chezmoi cd"
 
 # pnpm
-alias npx="pnpm dlx"
+# alias npx="pnpm dlx"
 alias u="pnpm update"
 alias nad="pnpm add -D"
 alias na="pnpm add"

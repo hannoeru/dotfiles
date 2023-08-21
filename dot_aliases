@@ -1,8 +1,8 @@
 function alias_if_exists() {
   # Does the alias only if the aliased program is installed
-    if command -v $2 > /dev/null; then
-        alias "$1"="$2"
-    fi
+  if command -v $2 >/dev/null; then
+    alias "$1"="$2"
+  fi
 }
 
 # Better defaults
@@ -24,7 +24,7 @@ alias l="ls"
 alias dotfiles="chezmoi cd"
 
 # pnpm
-alias npx="pnpm dlx $@"
+# alias npx="pnpm dlx $@"
 alias u="pnpm update"
 alias nad="pnpm add -D"
 alias na="pnpm add"
@@ -88,20 +88,19 @@ function pr() {
 }
 
 function clone() {
-  if [[ -z $2 ]] then
+  if [[ -z $2 ]]; then
     gh repo clone "$@" && cd "$(basename "$1" .git)"
   else
     gh repo clone "$@" && cd "$2"
   fi
 }
 
-
 function dir() {
   mkdir $1 && cd $1
 }
 
 function serve() {
-  if [[ -z $1 ]] then
+  if [[ -z $1 ]]; then
     live-server dist
   else
     live-server $1
