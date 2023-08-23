@@ -95,3 +95,11 @@ fi
 if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
   source "$HOME/.iterm2_shell_integration.zsh"
 fi
+
+#
+# Docker
+#
+
+# disable docker buildkit for docker conpose build using podman
+# see: https://github.com/containers/podman/issues/13889
+export DOCKER_BUILDKIT=0
