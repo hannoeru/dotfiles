@@ -69,7 +69,7 @@ add_to_path "$CARGOPATH/bin"
 #
 
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-add_to_path "$ANDROID_HOME/bin"
+add_to_path "$ANDROID_HOME/tools/bin"
 
 #
 # Java

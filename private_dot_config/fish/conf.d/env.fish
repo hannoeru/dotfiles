@@ -59,7 +59,7 @@ fish_add_path "$CARGOPATH/bin"
 #
 
 set -gx ANDROID_HOME "$HOME/Library/Android/sdk"
-fish_add_path "$ANDROID_HOME/bin"
+fish_add_path "$ANDROID_HOME/tools/bin"
 
 #
 # bun
