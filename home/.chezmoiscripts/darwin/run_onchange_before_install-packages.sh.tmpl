@@ -3,21 +3,22 @@
 set -eufo pipefail
 
 {{ $brews := list
-     "curl"
-     "gh"
-     "git"
-     "git-lfs"
-     "gnupg"
-     "jq"
-     "wget" -}}
+"curl"
+"gh"
+"git"
+"git-lfs"
+"gnupg"
+"jq"
+"wget"
+"starship" -}}
 
 {{ $casks := list
-     "google-chrome"
-     "iterm2"
-     "karabiner-elements"
-     "spotify"
-     "visual-studio-code"
-     "1password-cli" -}}
+"google-chrome"
+"iterm2"
+"karabiner-elements"
+"spotify"
+"visual-studio-code"
+"1password-cli" -}}
 
 brew bundle --no-lock --file=/dev/stdin <<EOF
 {{ range ($brews | sortAlpha | uniq) -}}
