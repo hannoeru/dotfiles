@@ -1,7 +1,5 @@
-{{- if (not .ephemeral) -}}
 #!/bin/bash
 
 set -eufo pipefail
 
 chsh -s /usr/bin/zsh
-{{ end -}}
