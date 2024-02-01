@@ -1,4 +1,3 @@
-{{ if (eq .chezmoi.os "darwin") -}}
 #!/bin/bash
 
 set -eufo pipefail
@@ -141,18 +140,16 @@ defaults write com.google.Chrome.canary AppleEnableSwipeNavigateWithScrolls -boo
 ###############################################################################
 
 for app in "Activity Monitor" \
-	"Address Book" \
-	"Calendar" \
-	"cfprefsd" \
-	"Contacts" \
-	"Dock" \
-	"Finder" \
-	"Google Chrome" \
-	"Google Chrome Canary" \
-	"Mail" \
-	"Photos" \
-	"SystemUIServer"; do
-	killall -q "${app}" || true
+  "Address Book" \
+  "Calendar" \
+  "cfprefsd" \
+  "Contacts" \
+  "Dock" \
+  "Finder" \
+  "Google Chrome" \
+  "Google Chrome Canary" \
+  "Mail" \
+  "Photos" \
+  "SystemUIServer"; do
+  killall -q "${app}" || true
 done
-
-{{ end -}}
