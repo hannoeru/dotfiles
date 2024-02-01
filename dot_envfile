@@ -75,7 +75,7 @@ add_to_path "$ANDROID_HOME/tools/bin"
 # Java
 #
 
-export SDKMAN_DIR="$HOMEBREW_PREFIX/opt/sdkman-cli/.sdkman"
+export SDKMAN_DIR="$HOMEBREW_PREFIX/opt/sdkman-cli/libexec"
 if [ -f "$SDKMAN_DIR/bin/sdkman-init.sh" ]; then
   source "$SDKMAN_DIR/bin/sdkman-init.sh"
 fi
