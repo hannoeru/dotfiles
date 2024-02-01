@@ -17,7 +17,7 @@ set -eufo pipefail
      "karabiner-elements"
      "spotify"
      "visual-studio-code"
-     "1password-cli"　-}}
+     "1password-cli" -}}
 
 brew bundle --no-lock --file=/dev/stdin <<EOF
 {{ range ($brews | sortAlpha | uniq) -}}
