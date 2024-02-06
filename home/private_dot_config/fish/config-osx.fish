@@ -8,8 +8,8 @@ alias forks="cd ~/Projects/forks"
 alias wine="wine64"
 alias brewup="brew update; brew upgrade; brew cleanup"
 
-if type -q exa
-  alias l="exa -g --icons"
+if type -q eza
+  alias l="eza -g --icons"
   alias ls="l"
   alias ll="l -l"
   alias lla="ll -a"
