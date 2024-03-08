@@ -12,19 +12,22 @@ set -eufo pipefail
 "wget"
 "starship"
 "eza"
-"fnm"
-"font-meslolgs-nerd-font"
-"font-input" -}}
+"fnm" -}}
 
 {{ $casks := list
-"google-chrome"
+"arc"
+"alt-tab"
+"stats"
 "iterm2"
 "karabiner-elements"
 "spotify"
 "visual-studio-code"
-"1password-cli" -}}
+"1password-cli"
+"font-meslo-lg-nerd-font"
+"font-input" -}}
 
 brew bundle --no-lock --file=/dev/stdin <<EOF
+tap "homebrew/cask-fonts"
 {{ range ($brews | sortAlpha | uniq) -}}
 brew "{{ . }}"
 {{ end -}}
