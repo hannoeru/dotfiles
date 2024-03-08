@@ -43,7 +43,7 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 [credential]
-	helper = /usr/local/bin/git-credential-manager
+	helper = /usr/local/share/gcm-core/git-credential-manager
 [credential "https://dev.azure.com"]
 	useHttpPath = true
 [url "https://github.com/"]
