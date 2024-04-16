@@ -4,4 +4,5 @@ git_protocol: https
 editor: code --wait
 # Aliases allow you to create nicknames for gh commands
 aliases:
-  co: pr checkout
+    co: pr checkout
+version: "1"

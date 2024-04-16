@@ -1,3 +1,1 @@
-for file in $HOME/.config/zsh/conf.d/*; do
-  source $file
-done
+source ~/.config/zsh/conf.d/fnm.zsh
