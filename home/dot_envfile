@@ -35,6 +35,9 @@ add_to_path "$PNPM_HOME"
 # local node_modules
 add_to_path "./node_modules/.bin"
 
+# simple-git-hooks
+export SIMPLE_GIT_HOOKS_RC="$HOME/.simple-git-hooks.rc"
+
 #
 # Python
 #
