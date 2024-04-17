@@ -15,6 +15,10 @@
 	autostash = true
 [commit]
 	gpgsign = true
+[branch]
+  sort = -committerdate
+[column]
+  ui = auto
 [gpg]
 	format = ssh
 [gpg "ssh"]
@@ -30,11 +34,13 @@
 	type = cat-file -t
 	dump = cat-file -p
 	ac = commit -am
+  fpush = push --force-with-lease
 [push]
 	default = current
 	autoSetupRemote = true
 [rerere]
 	enabled = true
+  autoUpdate = true
 [split-diffs]
 	theme-name = github-dark-dim
 [filter "lfs"]
