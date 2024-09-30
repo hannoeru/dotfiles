@@ -55,6 +55,13 @@ defaults write com.apple.dock mineffect -string "scale"
 # Minimize windows into their application's icon
 defaults write com.apple.dock minimize-to-application -bool true
 
+# Auto hide the Dock
+defaults write com.apple.dock autohide -bool true
+# Hide the Dock by setting the autohide-delay to 1000
+defaults write com.apple.dock autohide-delay -float 1000
+# Disable bouncing Dock icons
+defaults write com.apple.dock no-bouncing -bool true
+
 # Add iOS Simulator to Launchpad
 sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app" "/Applications/Simulator.app"
 
