@@ -54,7 +54,7 @@
 	useHttpPath = true
 [url "https://github.com/"]
 	insteadOf = git@github.com:
-[includeIf "gitdir:~/Project/jic/"]
-	path = ~/Project/jic/.gitconfig
+[includeIf "gitdir:~/projects/"]
+	path = ~/projects/.gitconfig
 [hub]
 	protocol = https
