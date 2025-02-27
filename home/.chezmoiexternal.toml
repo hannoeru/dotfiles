@@ -34,6 +34,12 @@ url = "https://github.com/olets/zsh-abbr/archive/master.tar.gz"
 exact = true
 stripComponents = 1
 refreshPeriod = "168h"
+[".oh-my-zsh/custom/plugins/zsh-abbr/zsh-job-queue"]
+type = "archive"
+url = "https://github.com/olets/zsh-job-queue/archive/master.tar.gz"
+exact = true
+stripComponents = 1
+refreshPeriod = "168h"
 [".nano"]
 type = "archive"
 url = "https://github.com/scopatz/nanorc/archive/master.tar.gz"
