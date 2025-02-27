@@ -103,9 +103,8 @@ fi
 # Docker
 #
 
-# disable docker buildkit for docker conpose build using podman
-# see: https://github.com/containers/podman/issues/13889
-# export DOCKER_BUILDKIT=0
+# Force enable docker buildkit
+export DOCKER_BUILDKIT=1
 # init Orbstack command-line tools and integration
 if [ -f "$HOME/.orbstack/shell/init.zsh" ]; then
   source "$HOME/.orbstack/shell/init.zsh"
