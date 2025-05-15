@@ -9,6 +9,6 @@ ignore-workspace-root-check=true
 @justincase-jp:registry="https://npm.pkg.github.com"
 
 {{- if eq .chezmoi.hostname "Han-MBP" }}
-//registry.npmjs.org/:_authToken={{ (onepasswordItemFields "ncpwdcg66lffachhqtfsitfa6q").HanMBP.value }}
-//npm.pkg.github.com/:_authToken={{ (onepasswordItemFields "kbimkjc3vear3pxzrbhkpgc7lu").HanMBP.value }}
+//registry.npmjs.org/:_authToken={{ onepasswordRead "op://Private/Npmjs - hannoeru/Personal access tokens/HanMBP" }}
+//npm.pkg.github.com/:_authToken={{ onepasswordRead "op://Private/github.com/Personal access tokens/HanMBP" }}
 {{- end }}
