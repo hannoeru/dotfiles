@@ -109,3 +109,8 @@ export DOCKER_BUILDKIT=1
 if [ -f "$HOME/.orbstack/shell/init.zsh" ]; then
   source "$HOME/.orbstack/shell/init.zsh"
 fi
+
+#
+# Krew (Kubernetes plugin manager)
+#
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
