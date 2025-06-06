@@ -113,4 +113,6 @@ fi
 #
 # Krew (Kubernetes plugin manager)
 #
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+if [ -d "${KREW_ROOT:-$HOME/.krew}" ]; then
+  add_to_path "${KREW_ROOT:-$HOME/.krew}/bin"
+fi
