@@ -27,6 +27,7 @@ plugins=(
   zsh-history-substring-search
   zsh-abbr
   zsh-z
+  kubectl
 )
 
 source $ZSH/oh-my-zsh.sh
