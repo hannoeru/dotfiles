@@ -7,12 +7,14 @@
       "Bash(mv:*)",
       "Bash(grep:*)",
       "Bash(npm:*)",
+      "Bash(pnpm:*)",
       "Bash(ls:*)",
       "Bash(cp:*)",
       "Write",
       "Edit",
       "Bash(chmod:*)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(gh:*)"
     ],
     "deny": []
   },
