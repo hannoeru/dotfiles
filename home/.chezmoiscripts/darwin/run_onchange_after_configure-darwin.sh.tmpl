@@ -8,7 +8,11 @@ set -eufo pipefail
 defaults write NSGlobalDomain AppleInterfaceStyle Dark
 
 # Set languages and formats
+{{- if eq .chezmoi.hostname "Han-MBP" }}
 defaults write NSGlobalDomain AppleLanguages -array "ja-JP" "en-JP" "zh-Hant-JP"
+{{- else }}
+defaults write NSGlobalDomain AppleLanguages -array "en-US" "ja-JP" "zh-Hant-JP"
+{{- end }}
 defaults write NSGlobalDomain AppleLocale "ja_JP@currency=JPY"
 defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleTemperatureUnit -string "Celsius"
@@ -41,6 +45,31 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 # Turn off changing file extension warning
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+# Show path bar in the bottom of the Finder windows
+defaults write com.apple.finder "ShowPathbar" -bool "true"
+
+# Set the default view style for folders without custom setting (List view)
+defaults write com.apple.finder "FXPreferredViewStyle" -string "Nlsv"
+
+# Keep folders on top when sorting by name 
+defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
+
+# Set the default search scope when performing a search (current folder)
+defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf"
+
+# Choose whether to display a warning when changing a file extension.
+defaults write com.apple.finder "FXEnableExtensionChangeWarning" -bool "false"
+
+# Keep folders on top when sorting
+defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true"
+
+###############################################################################
+# Menu Bar                                                                    #
+###############################################################################
+
+# Set the clock to analog clock
+defaults write com.apple.menuextra.clock "IsAnalog" -bool "true"
 
 ###############################################################################
 # Dock, Dashboard                                                             #
