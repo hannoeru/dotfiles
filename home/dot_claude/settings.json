@@ -25,7 +25,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run .claude/hooks/pre_tool_use.py"
+            "command": "uv run $HOME/.claude/hooks/pre_tool_use.py"
           }
         ]
       }
