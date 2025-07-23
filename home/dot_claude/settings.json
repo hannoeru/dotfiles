@@ -12,9 +12,15 @@
       "Bash(cp:*)",
       "Write",
       "Edit",
+      "List",
       "Bash(chmod:*)",
       "Bash(touch:*)",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Bash(helm unittest:*)",
+      "Bash(ct lint:*)",
+      "Bash(kubectl get:*)",
+      "Bash(kubectl describe:*)",
+      "Bash(make:*)"
     ],
     "deny": []
   },
