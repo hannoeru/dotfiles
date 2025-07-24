@@ -1,14 +1,10 @@
 prefix=${HOME}/.npm-global
-global-dir=${HOME}/Library/pnpm/global
 
-init-author-name=Han
+init-author-name=hannoeru
 init-author-email=me@hanlee.co
 
-ignore-workspace-root-check=true
-
-@justincase-jp:registry="https://npm.pkg.github.com"
-
-{{- if eq .chezmoi.hostname "Han-MBP" }}
+{{ $computerName := output "scutil" "--get" "ComputerName" | trim }}
+{{- if eq $computerName "Han-MBP" }}
 //registry.npmjs.org/:_authToken={{ onepasswordRead "op://Private/Npmjs - hannoeru/Personal access tokens/HanMBP" }}
 //npm.pkg.github.com/:_authToken={{ onepasswordRead "op://Private/github.com/Personal access tokens/HanMBP" }}
 {{- end }}

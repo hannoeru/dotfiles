@@ -8,7 +8,8 @@ set -eufo pipefail
 defaults write NSGlobalDomain AppleInterfaceStyle Dark
 
 # Set languages and formats
-{{- if eq .chezmoi.hostname "Han-MBP" }}
+{{ $computerName := output "scutil" "--get" "ComputerName" | trim }}
+{{- if eq $computerName "Han-MBP" }}
 defaults write NSGlobalDomain AppleLanguages -array "ja-JP" "en-JP" "zh-Hant-JP"
 {{- else }}
 defaults write NSGlobalDomain AppleLanguages -array "en-US" "ja-JP" "zh-Hant-JP"
