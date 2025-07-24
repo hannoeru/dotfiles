@@ -1,6 +1,12 @@
 {
   "permissions": {
     "allow": [
+      "Edit",
+      "List",
+      "MultiEdit",
+      "WebFetch",
+      "WebSearch",
+      "Write",
       "Bash(mkdir:*)",
       "Bash(uv:*)",
       "Bash(find:*)",
@@ -10,9 +16,6 @@
       "Bash(pnpm:*)",
       "Bash(ls:*)",
       "Bash(cp:*)",
-      "Write",
-      "Edit",
-      "List",
       "Bash(chmod:*)",
       "Bash(touch:*)",
       "Bash(gh:*)",
