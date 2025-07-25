@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+echo "Setting up Node.js environment..."
+
+# Install and use latest LTS Node.js with fnm
+if command -v fnm &> /dev/null; then
+    echo "Installing and using latest LTS Node.js..."
+    fnm install --lts --use
+    fnm default lts-latest
+    
+    # Source fnm to make node available in current session
+    eval "$(fnm env --use-on-cd --shell bash --corepack-enabled)"
+    corepack enable
+    corepack install -g pnpm@latest
+else
+    echo "fnm not found, please install it first"
+    exit 1
+fi
+
+# Install global npm packages from chezmoidata
+echo "Installing global npm packages..."
+pnpm add -g {{- range .packages.darwin.pnpm_globals }} {{ . | quote }}{{ end }}
+
+echo "Node.js environment setup complete!"
+echo "Node version: $(node --version)"
+echo "npm version: $(npm --version)"
+echo "pnpm version: $(pnpm --version)"

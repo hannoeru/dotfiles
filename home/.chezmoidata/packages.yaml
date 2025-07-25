@@ -79,3 +79,9 @@ packages:
       - "webex"
       - "zed"
       - "zoom"
+
+    pnpm_globals:
+      - "@antfu/ni"
+      - "@anthropic-ai/claude-code"
+      - "tsx"
+      - "taze"
