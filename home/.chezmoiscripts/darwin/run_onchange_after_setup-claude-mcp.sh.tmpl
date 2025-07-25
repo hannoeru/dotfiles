@@ -1,0 +1,60 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+# Claude Code MCP Servers Setup Script
+# This script configures MCP servers for Claude Code based on .chezmoidata configuration
+
+echo "Setting up Claude Code MCP servers..."
+
+# Ensure Claude Code is installed
+if ! command -v claude &> /dev/null; then
+    echo "Error: Claude Code is not installed or not in PATH"
+    exit 1
+fi
+
+# Function to add MCP server if not already configured
+add_mcp_server() {
+    local server_name="$1"
+    local config="$2"
+    local description="$3"
+    
+    echo "Adding MCP server: $server_name ($description)"
+    
+    # Use claude mcp add-json to add the server
+    claude mcp add-json -s {{ .settings.default_scope | default "user" }} "$server_name" "$config" || {
+        echo "Warning: Failed to add $server_name, it may already exist"
+    }
+}
+
+# Install MCP servers
+{{- range $name, $server := .mcpServers }}
+{{- if $server.enabled }}
+
+# {{ $server.name }}: {{ $server.description }}
+{{ $server.name | upper | replace "-" "_" }}_CONFIG='{
+  "type": "{{ $server.type }}",
+  "command": "{{ $server.command }}",
+  "args": {{ $server.args | toJson }},
+  "env": {{ $server.env | toJson }}
+}'
+add_mcp_server "{{ $server.name }}" "${{ $server.name | upper | replace "-" "_" }}_CONFIG" "{{ $server.description }}"
+{{- end }}
+{{- end }}
+
+
+echo ""
+echo "Claude Code MCP servers setup completed!"
+echo ""
+echo "Installed MCP servers:"
+{{- range $name, $server := .mcpServers }}
+{{- if $server.enabled }}
+echo "  - {{ $server.name }}: {{ $server.description }}"
+{{- end }}
+{{- end }}
+
+echo ""
+echo "Next steps:"
+echo "  1. Restart Claude Code to load the new MCP servers"
+echo "  2. Use 'claude mcp list' to verify installation"
+echo "  3. Type '/' in Claude Code to see available MCP commands"

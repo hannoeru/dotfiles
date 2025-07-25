@@ -1,0 +1,32 @@
+mcpServers:
+  sequential-thinking:
+    name: "sequential-thinking"
+    description: "Advanced reasoning capabilities for complex multi-step problems"
+    type: "stdio"
+    command: "pnpx"
+    args: ["@modelcontextprotocol/server-sequential-thinking"]
+    env: {}
+    enabled: true
+
+  puppeteer:
+    name: "puppeteer"
+    description: "Web browser automation for screenshots, clicking, filling forms"
+    type: "stdio"
+    command: "pnpx"
+    args: ["@modelcontextprotocol/server-puppeteer"]
+    env: {}
+    enabled: true
+
+  context7:
+    name: "context7"
+    description: "Access to library documentation and code examples"
+    type: "stdio"
+    command: "pnpx"
+    args: ["context7-mcp"]
+    env: {}
+    enabled: true
+
+# Server management settings
+settings:
+  # Scope for new servers (user, project)
+  default_scope: "user"
