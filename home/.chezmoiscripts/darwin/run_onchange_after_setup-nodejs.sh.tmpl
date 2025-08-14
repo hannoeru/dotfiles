@@ -7,7 +7,7 @@ echo "Setting up Node.js environment..."
 # Install and use latest LTS Node.js with fnm
 if command -v fnm &> /dev/null; then
     echo "Installing and using latest LTS Node.js..."
-    fnm install --lts --use
+    fnm install --lts
     fnm default lts-latest
     
     # Source fnm to make node available in current session
