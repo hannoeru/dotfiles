@@ -38,8 +38,8 @@ if [ -f ~/.aliases ]; then
 fi
 
 # load configs
-for file in $HOME/.config/zsh/conf.d/*; do
-  source $file
+for file in $HOME/.config/zsh/conf.d/*.zsh; do
+  [ -r "$file" ] && source "$file"
 done
 
 # load os specific config
@@ -48,7 +48,7 @@ case $(uname) in
 esac
 
 # init starship
-if which starship >/dev/null 2>&1; then
+if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
 
