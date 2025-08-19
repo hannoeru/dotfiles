@@ -22,12 +22,12 @@ plugins=(
   aliases
   brew
   macos
-  zsh-autosuggestions
-  zsh-syntax-highlighting
-  zsh-history-substring-search
   zsh-abbr
   zsh-z
   kubectl
+  zsh-history-substring-search
+  zsh-autosuggestions
+  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
