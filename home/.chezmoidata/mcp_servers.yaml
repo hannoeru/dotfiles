@@ -22,7 +22,7 @@ mcpServers:
     description: "Access to library documentation and code examples"
     type: "stdio"
     command: "pnpx"
-    args: ["context7-mcp"]
+    args: ["@upstash/context7-mcp"]
     env: {}
     enabled: true
 
