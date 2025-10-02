@@ -19,15 +19,9 @@ HIST_STAMPS="yyyy/mm/dd"
 
 # on-my-zsh plugins
 plugins=(
-  aliases
-  brew
-  macos
-  zsh-abbr
-  zsh-z
-  kubectl
-  zsh-history-substring-search
-  zsh-autosuggestions
-  zsh-syntax-highlighting
+{{- range .zshPlugins }}
+  {{ . }}
+{{- end }}
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -42,10 +36,10 @@ for file in $HOME/.config/zsh/conf.d/*.zsh; do
   [ -r "$file" ] && source "$file"
 done
 
+{{- if eq .chezmoi.os "darwin" }}
 # load os specific config
-case $(uname) in
-"Darwin") source $HOME/.config/zsh/config-osx.zsh ;;
-esac
+source $HOME/.config/zsh/config-osx.zsh
+{{- end }}
 
 # init starship
 if command -v starship >/dev/null 2>&1; then
