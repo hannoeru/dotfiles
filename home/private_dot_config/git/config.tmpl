@@ -1,7 +1,9 @@
 [user]
-  name = hanlee
-  email = me@hanlee.co
-  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOuV2oRxBdZb+hH1+YDZChCCFuwHYDgFFekZtGwKTvjd
+  name = {{ .name }}
+  email = {{ .email }}
+{{- if eq .chezmoi.os "darwin" }}
+  signingkey = {{ onepasswordRead "op://Private/GitHub SSH Key/public key" }}
+{{- end }}
 [core]
   editor = code --wait
   excludesfile = ~/.config/git/ignore
@@ -57,11 +59,13 @@
   autostash = true
   updateRefs = true
 
+{{- if eq .chezmoi.os "darwin" -}}
 # GPG signing
 [gpg]
   format = ssh
 [gpg "ssh"]
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+{{- end }}
 
 # Aliases
 [alias]
@@ -84,7 +88,13 @@
 
 # Credentials
 [credential]
-  helper = /usr/local/share/gcm-core/git-credential-manager
+{{- if .wsl }}
+  helper = "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe"
+{{- end }}
+{{- $helper := lookPath "git-credential-manager" }}
+{{- if $helper }}
+  helper = {{ $helper }}
+{{- end }}
 [credential "https://dev.azure.com"]
   useHttpPath = true
 [url "https://github.com/"]

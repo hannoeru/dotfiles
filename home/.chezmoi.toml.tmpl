@@ -2,6 +2,7 @@
 {{- $ephemeral := false -}}{{/* true if this machine is ephemeral, e.g. a cloud or VM instance */}}
 {{- $work := false -}}{{/* true if this machine is a work machine */}}
 {{- $headless := false -}}{{/* true if this machine does not have a screen and keyboard */}}
+{{- $wsl := false -}}{{/* true if this machine is WSL */}}
 {{- $personal := false -}}{{/* true if this machine should have personal secrets */}}
 {{- "" -}}
 
@@ -10,11 +11,20 @@
 {{-   $osID = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
 
-{{/* detect GitHub codespaces, VSCode remote containers, Docker containers, Multipass VMs, WSL, and Vagrant boxes */}}
-{{- if or (env "CODESPACES") (env "REMOTE_CONTAINERS_IPC") (eq .chezmoi.username "root" "ubuntu" "vagrant" "vscode") (stat "/usr/bin/wslinfo") -}}
+{{/* detect GitHub codespaces, VSCode remote containers, Docker containers, Multipass VMs, and Vagrant boxes */}}
+{{- if or (env "CODESPACES") (env "REMOTE_CONTAINERS_IPC") (eq .chezmoi.username "root" "ubuntu" "vagrant" "vscode") -}}
 {{-   $ephemeral = true -}}
 {{-   $headless = true -}}
 {{- end -}}
+
+{{/* detect Windows Subsystem for Linux (WSL) */}}
+{{- if eq .chezmoi.os "linux" }}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+{{-     $ephemeral = true -}}
+{{-     $headless = true -}}
+{{-     $wsl = true -}}
+{{-   end }}
+{{- end }}
 
 {{/* work around unreliable hostname on darwin */}}
 {{- $hostname := .chezmoi.hostname -}}
@@ -43,9 +53,20 @@
 {{-   end -}}
 {{- end -}}
 
+
+{{- $name := "Han" -}}
+{{- $email := "me@hanlee.co" -}}
+{{- if $work -}}
+{{-   $name = "" -}}
+{{-   $email = "" -}}
+{{- end -}}
+
 [data]
+  name = {{ $name | quote }}
+  email = {{ $email | quote }}
   ephemeral = {{ $ephemeral }}
   work = {{ $work }}
+  wsl = {{ $wsl }}
   headless = {{ $headless }}
   hostname = {{ $hostname | quote }}
   personal = {{ $personal }}
