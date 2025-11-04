@@ -5,6 +5,7 @@ theme = dark:vitesse-dark,light:vitesse-light
 font-family = "MesloLGS Nerd Font Mono"
 font-size = 14
 font-thicken = true
+font-synthetic-style = true
 
 # Window Settings
 window-padding-x = 10
