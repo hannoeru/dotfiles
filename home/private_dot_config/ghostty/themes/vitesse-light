@@ -1,0 +1,35 @@
+# Converted from https://github.com/HiDeoo/iTerm2-theme-vitesse under MIT License
+
+# Vitesse Light
+
+# Background and Foreground
+background = #ffffff
+foreground = #393a34
+
+# Cursor
+cursor-color = #393a34
+cursor-text = #ffffff
+
+# Selection
+selection-background = #1c6b48
+selection-foreground = #ffffff
+
+# ANSI Colors (0-7)
+palette = 0=#121212
+palette = 1=#ab5959
+palette = 2=#1e754f
+palette = 3=#bda437
+palette = 4=#296aa3
+palette = 5=#a13865
+palette = 6=#2993a3
+palette = 7=#dbdaca
+
+# Bright ANSI Colors (8-15)
+palette = 8=#aaaaaa
+palette = 9=#ab5959
+palette = 10=#1e754f
+palette = 11=#bda437
+palette = 12=#296aa3
+palette = 13=#a13865
+palette = 14=#2993a3
+palette = 15=#dddddd
