@@ -29,6 +29,10 @@ copy-on-select = false
 clipboard-read = allow
 clipboard-write = allow
 
+# Shell
+shell-integration = detect
+shell-integration-features = true
+
 # Performance
 unfocused-split-opacity = 0.8
 confirm-close-surface = false
