@@ -2,7 +2,8 @@ README.md
 Makefile
 install.sh
 *.deb
-.oh-my-zsh/cache/**
+.oh-my-zsh
+.antidote
 
 {{ if ne .chezmoi.os "darwin" }}
 .ssh

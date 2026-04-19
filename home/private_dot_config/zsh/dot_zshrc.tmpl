@@ -1,50 +1,46 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+setopt HIST_SAVE_NO_DUPS
+setopt INC_APPEND_HISTORY
+setopt PUSHD_IGNORE_DUPS
 
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# Move to directories without cd
+setopt autocd
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME=""
+# Completion
+autoload -Uz compinit
+compinit
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-DISABLE_AUTO_UPDATE="true"
-
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-HIST_STAMPS="yyyy/mm/dd"
-
-# on-my-zsh plugins
-plugins=(
-{{- range .zshPlugins }}
-  {{ . }}
+# Antidote plugin manager
+function is-macos() { [[ $OSTYPE == darwin* ]] }
+{{- if eq .chezmoi.os "linux" }}
+function is-linux() { [[ $OSTYPE == linux* ]] }
 {{- end }}
-)
 
-source $ZSH/oh-my-zsh.sh
+source $HOME/.antidote/antidote.zsh
+antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
 
-# aliases
-if [ -f ~/.aliases ]; then
-  source ~/.aliases
+# Init zoxide
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
 fi
 
-# load configs
-for file in $HOME/.config/zsh/conf.d/*.zsh; do
-  [ -r "$file" ] && source "$file"
-done
-
-{{- if eq .chezmoi.os "darwin" }}
-# load os specific config
-source $HOME/.config/zsh/config-osx.zsh
-{{- end }}
-
-# init starship
+# Init starship prompt
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
 
-# Ensure path arrays do not contain duplicates.
+# Load custom configs (includes config-osx.zsh on macOS)
+for file in $HOME/.config/zsh/conf.d/*.zsh; do
+  [ -r "$file" ] && source "$file"
+done
+
+# Load aliases
+if [ -f ~/.aliases ]; then
+  source ~/.aliases
+fi
+
+# Deduplicate paths
 typeset -gU cdpath fpath mailpath path
