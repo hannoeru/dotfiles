@@ -14,20 +14,9 @@ alias_if_exists 'vim' 'nvim'
 
 # ssh
 alias sshlink='ssh-copy-id -i ~/.ssh/id_rsa.pub'
-alias sshconfig='nano ~/.ssh/config'
 
 # common
-alias up="cd ../"
-alias la="ls -a"
-alias lla="ls -al"
-alias l="ls"
 alias dotfiles="chezmoi cd"
-
-# pnpm
-# alias npx="pnpm dlx $@"
-alias u="pnpm update"
-alias nad="pnpm add -D"
-alias na="pnpm add"
 
 # update npm deps
 alias udeps="taze major -rwu"
@@ -48,7 +37,7 @@ alias lintf="nr lint --fix"
 alias release="nr release"
 alias re="nr release"
 alias sb="nr storybook"
-alias bsb="pnpm build-storybook"
+alias bsb="nr build-storybook"
 
 # vite
 alias cva="pnpm dlx create-vite"
@@ -69,15 +58,6 @@ alias dcb="docker compose build"
 alias dckill="docker compose kill"
 alias docker-compsoe="docker compose $@"
 
-# Python
-alias py="python $@"
-alias prp="pipenv run python $@"
-alias ps="pipenv shell"
-alias pi="pipenv install $@"
-alias pu="pipenv uninstall $@"
-alias pg="pipenv graph"
-alias prm="pipenv --rm"
-
 # github
 function pr() {
   if [ $1 = "ls" ]; then
@@ -97,14 +77,6 @@ function clone() {
 
 function dir() {
   mkdir $1 && cd $1
-}
-
-function serve() {
-  if [[ -z $1 ]]; then
-    live-server dist
-  else
-    live-server $1
-  fi
 }
 
 # Open Files
