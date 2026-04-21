@@ -2,3 +2,4 @@
 .config/zsh/config-osx.zsh
 .config/zsh/abbreviations
 .config/fish/config-osx.zsh
+.config/iterm/com.googlecode.iterm2.plist
