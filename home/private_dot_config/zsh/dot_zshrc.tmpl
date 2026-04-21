@@ -9,10 +9,6 @@ setopt PUSHD_IGNORE_DUPS
 # Move to directories without cd
 setopt autocd
 
-# Completion
-autoload -Uz compinit
-compinit
-
 # Antidote plugin manager
 function is-macos() { [[ $OSTYPE == darwin* ]] }
 {{- if eq .chezmoi.os "linux" }}
