@@ -91,16 +91,15 @@ if [ -z "$BASH" ]; then
   alias -s {cs,js,ts,html}=code
 fi
 
-{{- if eq .chezmoi.os "darwin" }}
-alias dl="cd ~/Downloads"
-alias p="nr preview"
-alias forks="cd ~/Projects/forks"
-alias brewup='brew update; brew upgrade; brew cleanup'
-
 if which eza >/dev/null 2>&1; then
   alias l="eza -g --icons"
   alias ls="l"
   alias ll="l -l"
   alias lla="ll -a"
 fi
+
+{{- if eq .chezmoi.os "darwin" }}
+alias dl="cd ~/Downloads"
+alias p="cd ~/Projects"
+alias forks="cd ~/Projects/forks"
 {{- end }}
