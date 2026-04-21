@@ -38,9 +38,3 @@ set -gx LS_COLORS gxBxhxDxfxhxhxhxhxcxcx
 
 # less
 set -gx LESS "-F -g -i -M -R -S -w -X -z-4"
-
-# load OS specific configs
-switch (uname)
-  case Darwin
-    source (dirname (status --current-filename))/config-osx.fish
-end
