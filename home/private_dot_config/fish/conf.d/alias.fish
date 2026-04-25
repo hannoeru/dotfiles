@@ -29,13 +29,6 @@ alias lla="ls -al"
 alias l="ls"
 alias dotfiles="chezmoi cd"
 
-# pnpm
-# alias npx="pnpm dlx"
-alias u="pnpm update"
-alias nad="pnpm add -D"
-alias na="pnpm add"
-alias pnpmu="pnpm i -g pnpm"
-
 # update npm deps
 alias udeps="taze major -rwu"
 
@@ -55,7 +48,7 @@ alias lintf="nr lint --fix"
 alias release="nr release"
 alias re="nr release"
 alias sb="nr storybook"
-alias bsb="pnpm build-storybook"
+alias bsb="nr build-storybook"
 
 # vite
 alias cva="pnpm dlx create-vite"
@@ -76,15 +69,6 @@ alias dcd="docker compose down"
 alias dcb="docker compose build"
 alias dckill="docker compose kill"
 alias docker-compose="docker compose"
-
-# python
-alias py="python"
-alias prp="pipenv run python"
-alias ps="pipenv shell"
-alias pi="pipenv install"
-alias pu="pipenv uninstall"
-alias pg="pipenv graph"
-alias prm="pipenv --rm"
 
 # github
 function pr --wraps gh --description 'gh pr list or checkout'
