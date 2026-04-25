@@ -1,3 +1,4 @@
+.config/zsh/conf.d/alias.zsh
 .config/zsh/conf.d/config-osx.zsh
 .config/zsh/config-osx.zsh
 .config/zsh/abbreviations
