@@ -92,14 +92,6 @@ if [ -f "$HOME/.phpbrew/bashrc" ]; then
 fi
 
 #
-# iTerm2
-#
-
-if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
-  source "$HOME/.iterm2_shell_integration.zsh"
-fi
-
-#
 # Docker
 #
 
