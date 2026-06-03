@@ -37,7 +37,6 @@ packages:
       - "figma"
       - "firefox"
       - "firefox@developer-edition"
-      - "flutter"
       - "font-input"
       - "font-meslo-lg-nerd-font"
       - "font-monaspace"
