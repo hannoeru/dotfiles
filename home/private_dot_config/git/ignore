@@ -21,4 +21,6 @@ venv
 node_modules
 .sass-cache
 
+# AI stuff
+.pi-lens
 **/.claude/settings.local.json
