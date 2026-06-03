@@ -67,7 +67,6 @@ packages:
       - "quicklook-video"
       - "quicklookase"
       - "raycast"
-      - "rectangle"
       - "slack"
       - "spotify"
       - "stats"
