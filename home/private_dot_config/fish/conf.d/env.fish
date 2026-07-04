@@ -24,7 +24,7 @@ fish_add_path "$HOME/.npm-global/bin"
 
 # pnpm
 set -gx PNPM_HOME "$HOME/Library/pnpm"
-fish_add_path "$PNPM_HOME"
+fish_add_path "$PNPM_HOME/bin"
 
 # simple-git-hooks
 set -gx SIMPLE_GIT_HOOKS_RC="$HOME/.simple-git-hooks.rc"
