@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+# Re-run when the pi package manifest or lockfile changes.
+# package.json hash: {{ include (joinPath .chezmoi.homeDir ".pi" "package.json") | sha256sum }}
+# pnpm-lock.yaml hash: {{ include (joinPath .chezmoi.homeDir ".pi" "pnpm-lock.yaml") | sha256sum }}
+# pnpm-workspace.yaml hash: {{ include (joinPath .chezmoi.homeDir ".pi" "pnpm-workspace.yaml") | sha256sum }}
+
+echo "Installing pi dependencies..."
+
+# Make node/pnpm available in this session.
+if command -v fnm &> /dev/null; then
+    eval "$(fnm env --use-on-cd --shell bash --corepack-enabled)"
+fi
+
+cd "{{ .chezmoi.homeDir }}/.pi"
+pnpm install
+
+echo "pi dependencies installed."
