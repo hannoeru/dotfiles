@@ -10,7 +10,7 @@ packages:
       - "docker"
       - "docker-credential-helper"
       - "eza"
-      - "fnm"
+      - "mise"
       - "gh"
       - "git"
       - "git-filter-repo"
@@ -62,8 +62,3 @@ packages:
       - "switchresx"
       - "syntax-highlight"
       - "visual-studio-code"
-
-    pnpm_globals:
-      - "@antfu/ni"
-      - "tsx"
-      - "taze"

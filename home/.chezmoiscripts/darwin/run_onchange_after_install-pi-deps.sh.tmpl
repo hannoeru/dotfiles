@@ -10,9 +10,11 @@ set -eufo pipefail
 echo "Installing pi dependencies..."
 
 # Make node/pnpm available in this session.
-if command -v fnm &> /dev/null; then
-    eval "$(fnm env --use-on-cd --shell bash --corepack-enabled)"
+if ! command -v mise &> /dev/null; then
+    echo "mise not found, please install it first"
+    exit 1
 fi
+eval "$(mise activate bash)"
 
 cd "{{ .chezmoi.homeDir }}/.pi"
 pnpm install

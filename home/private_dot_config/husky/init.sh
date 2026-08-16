@@ -1,1 +1,1 @@
-source ~/.config/zsh/conf.d/fnm.zsh
+source ~/.config/zsh/conf.d/mise.zsh

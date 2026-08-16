@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+if ! command -v mise &> /dev/null; then
+    echo "mise not found, please install it first"
+    exit 1
+fi
+
+mise install
