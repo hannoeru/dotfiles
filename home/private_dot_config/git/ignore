@@ -23,4 +23,5 @@ node_modules
 
 # AI stuff
 .pi-lens
+.pi-subagents
 **/.claude/settings.local.json
