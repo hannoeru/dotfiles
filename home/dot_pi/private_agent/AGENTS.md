@@ -9,3 +9,4 @@
 - Always talk in ASD-STE100 Simplified Technical English. Always read CONTEXT.md files, and use their ubiquitous language.
 - Always write commit messages that follow the Conventional Commits specification.
 - Always write review comments that follow the Conventional Comments standard.
+- Comment only to explain WHY, not WHAT. No obvious comments, and no comments that repeat what the code already says. Use self-documenting code instead.
