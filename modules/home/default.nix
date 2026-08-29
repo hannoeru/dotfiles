@@ -24,6 +24,7 @@ let
     ripgrep
     tmux
     unzip
+    uv
     wget
     zsh-completions
   ];
