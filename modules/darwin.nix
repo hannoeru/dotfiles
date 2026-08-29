@@ -1,22 +1,61 @@
 # Shared nix-darwin system configuration for all Macs.
-#
-# `machine` describes the target machine:
-#   hostname  - host name, also the flake configuration name
-#   username  - login name of the primary user
-#   languages - preferred UI languages, most preferred first
-#   personal  - whether this machine may read personal secrets from 1Password
-#   name      - git user name
-#   email     - git user email
-machine:
-{ config, pkgs, lib, antidote, nanorc, ... }:
-
+# Machine facts come from machines.nix via the `machine` module argument.
 {
+  config,
+  pkgs,
+  lib,
+  machine,
+  nanorc,
+  ...
+}:
+
+let
+  sharedCasks = [
+    "1password"
+    "1password-cli"
+    "alt-tab"
+    "appcleaner"
+    "bettertouchtool"
+    "cursor"
+    "figma"
+    "firefox"
+    "firefox@developer-edition"
+    "font-input"
+    "font-meslo-lg-nerd-font"
+    "font-monaspace"
+    "gcloud-cli"
+    "google-chrome"
+    "google-chrome@canary"
+    "google-japanese-ime"
+    "input-source-pro"
+    "ghostty"
+    "karabiner-elements"
+    "orbstack"
+    "qlmarkdown"
+    "qlstephen"
+    "quicklook-csv"
+    "quicklook-video"
+    "quicklookase"
+    "raycast"
+    "slack"
+    "stats"
+    "switchresx"
+    "syntax-highlight"
+    "visual-studio-code"
+  ];
+
+  personalCasks = [
+    "google-drive"
+    "keka"
+    "spotify"
+  ];
+in
+{
+  nixpkgs.hostPlatform = "aarch64-darwin";
   # The host name is not managed when unset; the machine keeps its own.
   networking.hostName = machine.hostname or null;
   system.primaryUser = machine.username;
   system.stateVersion = 7;
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   users.users.${machine.username} = {
     name = machine.username;
@@ -24,6 +63,23 @@ machine:
     shell = pkgs.zsh;
   };
   environment.shells = [ pkgs.zsh ];
+
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+  nix.optimise.automatic = true;
+  nix.gc = {
+    automatic = true;
+    interval = [
+      {
+        Weekday = 0;
+        Hour = 2;
+        Minute = 0;
+      }
+    ];
+    options = "--delete-older-than 30d";
+  };
 
   system.defaults = {
     NSGlobalDomain = {
@@ -55,7 +111,8 @@ machine:
     };
 
     screencapture = {
-      location = "~/Desktop/Screenshots";
+      # Absolute path: macOS does not expand ~ in this preference.
+      location = "/Users/${machine.username}/Desktop/Screenshots";
       type = "png";
     };
 
@@ -96,8 +153,9 @@ machine:
     };
   };
 
-  # Per-host preference, not exposed as a typed option.
-  system.activationScripts.imageCaptureDefaults.text = ''
+  # Per-host preference without a typed option. Must run inside one of the
+  # enumerated activation scripts; custom names are never invoked.
+  system.activationScripts.postActivation.text = ''
     uid="$(id -u ${machine.username})"
     launchctl asuser "$uid" sudo -u ${machine.username} \
       defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
@@ -120,54 +178,16 @@ machine:
       "grep"
     ];
 
-    casks = [
-      "1password"
-      "1password-cli"
-      "alt-tab"
-      "appcleaner"
-      "bettertouchtool"
-      "cursor"
-      "figma"
-      "firefox"
-      "firefox@developer-edition"
-      "font-input"
-      "font-meslo-lg-nerd-font"
-      "font-monaspace"
-      "gcloud-cli"
-      "google-chrome"
-      "google-chrome@canary"
-      "google-drive"
-      "google-japanese-ime"
-      "input-source-pro"
-      "ghostty"
-      "karabiner-elements"
-      "keka"
-      "orbstack"
-      "qlmarkdown"
-      "qlstephen"
-      "quicklook-csv"
-      "quicklook-video"
-      "quicklookase"
-      "raycast"
-      "slack"
-      "spotify"
-      "stats"
-      "switchresx"
-      "syntax-highlight"
-      "visual-studio-code"
-    ];
-
+    casks = sharedCasks ++ lib.optionals machine.personal personalCasks;
   };
 
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit antidote nanorc; };
-    users.${machine.username} = { config, ... }: {
-      imports = [
-        (import ./home (machine // { os = "darwin"; }))
-      ];
+    extraSpecialArgs = { inherit machine nanorc; };
+    users.${machine.username} = {
+      imports = [ ./home ];
     };
   };
 }

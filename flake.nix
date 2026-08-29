@@ -14,84 +14,78 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    antidote = {
-      url = "github:mattmc3/antidote";
-      flake = false;
-    };
-
     nanorc = {
       url = "github:scopatz/nanorc";
       flake = false;
     };
   };
 
-  outputs = { self, nixpkgs, nix-darwin, home-manager, antidote, nanorc }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nix-darwin,
+      home-manager,
+      nanorc,
+    }:
     let
-      darwinSystem = "aarch64-darwin";
+      lib = nixpkgs.lib;
+      machines = import ./machines.nix;
 
-      mkHome = { system, machine }: home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${system};
-        extraSpecialArgs = { inherit antidote nanorc; };
-        modules = [
-          (import ./modules/home machine)
-        ];
-      };
-
-      homeMachines = {
-        # Personal headless Linux box.
-        "hanlee@ubuntu" = {
-          username = "hanlee";
-          personal = true;
-          name = "Han";
-          email = "me@hanlee.co";
+      mkHome =
+        { system, machine }:
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.${system};
+          extraSpecialArgs = { inherit machine nanorc; };
+          modules = [ ./modules/home ];
         };
-        # Ephemeral machines (containers, devcontainers, WSL).
-        hanlee = {
-          username = "hanlee";
-          personal = false;
-          name = "Han";
-          email = "me@hanlee.co";
-        };
-      };
-
-      homeConfigurations =
-        let
-          forMachine = name: machine: {
-            "${name}" = mkHome {
-              system = "x86_64-linux";
-              machine = machine // { os = "linux"; };
-            };
-            "${name}-aarch64" = mkHome {
-              system = "aarch64-linux";
-              machine = machine // { os = "linux"; };
-            };
-          };
-        in
-        nixpkgs.lib.foldl' (a: b: a // b) { }
-          (nixpkgs.lib.mapAttrsToList forMachine homeMachines);
     in
     {
-      darwinConfigurations = {
-        "Han-MBP" = nix-darwin.lib.darwinSystem {
-          system = darwinSystem;
-          specialArgs = { inherit antidote nanorc; };
+      darwinConfigurations = lib.mapAttrs (
+        name: machine:
+        nix-darwin.lib.darwinSystem {
+          specialArgs = { inherit machine nanorc; };
           modules = [
-            ./hosts/Han-MBP.nix
+            ./modules/darwin.nix
             home-manager.darwinModules.home-manager
           ];
-        };
+        }
+      ) (lib.filterAttrs (name: machine: machine.os == "darwin") machines);
 
-        # Work MacBook; host name deliberately not declared (see hosts/work.nix).
-        work = nix-darwin.lib.darwinSystem {
-          system = darwinSystem;
-          specialArgs = { inherit antidote nanorc; };
-          modules = [
-            ./hosts/work.nix
-            home-manager.darwinModules.home-manager
-          ];
+      homeConfigurations = lib.concatMapAttrs (name: machine: {
+        "${name}" = mkHome {
+          system = "x86_64-linux";
+          inherit machine;
         };
-      };
+        "${name}-aarch64" = mkHome {
+          system = "aarch64-linux";
+          inherit machine;
+        };
+      }) (lib.filterAttrs (name: machine: machine.os == "linux") machines);
 
-      inherit homeConfigurations;
+      # Pinned entry points so bootstrap does not depend on the global
+      # flake registry.
+      apps =
+        let
+          mkApp = pkg: {
+            type = "app";
+            program = lib.getExe pkg;
+          };
+        in
+        lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system: {
+          home-manager = mkApp home-manager.packages.${system}.home-manager;
+        })
+        // lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" ] (system: {
+          darwin-rebuild = mkApp (
+            (import nixpkgs {
+              inherit system;
+              overlays = [ nix-darwin.overlays.default ];
+            }).darwin-rebuild
+          );
+        });
+
+      formatter = lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" "x86_64-linux" "aarch64-linux" ] (
+        system: nixpkgs.legacyPackages.${system}.nixfmt
+      );
     };
 }

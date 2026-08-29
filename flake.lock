@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "antidote": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1786559044,
-        "narHash": "sha256-wHoWObovYnKpD4qbDqvSnxyo4iSey+uTHiFyEgppYDU=",
-        "owner": "mattmc3",
-        "repo": "antidote",
-        "rev": "db19ea3aa9ad83dbe6ac465ecce0a0afc5a752a5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mattmc3",
-        "repo": "antidote",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -90,7 +74,6 @@
     },
     "root": {
       "inputs": {
-        "antidote": "antidote",
         "home-manager": "home-manager",
         "nanorc": "nanorc",
         "nix-darwin": "nix-darwin",

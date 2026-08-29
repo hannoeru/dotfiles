@@ -3,7 +3,7 @@
 {
   programs.starship = {
     enable = true;
-    settings ={
+    settings = {
       "$schema" = "https://starship.rs/config-schema.json";
       add_newline = true;
       character = {

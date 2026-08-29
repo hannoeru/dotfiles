@@ -4,7 +4,9 @@
   programs.mise = {
     enable = true;
     enableZshIntegration = true;
-    globalConfig ={
+    # Keep the main config.toml writable by `mise use --global`.
+    enableMutableConfig = true;
+    globalConfig = {
       tools = {
         "npm:@antfu/ni" = "latest";
         "npm:@earendil-works/pi-coding-agent" = {

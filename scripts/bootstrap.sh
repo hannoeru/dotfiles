@@ -11,7 +11,8 @@ script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 
 if ! command -v nix >/dev/null 2>&1; then
   echo "==> Installing Nix"
-  curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+  curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix \
+    | sh -s -- install --tag v3.22.2
 fi
 
 # The installer cannot modify this shell's environment; add the Nix
@@ -33,7 +34,8 @@ case "$(uname)" in
       Han-MBP) darwin_config="Han-MBP" ;;
       *) darwin_config="work" ;;
     esac
-    nix run nix-darwin -- switch --flake "$script_dir#$darwin_config"
+    # darwin-rebuild comes from this flake's locked nix-darwin input
+    nix run "$script_dir#darwin-rebuild" -- switch --flake "$script_dir#$darwin_config"
     ;;
 
   Linux)
@@ -47,7 +49,8 @@ case "$(uname)" in
       aarch64 | arm64) home_config="$home_config-aarch64" ;;
       *) echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
     esac
-    nix run home-manager -- switch -b backup --flake "$script_dir#$home_config"
+    # home-manager comes from this flake's locked home-manager input
+    nix run "$script_dir#home-manager" -- switch -b backup --flake "$script_dir#$home_config"
 
     # zsh comes from home-manager; chsh needs the path in /etc/shells.
     zsh="$(command -v zsh || true)"
