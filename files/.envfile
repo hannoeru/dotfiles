@@ -1,0 +1,25 @@
+# Sourced from the zsh profile and .bashrc, after Homebrew's shellenv has
+# run. Pure variables and paths live in home-manager's sessionVariables and
+# sessionPath instead.
+
+function add_to_path() {
+  # Add a directory to PATH only if it is non-empty and exists
+  if [ -n "$1" ] && [ -d "$1" ]; then
+    export PATH="$1:$PATH"
+  fi
+}
+
+# Homebrew keg-only formulae
+add_to_path "$HOMEBREW_PREFIX/opt/curl/bin"
+add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
+add_to_path "$HOMEBREW_PREFIX/opt/grep/libexec/gnubin"
+
+# init OrbStack command-line tools and integration
+if [ -f "$HOME/.orbstack/shell/init.zsh" ]; then
+  source "$HOME/.orbstack/shell/init.zsh"
+fi
+
+# Krew (Kubernetes plugin manager)
+if [ -d "${KREW_ROOT:-$HOME/.krew}" ]; then
+  add_to_path "${KREW_ROOT:-$HOME/.krew}/bin"
+fi
