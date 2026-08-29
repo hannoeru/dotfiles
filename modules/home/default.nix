@@ -16,7 +16,6 @@ let
   # neovim, vim, ghostty, zoxide, bash) are not repeated here.
   sharedPackages = with pkgs; [
     eza
-    ffmpeg
     git-filter-repo
     git-lfs
     jq
@@ -97,11 +96,6 @@ in
     ".simple-git-hooks.rc".source = ../../files/.simple-git-hooks.rc;
 
     ".nano".source = nanorc;
-
-    "bin" = {
-      source = ../../files/bin;
-      recursive = true;
-    };
 
     ".pi" = {
       source = ../../files/.pi;
