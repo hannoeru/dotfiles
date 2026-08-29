@@ -47,6 +47,10 @@ in
   );
   home.stateVersion = "25.05";
 
+  # The home-configuration manpage embeds options.json, whose build
+  # triggers a Nix warning at eval time; read the docs online instead.
+  manual.manpages.enable = false;
+
   home.packages = sharedPackages ++ lib.optionals darwin darwinPackages;
 
   home.sessionVariables = {

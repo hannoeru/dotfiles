@@ -74,6 +74,11 @@ in
   # daemon itself; nix-darwin must not manage it.
   nix.enable = false;
 
+  # Skip the darwin manual: its options.json build triggers a Nix
+  # warning about an unreferenced source path, and the docs are read
+  # online anyway.
+  documentation.enable = false;
+
   system.defaults = {
     NSGlobalDomain = {
       AppleInterfaceStyle = "Dark";
