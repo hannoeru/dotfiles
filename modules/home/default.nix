@@ -76,8 +76,6 @@ in
     ".npmrc".source = ../../files/.npmrc;
     ".psqlrc".source = ../../files/.psqlrc;
     ".simple-git-hooks.rc".source = ../../files/.simple-git-hooks.rc;
-    ".tmux.conf".source = ../../files/.tmux.conf;
-    ".tmux-osx.conf".source = ../../files/.tmux-osx.conf;
     ".vuerc".source = ../../files/.vuerc;
 
     ".antidote".source = antidote;
