@@ -105,6 +105,10 @@ in
       source = ../../files/.config/zsh/conf.d;
       recursive = true;
     };
+    ".config/fish" = {
+      source = ../../files/.config/fish;
+      recursive = true;
+    };
     ".config/husky/init.sh".source = ../../files/.config/husky/init.sh;
     ".config/zsh-abbr/user-abbreviations".source = ../../files/.config/zsh-abbr/user-abbreviations;
   }

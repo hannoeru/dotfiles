@@ -62,7 +62,13 @@ in
     home = "/Users/${machine.username}";
     shell = pkgs.zsh;
   };
-  environment.shells = [ pkgs.zsh ];
+  environment.shells = [
+    pkgs.zsh
+    "/opt/homebrew/bin/fish"
+  ];
+
+  # Keep Touch ID for sudo.
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # Nix is installed by the Determinate installer, which manages the
   # daemon itself; nix-darwin must not manage it.
@@ -158,6 +164,7 @@ in
     # ~/.envfile adds to PATH. VS Code extensions are not managed here.
     brews = [
       "curl"
+      "fish"
       "openssl@3"
       "grep"
     ];
