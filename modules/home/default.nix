@@ -56,6 +56,7 @@ in
   home.packages = sharedPackages ++ lib.optionals darwin darwinPackages;
 
   imports = [
+    ./programs/bash.nix
     ./programs/gh.nix
     ./programs/ghostty.nix
     ./programs/mise.nix
@@ -67,8 +68,6 @@ in
 
   home.file = {
     ".aliases".source = ../../files/.aliases;
-    ".bash_profile".source = ../../files/.bash_profile;
-    ".bashrc".source = ../../files/.bashrc;
     ".condarc".source = ../../files/.condarc;
     ".envfile".source = ../../files/.envfile;
     ".nanorc".source = ../../files/.nanorc;
