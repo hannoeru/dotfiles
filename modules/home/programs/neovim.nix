@@ -1,10 +1,17 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   programs.neovim = {
     enable = true;
     withRuby = false;
     withPython3 = false;
+
+    plugins = with pkgs.vimPlugins; [
+      vim-airline
+      vim-airline-themes
+      gruvbox
+    ];
+
     extraConfig = ''
       set nocompatible
 
@@ -25,28 +32,9 @@
       set tabstop=2       " tabは半角2文字
       set shiftwidth=2    " tabの幅
 
-
-
-      " Plugins will be downloaded under the specified directory.
-      call plug#begin()
-
-      " Automatically install missing plugins on startup
-      if !empty(filter(copy(g:plugs), '!isdirectory(v:val.dir)'))
-        autocmd VimEnter * PlugInstall | q
-      endif
-
-      " Declare the list of plugins.
-      Plug 'vim-airline/vim-airline'
-      Plug 'vim-airline/vim-airline-themes'
-      Plug 'morhetz/gruvbox'
-
-      " List ends here. Plugins become visible to Vim after this call.
-      call plug#end()
-
-      " enable gruvbox theme
-      autocmd vimenter * ++nested colorscheme gruvbox
-
+      " gruvbox theme
       set background=dark    " Setting dark mode
+      colorscheme gruvbox
 
       nnoremap <silent> [oh :call gruvbox#hls_show()<CR>
       nnoremap <silent> ]oh :call gruvbox#hls_hide()<CR>

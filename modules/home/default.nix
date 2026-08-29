@@ -246,8 +246,9 @@ in
 
   home.activation = {
     sshSetup = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      $DRY_RUN_CMD mkdir -p "$HOME/.ssh/config.d"
+      $DRY_RUN_CMD mkdir -p "$HOME/.ssh"
       $DRY_RUN_CMD chmod 700 "$HOME/.ssh"
+      $DRY_RUN_CMD mkdir -p "$HOME/.ssh/config.d"
     '';
 
     personalSecrets = lib.hm.dag.entryAfter [ "sshSetup" ] (
