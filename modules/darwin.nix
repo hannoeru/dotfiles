@@ -84,9 +84,6 @@ in
   system.defaults = {
     NSGlobalDomain = {
       AppleInterfaceStyle = "Dark";
-      AppleMeasurementUnits = "Centimeters";
-      AppleTemperatureUnit = "Celsius";
-      AppleMetricUnits = 1;
       KeyRepeat = 1;
       InitialKeyRepeat = 30;
       AppleKeyboardUIMode = 3;
@@ -113,24 +110,15 @@ in
     screencapture = {
       # Absolute path: macOS does not expand ~ in this preference.
       location = "/Users/${machine.username}/Desktop/Screenshots";
-      type = "png";
     };
 
     menuExtraClock = {
-      IsAnalog = false;
-      Show24Hour = true;
-      ShowDate = true;
+      ShowDate = 1;
       ShowDayOfWeek = true;
       ShowSeconds = true;
     };
 
-    ActivityMonitor = {
-      OpenMainWindow = true;
-      IconType = 5;
-      ShowCategory = 100;
-      SortColumn = "CPUUsage";
-      SortDirection = 0;
-    };
+    ActivityMonitor.IconType = 5;
 
     CustomUserPreferences = {
       NSGlobalDomain = {
@@ -144,16 +132,10 @@ in
         ShowDebugMenu = true;
       };
       "com.apple.SoftwareUpdate" = {
-        AutomaticCheckEnabled = true;
+        # Daily, not the factory weekly.
         ScheduleFrequency = 1;
-        AutomaticDownload = 1;
-        CriticalUpdateInstall = 1;
-        ConfigDataInstall = 1;
       };
-      "com.apple.commerce" = {
-        AutoUpdate = true;
-        AutoUpdateRestartRequired = true;
-      };
+      "com.apple.commerce".AutoUpdateRestartRequired = true;
       "com.google.Chrome".AppleEnableSwipeNavigateWithScrolls = false;
       "com.google.Chrome.canary".AppleEnableSwipeNavigateWithScrolls = false;
     };
