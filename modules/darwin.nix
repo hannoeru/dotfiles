@@ -88,6 +88,8 @@ in
       InitialKeyRepeat = 30;
       AppleKeyboardUIMode = 3;
       AppleShowAllExtensions = true;
+      # Key repeat instead of the accent-character popup.
+      ApplePressAndHoldEnabled = false;
     };
 
     dock = {
@@ -96,21 +98,28 @@ in
       minimize-to-application = true;
       autohide = true;
       autohide-delay = 1000.0;
+      launchanim = false;
+      show-recents = false;
+      expose-group-apps = true;
     };
 
     finder = {
       ShowPathbar = true;
+      ShowStatusBar = true;
       FXPreferredViewStyle = "Nlsv";
       _FXSortFoldersFirst = true;
       _FXSortFoldersFirstOnDesktop = true;
       FXDefaultSearchScope = "SCcf";
       FXEnableExtensionChangeWarning = false;
+      NewWindowTarget = "Home";
     };
 
     screencapture = {
       # Absolute path: macOS does not expand ~ in this preference.
       location = "/Users/${machine.username}/Desktop/Screenshots";
     };
+
+    WindowManager.EnableStandardClickToShowDesktop = false;
 
     menuExtraClock = {
       ShowDate = 1;
