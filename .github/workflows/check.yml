@@ -1,0 +1,30 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@v22
+      - run: nix fmt -- --check $(git ls-files '*.nix')
+
+  home:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@v22
+      - run: nix build --no-link .#homeConfigurations.hanlee.activationPackage
+      - run: nix build --no-link .#homeConfigurations."hanlee@ubuntu".activationPackage
+
+  darwin:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@v22
+      - run: nix build --no-link .#darwinConfigurations.Han-MBP.system
+      - run: nix build --no-link .#darwinConfigurations.work.system
