@@ -66,6 +66,7 @@ in
   };
 
   home.sessionPath = [
+    "$HOME/bin"
     "$HOME/.local/bin"
     "$HOME/.npm-global/bin"
     "$HOME/.deno/bin"
