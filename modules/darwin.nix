@@ -64,22 +64,9 @@ in
   };
   environment.shells = [ pkgs.zsh ];
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  nix.optimise.automatic = true;
-  nix.gc = {
-    automatic = true;
-    interval = [
-      {
-        Weekday = 0;
-        Hour = 2;
-        Minute = 0;
-      }
-    ];
-    options = "--delete-older-than 30d";
-  };
+  # Nix is installed by the Determinate installer, which manages the
+  # daemon itself; nix-darwin must not manage it.
+  nix.enable = false;
 
   system.defaults = {
     NSGlobalDomain = {

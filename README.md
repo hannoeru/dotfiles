@@ -84,5 +84,7 @@ configurations on macOS runners.
   (bootstrap does this for you).
 - pi agent dependencies: run `pnpm install` in `~/.pi` after mise provides
   node and pnpm.
-- Nix garbage collection runs weekly on macOS and removes store paths older
-  than 30 days.
+- Nix is installed by the Determinate installer and runs with flakes
+  enabled; nix-darwin does not manage it (`nix.enable = false`), so run
+  `nix-collect-garbage --delete-older-than 30d` occasionally to clean the
+  store.
