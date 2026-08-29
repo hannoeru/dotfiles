@@ -47,11 +47,11 @@ everything):
 
 ## Apply changes
 
-macOS (personal Mac uses its host name as the configuration name,
-the work Mac uses `work`):
+macOS (as root; personal Mac uses its host name as the configuration
+name, the work Mac uses `work`):
 
-    darwin-rebuild switch --flake ~/dotfiles#Han-MBP
-    darwin-rebuild switch --flake ~/dotfiles#work
+    sudo darwin-rebuild switch --flake ~/dotfiles#Han-MBP
+    sudo darwin-rebuild switch --flake ~/dotfiles#work
 
 Linux (pass `-b backup` on the first switch to move conflicting leftover
 files aside):

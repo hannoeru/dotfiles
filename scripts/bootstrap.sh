@@ -8,6 +8,7 @@
 set -eu
 
 script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
+flake_dir="$(cd -P "$script_dir/.." && pwd -P)"
 
 if ! command -v nix >/dev/null 2>&1; then
   echo "==> Installing Nix"
@@ -35,8 +36,10 @@ case "$(uname)" in
       Han-MBP) darwin_config="Han-MBP" ;;
       *) darwin_config="work" ;;
     esac
-    # darwin-rebuild comes from this flake's locked nix-darwin input
-    nix run "$script_dir#darwin-rebuild" -- switch --flake "$script_dir#$darwin_config"
+    # Build as the user, activate as root (same script darwin-rebuild runs).
+    toplevel="$(nix build --no-link --print-out-paths \
+      "$flake_dir#darwinConfigurations.$darwin_config.system")"
+    sudo "$toplevel/activate"
     ;;
 
   Linux)
@@ -50,8 +53,7 @@ case "$(uname)" in
       aarch64 | arm64) home_config="$home_config-aarch64" ;;
       *) echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
     esac
-    # home-manager comes from this flake's locked home-manager input
-    nix run "$script_dir#home-manager" -- switch -b backup --flake "$script_dir#$home_config"
+    nix run "$flake_dir#home-manager" -- switch -b backup --flake "$flake_dir#$home_config"
 
     # zsh comes from home-manager; chsh needs the path in /etc/shells.
     zsh="$(command -v zsh || true)"
