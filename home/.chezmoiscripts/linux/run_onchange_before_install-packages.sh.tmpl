@@ -1,0 +1,55 @@
+{{ if eq .chezmoi.os "linux" -}}
+{{- $distroID := index .chezmoi.osRelease "id" | default "" -}}
+{{- if has $distroID (list "ubuntu" "debian") -}}
+#!/bin/bash
+
+set -eufo pipefail
+
+# Use sudo only when not running as root (e.g. containers, devcontainers).
+if [ "$(id -u)" -eq 0 ]; then
+  sudo=""
+else
+  sudo="sudo"
+fi
+
+$sudo apt-get update
+
+{{ range .packages.linux.apt -}}
+$sudo apt-get install -y {{ . | quote }}
+{{ end -}}
+
+# GitHub CLI is not in the standard Ubuntu/Debian repos. Use the official apt repo.
+if ! command -v gh >/dev/null 2>&1; then
+  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+    | $sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+    | $sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+  $sudo apt-get update
+  $sudo apt-get install -y gh
+fi
+
+# Single-binary CLIs that are not in the Ubuntu/Debian repos.
+local_bin="$HOME/.local/bin"
+mkdir -p "$local_bin"
+
+if ! command -v mise >/dev/null 2>&1; then
+  curl -fsSL https://mise.run | sh
+fi
+
+if ! command -v starship >/dev/null 2>&1; then
+  curl -sS https://starship.rs/install.sh | sh -s -- -b "$local_bin" --yes
+fi
+
+if ! command -v zoxide >/dev/null 2>&1; then
+  curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh \
+    | bash -s -- --bin-dir "$local_bin"
+fi
+{{- else -}}
+#!/bin/bash
+
+set -eufo pipefail
+
+echo "Unsupported Linux distribution: {{ $distroID }}. Only ubuntu and debian are supported." >&2
+exit 1
+{{- end -}}
+{{- end -}}

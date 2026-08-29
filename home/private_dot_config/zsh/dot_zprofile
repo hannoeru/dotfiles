@@ -21,7 +21,7 @@ fi
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
-  if ! type "code" > /dev/null; then
+  if type code >/dev/null 2>&1; then
     export EDITOR='code --wait'
   else
     export EDITOR='nano'

@@ -1,5 +1,14 @@
+{{ if eq .chezmoi.os "linux" -}}
 #!/bin/bash
 
 set -eufo pipefail
 
-chsh -s /bin/zsh
+# zsh is installed by run_onchange_before_install-packages.sh.tmpl
+zsh="$(command -v zsh || true)"
+
+if [ -n "$zsh" ] && [ "$SHELL" != "$zsh" ]; then
+  chsh -s "$zsh"
+else
+  echo "zsh is not installed or already the default shell, skipping chsh"
+fi
+{{ end -}}

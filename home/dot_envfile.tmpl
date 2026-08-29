@@ -29,8 +29,10 @@ add_to_path "$HOMEBREW_PREFIX/opt/gawk/libexec/gnubin"
 add_to_path "$HOME/.npm-global/bin"
 
 # pnpm
+{{ if eq .chezmoi.os "darwin" }}
 export PNPM_HOME="$HOME/Library/pnpm"
 add_to_path "$PNPM_HOME/bin"
+{{ end }}
 
 # local node_modules
 add_to_path "./node_modules/.bin"
@@ -71,8 +73,10 @@ add_to_path "$CARGOPATH/bin"
 # Android
 #
 
+{{ if eq .chezmoi.os "darwin" }}
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 add_to_path "$ANDROID_HOME/tools/bin"
+{{ end }}
 
 #
 # Java

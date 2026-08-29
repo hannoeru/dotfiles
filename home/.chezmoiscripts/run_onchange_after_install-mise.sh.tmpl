@@ -1,3 +1,4 @@
+{{ if eq .chezmoi.os "darwin" "linux" -}}
 #!/bin/bash
 
 set -eufo pipefail
@@ -8,3 +9,4 @@ if ! command -v mise &> /dev/null; then
 fi
 
 mise install
+{{ end -}}

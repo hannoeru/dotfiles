@@ -1,7 +1,14 @@
+{{- $sshSignProgram := "" }}
+{{- if eq .chezmoi.os "darwin" }}
+{{-   $sshSignProgram = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" }}
+{{- else if lookPath "op-ssh-sign" }}
+{{-   $sshSignProgram = lookPath "op-ssh-sign" }}
+{{- end }}
+{{- $delta := lookPath "delta" }}
 [user]
   name = {{ .name }}
   email = {{ .email }}
-{{- if eq .chezmoi.os "darwin" }}
+{{- if $sshSignProgram }}
   signingkey = {{ onepasswordRead "op://Private/GitHub SSH Key/public key" }}
 {{- end }}
 [core]
@@ -9,9 +16,13 @@
   excludesfile = ~/.config/git/ignore
   autocrlf = input
   safecrlf = true
+{{- if $delta }}
   pager = delta
+{{- end }}
 [interactive]
+{{- if $delta }}
   diffFilter = delta --color-only
+{{- end }}
 [delta]
   navigate = true  # use n and N to move between diff sections
   line-numbers = true
@@ -49,7 +60,9 @@
 [help]
   autocorrect = prompt
 [commit]
+{{- if $sshSignProgram }}
   gpgsign = true
+{{- end }}
   verbose = true
 [rerere]
   enabled = true
@@ -59,12 +72,12 @@
   autostash = true
   updateRefs = true
 
-{{- if eq .chezmoi.os "darwin" -}}
+{{- if $sshSignProgram -}}
 # GPG signing
 [gpg]
   format = ssh
 [gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+  program = {{ $sshSignProgram | quote }}
 {{- end }}
 
 # Aliases

@@ -1,4 +1,20 @@
 packages:
+  linux:
+    apt:
+      - "build-essential"
+      - "ca-certificates"
+      - "curl"
+      - "fontconfig"
+      - "git"
+      - "git-lfs"
+      - "jq"
+      - "neovim"
+      - "ripgrep"
+      - "tmux"
+      - "unzip"
+      - "wget"
+      - "zsh"
+
   darwin:
     brews:
       - "openssl@3"

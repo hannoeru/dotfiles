@@ -6,7 +6,8 @@ install.sh
 .antidote
 
 {{ if ne .chezmoi.os "darwin" }}
-.ssh
-.gitconfig
 .config/karabiner
+{{ end }}
+{{ if not .personal }}
+.ssh
 {{ end }}

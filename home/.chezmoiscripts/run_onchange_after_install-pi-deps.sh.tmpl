@@ -1,3 +1,4 @@
+{{ if eq .chezmoi.os "darwin" "linux" -}}
 #!/bin/bash
 
 set -eufo pipefail
@@ -7,16 +8,18 @@ set -eufo pipefail
 # pnpm-lock.yaml hash: {{ include (joinPath .chezmoi.homeDir ".pi" "pnpm-lock.yaml") | sha256sum }}
 # pnpm-workspace.yaml hash: {{ include (joinPath .chezmoi.homeDir ".pi" "pnpm-workspace.yaml") | sha256sum }}
 
-echo "Installing pi dependencies..."
-
-# Make node/pnpm available in this session.
 if ! command -v mise &> /dev/null; then
     echo "mise not found, please install it first"
     exit 1
 fi
+
+echo "Installing pi dependencies..."
+
+# Make node/pnpm available in this session.
 eval "$(mise activate bash)"
 
 cd "{{ .chezmoi.homeDir }}/.pi"
 pnpm install
 
 echo "pi dependencies installed."
+{{ end -}}
