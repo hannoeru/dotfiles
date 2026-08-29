@@ -11,8 +11,9 @@ script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 
 if ! command -v nix >/dev/null 2>&1; then
   echo "==> Installing Nix"
-  curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix \
-    | sh -s -- install --tag v3.22.2
+  curl --proto '=https' --tlsv1.2 -sSf -L \
+    https://install.determinate.systems/nix/tag/v3.22.2/nix-installer.sh \
+    | sh -s -- install
 fi
 
 # The installer cannot modify this shell's environment; add the Nix
