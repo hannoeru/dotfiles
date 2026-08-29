@@ -29,7 +29,11 @@ case "$(uname)" in
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
     hostname="$(scutil --get LocalHostName)"
-    nix run nix-darwin -- switch --flake "$script_dir#$hostname"
+    case "$hostname" in
+      Han-MBP) darwin_config="Han-MBP" ;;
+      *) darwin_config="work" ;;
+    esac
+    nix run nix-darwin -- switch --flake "$script_dir#$darwin_config"
     ;;
 
   Linux)

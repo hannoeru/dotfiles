@@ -1,8 +1,8 @@
-# Work MacBook.
+# Work MacBook. The host name is set by the employer's device management
+# and is intentionally not declared here.
 { ... }: {
   imports = [
     (import ../modules/darwin.nix {
-      hostname = "LX-240047";
       username = "hanlee";
       languages = [ "en-US" "ja-JP" "zh-Hant-JP" ];
       personal = false;

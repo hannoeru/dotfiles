@@ -7,7 +7,7 @@ Hannoeru's dotfiles, managed with [Nix](https://nixos.org) ([nix-darwin](https:/
 | Configuration | Machine |
 | --- | --- |
 | `darwinConfigurations.Han-MBP` | Personal MacBook Pro |
-| `darwinConfigurations.LX-240047` | Work MacBook |
+| `darwinConfigurations.work` | Work MacBook |
 | `homeConfigurations.hanlee@ubuntu` | Personal headless Linux box (x86_64) |
 | `homeConfigurations.hanlee` | Ephemeral machines (containers, devcontainers, WSL), x86_64 |
 
@@ -42,9 +42,11 @@ running as a different user needs its own entry in `flake.nix`.
 
 ## Apply changes
 
-macOS (uses the machine's host name as the configuration name):
+macOS (personal Mac uses its host name as the configuration name,
+the work Mac uses `work`):
 
     darwin-rebuild switch --flake ~/dotfiles#Han-MBP
+    darwin-rebuild switch --flake ~/dotfiles#work
 
 Linux (pass `-b backup` on the first switch to move conflicting leftover
 files aside):
@@ -58,7 +60,7 @@ Update inputs (nixpkgs, antidote, nanorc, ...):
 ## Layout
 
 - `flake.nix` — machine definitions
-- `hosts/` — per-machine entry points (`Han-MBP`, `LX-240047`)
+- `hosts/` — per-machine entry points (`Han-MBP`, `work`)
 - `modules/darwin.nix` — shared nix-darwin system configuration (defaults, Homebrew)
 - `modules/home/` — shared home-manager configuration (`default.nix` plus one module per program in `programs/`)
 - `files/` — dotfiles, applied verbatim to `$HOME`

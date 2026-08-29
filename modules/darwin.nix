@@ -11,7 +11,8 @@ machine:
 { config, pkgs, lib, antidote, nanorc, ... }:
 
 {
-  networking.hostName = machine.hostname;
+  # The host name is not managed when unset; the machine keeps its own.
+  networking.hostName = machine.hostname or null;
   system.primaryUser = machine.username;
   system.stateVersion = 7;
 

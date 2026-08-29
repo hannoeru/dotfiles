@@ -81,11 +81,12 @@
           ];
         };
 
-        "LX-240047" = nix-darwin.lib.darwinSystem {
+        # Work MacBook; host name deliberately not declared (see hosts/work.nix).
+        work = nix-darwin.lib.darwinSystem {
           system = darwinSystem;
           specialArgs = { inherit antidote nanorc; };
           modules = [
-            ./hosts/LX-240047.nix
+            ./hosts/work.nix
             home-manager.darwinModules.home-manager
           ];
         };
