@@ -30,7 +30,6 @@ let
     "input-source-pro"
     "ghostty"
     "karabiner-elements"
-    "orbstack"
     "qlmarkdown"
     "qlstephen"
     "quicklook-csv"
@@ -47,6 +46,7 @@ let
   personalCasks = [
     "google-drive"
     "keka"
+    "orbstack"
     "spotify"
   ];
 in
@@ -116,7 +116,13 @@ in
       type = "png";
     };
 
-    menuExtraClock.IsAnalog = true;
+    menuExtraClock = {
+      IsAnalog = false;
+      Show24Hour = true;
+      ShowDate = true;
+      ShowDayOfWeek = true;
+      ShowSeconds = true;
+    };
 
     ActivityMonitor = {
       OpenMainWindow = true;
