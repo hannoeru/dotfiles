@@ -105,7 +105,7 @@ machine:
     onActivation = {
       autoUpdate = true;
       upgrade = false;
-      cleanup = "none";
+      cleanup = "uninstall";
     };
 
     # CLI tools come from nixpkgs; Homebrew keeps only what Nix cannot
