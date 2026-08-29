@@ -1,0 +1,114 @@
+function add_to_path() {
+  # Does the alias only if the aliased program is installed
+  if [ -d $1 ]; then
+    export PATH="$1:$PATH"
+  fi
+}
+
+add_to_path "$HOME/bin"
+# Custom scripts
+add_to_path "$HOME/.local/bin"
+# curl
+add_to_path "$HOMEBREW_PREFIX/opt/curl/bin"
+# openssl
+add_to_path "$HOMEBREW_PREFIX/opt/openssl/bin"
+# libressl
+add_to_path "$HOMEBREW_PREFIX/opt/libressl/bin"
+# grep
+add_to_path "$HOMEBREW_PREFIX/opt/grep/libexec/gnubin"
+# sed
+add_to_path "$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin"
+# awk
+add_to_path "$HOMEBREW_PREFIX/opt/gawk/libexec/gnubin"
+
+#
+# Node
+#
+
+# npm
+add_to_path "$HOME/.npm-global/bin"
+
+# pnpm
+if [[ $OSTYPE == darwin* ]]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+  add_to_path "$PNPM_HOME/bin"
+fi
+
+# local node_modules
+add_to_path "./node_modules/.bin"
+
+# simple-git-hooks
+export SIMPLE_GIT_HOOKS_RC="$HOME/.simple-git-hooks.rc"
+
+#
+# Python
+#
+
+# add pyenv path
+export PYENV_ROOT="$HOME/.pyenv"
+add_to_path "$PYENV_ROOT/shims"
+
+#
+# Deno
+#
+
+export DENO_DIR=$HOME/.deno
+add_to_path "$HOME/.deno/bin"
+
+#
+# Golang
+#
+
+export GOPATH="$HOME/go"
+add_to_path "$GOPATH/bin"
+
+#
+# Rust
+#
+
+export CARGOPATH="$HOME/.cargo"
+add_to_path "$CARGOPATH/bin"
+
+#
+# Android
+#
+
+if [[ $OSTYPE == darwin* ]]; then
+  export ANDROID_HOME="$HOME/Library/Android/sdk"
+  add_to_path "$ANDROID_HOME/tools/bin"
+fi
+
+#
+# Java
+#
+
+if [ -f "$HOMEBREW_PREFIX/opt/sdkman-cli/libexec/bin/sdkman-init.sh" ]; then
+  export SDKMAN_DIR="$HOMEBREW_PREFIX/opt/sdkman-cli/libexec"
+  source "$SDKMAN_DIR/bin/sdkman-init.sh"
+fi
+
+#
+# PHP
+#
+
+if [ -f "$HOME/.phpbrew/bashrc" ]; then
+  source "$HOME/.phpbrew/bashrc"
+fi
+
+#
+# Docker
+#
+
+# Force enable docker buildkit
+export DOCKER_BUILDKIT=1
+# init Orbstack command-line tools and integration
+if [ -f "$HOME/.orbstack/shell/init.zsh" ]; then
+  source "$HOME/.orbstack/shell/init.zsh"
+fi
+
+#
+# Krew (Kubernetes plugin manager)
+#
+if [ -d "${KREW_ROOT:-$HOME/.krew}" ]; then
+  add_to_path "${KREW_ROOT:-$HOME/.krew}/bin"
+fi
