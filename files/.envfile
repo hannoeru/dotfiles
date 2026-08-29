@@ -1,6 +1,6 @@
 function add_to_path() {
-  # Does the alias only if the aliased program is installed
-  if [ -d $1 ]; then
+  # Add a directory to PATH only if it is non-empty and exists
+  if [ -n "$1" ] && [ -d "$1" ]; then
     export PATH="$1:$PATH"
   fi
 }

@@ -27,6 +27,8 @@
 
   outputs = { self, nixpkgs, nix-darwin, home-manager, antidote, nanorc }:
     let
+      darwinSystem = "aarch64-darwin";
+
       mkHome = { system, machine }: home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = { inherit antidote nanorc; };
@@ -71,7 +73,7 @@
     {
       darwinConfigurations = {
         "Han-MBP" = nix-darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
+          system = darwinSystem;
           specialArgs = { inherit antidote nanorc; };
           modules = [
             ./hosts/Han-MBP.nix
@@ -80,7 +82,7 @@
         };
 
         "LX-240047" = nix-darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
+          system = darwinSystem;
           specialArgs = { inherit antidote nanorc; };
           modules = [
             ./hosts/LX-240047.nix

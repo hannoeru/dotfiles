@@ -15,7 +15,6 @@ let
   sharedPackages = with pkgs; [
     eza
     ffmpeg
-    delta
     gh
     git-filter-repo
     git-lfs
@@ -40,20 +39,27 @@ let
     opentofu
   ];
 
+  linuxPackages = with pkgs; [
+    zsh
+  ];
+
   sshSignProgram =
     if darwin
     then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
     else "op-ssh-sign";
 in
 {
-  home.username = machine.username;
-  home.homeDirectory =
+  # mkDefault: as a nix-darwin module these come from users.users.<name>
+  # (see modules/darwin.nix); standalone they are set here.
+  home.username = lib.mkDefault machine.username;
+  home.homeDirectory = lib.mkDefault (
     if darwin
     then "/Users/${machine.username}"
-    else "/home/${machine.username}";
+    else "/home/${machine.username}"
+  );
   home.stateVersion = "25.05";
 
-  home.packages = sharedPackages ++ lib.optionals darwin darwinPackages;
+  home.packages = sharedPackages ++ lib.optionals darwin darwinPackages ++ lib.optionals (!darwin) linuxPackages;
 
   home.file = {
     ".aliases".source = ../files/.aliases;
@@ -74,8 +80,6 @@ in
 
     ".antidote".source = antidote;
     ".nano".source = nanorc;
-
-    ".ssh/config".source = ../files/.ssh/config;
 
     "bin" = {
       source = ../files/bin;
@@ -112,12 +116,13 @@ in
       source = ../files/.config/karabiner;
       recursive = true;
     };
+  }
+  // lib.optionalAttrs machine.personal {
+    ".ssh/config".source = ../files/.ssh/config;
   };
 
   programs.git = {
     enable = true;
-    userName = machine.name;
-    userEmail = machine.email;
 
     delta = {
       enable = true;
@@ -127,7 +132,11 @@ in
       };
     };
 
-    extraConfig = {
+    settings = {
+      user = {
+        name = machine.name;
+        email = machine.email;
+      };
       core = {
         editor = "code --wait";
         excludesfile = "~/.config/git/ignore";
@@ -195,20 +204,28 @@ in
   };
 
   home.activation = {
-    sshSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    sshSetup = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
       $DRY_RUN_CMD mkdir -p "$HOME/.ssh/config.d"
       chmod 700 "$HOME/.ssh"
-      chmod 600 "$HOME/.ssh/config"
+      if [ -f "$HOME/.ssh/config" ]; then
+        chmod 600 "$HOME/.ssh/config"
+      fi
     '';
 
     personalSecrets = lib.hm.dag.entryAfter [ "sshSetup" ] (
       if machine.personal then ''
         op_bin="$(command -v op || true)"
-        if [ -z "$op_bin" ] && [ -x /opt/homebrew/bin/op ]; then
-          op_bin=/opt/homebrew/bin/op
+        if [ -z "$op_bin" ]; then
+          for candidate in /opt/homebrew/bin/op "$HOME/.local/bin/op"; do
+            if [ -x "$candidate" ]; then
+              op_bin="$candidate"
+              break
+            fi
+          done
         fi
 
         if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
+          $DRY_RUN_CMD mkdir -p "$HOME/.config/git"
           key="$($op_bin read 'op://Private/GitHub SSH Key/public key' || true)"
           if [ -n "$key" ]; then
             tmp="$(mktemp)"
@@ -230,7 +247,9 @@ in
           tmp="$(mktemp)"
           if "$op_bin" document lqhaym7u7wa5jjfpcmenk7xo4y > "$tmp"; then
             $DRY_RUN_CMD mv "$tmp" "$HOME/.ssh/config.d/personal.conf"
-            chmod 600 "$HOME/.ssh/config.d/personal.conf"
+            if [ -f "$HOME/.ssh/config.d/personal.conf" ]; then
+              chmod 600 "$HOME/.ssh/config.d/personal.conf"
+            fi
           else
             rm -f "$tmp"
             echo "warning: could not fetch ssh config from 1Password" >&2

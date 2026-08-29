@@ -16,10 +16,11 @@ The darwin configurations assume Apple Silicon; change `system` in
 also exists with an `-aarch64` suffix (e.g. `homeConfigurations.hanlee-aarch64`)
 for ARM machines such as containers running on Apple Silicon.
 
-CLI tools come from nixpkgs. GUI apps, fonts, and VS Code extensions are
-installed through [Homebrew](https://brew.sh) (managed by nix-darwin's
-`homebrew` module). Language runtimes (node, python, ...) are managed with
-[mise](https://mise.jdx.dev).
+CLI tools come from nixpkgs. GUI apps and fonts are installed through
+[Homebrew](https://brew.sh) (managed by nix-darwin's `homebrew` module) with
+`cleanup = "none"`: packages installed manually are left alone. VS Code
+extensions are not managed — install them manually. Language runtimes
+(node, python, ...) are managed with [mise](https://mise.jdx.dev).
 
 ## Install
 
@@ -32,7 +33,12 @@ everything):
 Personal secrets are stored in [1Password](https://1password.com) and you'll
 need the [1Password CLI](https://developer.1password.com/docs/cli/) installed.
 The git signing key and personal SSH config are fetched from 1Password during
-activation; without the CLI they are skipped with a warning.
+activation; without the CLI they are skipped with a warning. On the first
+bootstrap the CLI may not be installed yet when home-manager activates —
+run the switch a second time to pick up the secrets.
+
+Ephemeral Linux configurations assume the user is `hanlee`; a container
+running as a different user needs its own entry in `flake.nix`.
 
 ## Apply changes
 

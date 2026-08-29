@@ -32,7 +32,7 @@ if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
 
-# Load custom configs (includes config-osx.zsh on macOS)
+# Load custom configs
 for file in $HOME/.config/zsh/conf.d/*.zsh; do
   [ -r "$file" ] && source "$file"
 done
