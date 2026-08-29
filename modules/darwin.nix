@@ -165,7 +165,7 @@ machine:
     extraSpecialArgs = { inherit antidote nanorc; };
     users.${machine.username} = { config, ... }: {
       imports = [
-        (import ./home.nix (machine // { os = "darwin"; }))
+        (import ./home (machine // { os = "darwin"; }))
       ];
     };
   };

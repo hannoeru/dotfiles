@@ -33,7 +33,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = { inherit antidote nanorc; };
         modules = [
-          (import ./modules/home.nix machine)
+          (import ./modules/home machine)
         ];
       };
 

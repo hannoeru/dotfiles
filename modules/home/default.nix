@@ -12,19 +12,17 @@ machine:
 let
   darwin = machine.os == "darwin";
 
+  # Tools managed by their home-manager modules (zsh, starship, gh, mise,
+  # neovim, vim, ghostty) are not repeated here.
   sharedPackages = with pkgs; [
     eza
     ffmpeg
-    gh
     git-filter-repo
     git-lfs
     jq
     kustomize
-    mise
     nano
-    neovim
     ripgrep
-    starship
     tmux
     unzip
     wget
@@ -37,10 +35,6 @@ let
     azure-cli
     docker
     opentofu
-  ];
-
-  linuxPackages = with pkgs; [
-    zsh
   ];
 
   sshSignProgram =
@@ -59,70 +53,100 @@ in
   );
   home.stateVersion = "25.05";
 
-  home.packages = sharedPackages ++ lib.optionals darwin darwinPackages ++ lib.optionals (!darwin) linuxPackages;
+  home.packages = sharedPackages ++ lib.optionals darwin darwinPackages;
+
+  imports = [
+    ./programs/gh.nix
+    ./programs/ghostty.nix
+    ./programs/mise.nix
+    ./programs/neovim.nix
+    ./programs/starship.nix
+    ./programs/vim.nix
+    ./programs/zsh.nix
+  ];
 
   home.file = {
-    ".aliases".source = ../files/.aliases;
-    ".bash_profile".source = ../files/.bash_profile;
-    ".bashrc".source = ../files/.bashrc;
-    ".condarc".source = ../files/.condarc;
-    ".envfile".source = ../files/.envfile;
-    ".nanorc".source = ../files/.nanorc;
-    ".nirc".source = ../files/.nirc;
-    ".npmrc".source = ../files/.npmrc;
-    ".psqlrc".source = ../files/.psqlrc;
-    ".simple-git-hooks.rc".source = ../files/.simple-git-hooks.rc;
-    ".tmux.conf".source = ../files/.tmux.conf;
-    ".tmux-osx.conf".source = ../files/.tmux-osx.conf;
-    ".vimrc".source = ../files/.vimrc;
-    ".vuerc".source = ../files/.vuerc;
-    ".zshenv".source = ../files/.zshenv;
+    ".aliases".source = ../../files/.aliases;
+    ".bash_profile".source = ../../files/.bash_profile;
+    ".bashrc".source = ../../files/.bashrc;
+    ".condarc".source = ../../files/.condarc;
+    ".envfile".source = ../../files/.envfile;
+    ".nanorc".source = ../../files/.nanorc;
+    ".nirc".source = ../../files/.nirc;
+    ".npmrc".source = ../../files/.npmrc;
+    ".psqlrc".source = ../../files/.psqlrc;
+    ".simple-git-hooks.rc".source = ../../files/.simple-git-hooks.rc;
+    ".tmux.conf".source = ../../files/.tmux.conf;
+    ".tmux-osx.conf".source = ../../files/.tmux-osx.conf;
+    ".vuerc".source = ../../files/.vuerc;
 
     ".antidote".source = antidote;
     ".nano".source = nanorc;
 
     "bin" = {
-      source = ../files/bin;
+      source = ../../files/bin;
       recursive = true;
     };
 
     ".pi" = {
-      source = ../files/.pi;
+      source = ../../files/.pi;
       recursive = true;
     };
 
-    ".config/zsh" = {
-      source = ../files/.config/zsh;
+    ".config/zsh/conf.d" = {
+      source = ../../files/.config/zsh/conf.d;
       recursive = true;
     };
+    ".config/zsh/.zsh_plugins.txt".source = ../../files/.config/zsh/.zsh_plugins.txt;
     ".config/fish" = {
-      source = ../files/.config/fish;
+      source = ../../files/.config/fish;
       recursive = true;
     };
-    ".config/git/ignore".source = ../files/.config/git/ignore;
-    ".config/ghostty" = {
-      source = ../files/.config/ghostty;
-      recursive = true;
-    };
-    ".config/gh/config.yml".source = ../files/.config/gh/config.yml;
-    ".config/husky/init.sh".source = ../files/.config/husky/init.sh;
-    ".config/mise/config.toml".source = ../files/.config/mise/config.toml;
-    ".config/nvim/init.vim".source = ../files/.config/nvim/init.vim;
-    ".config/starship.toml".source = ../files/.config/starship.toml;
-    ".config/zsh-abbr/user-abbreviations".source = ../files/.config/zsh-abbr/user-abbreviations;
+    ".config/husky/init.sh".source = ../../files/.config/husky/init.sh;
+    ".config/zsh-abbr/user-abbreviations".source = ../../files/.config/zsh-abbr/user-abbreviations;
   }
   // lib.optionalAttrs darwin {
     ".config/karabiner" = {
-      source = ../files/.config/karabiner;
+      source = ../../files/.config/karabiner;
       recursive = true;
     };
   }
   // lib.optionalAttrs machine.personal {
-    ".ssh/config".source = ../files/.ssh/config;
+    ".ssh/config".source = ../../files/.ssh/config;
   };
 
   programs.git = {
     enable = true;
+    # Written to ~/.config/git/ignore (git's default excludes file).
+    ignores =[
+        "# Folder view configuration files"
+        ".DS_Store"
+        "Desktop.ini"
+        ""
+        "# Thumbnail cache files"
+        "._*"
+        "Thumbs.db"
+        ""
+        "# Files that might appear on external disks"
+        ".Spotlight-V100"
+        ".Trashes"
+        ""
+        "# Compiled Python files"
+        "*.pyc"
+        ""
+        "# Compiled C++ files"
+        "*.out"
+        ""
+        "# Application specific files"
+        "venv"
+        "node_modules"
+        ".sass-cache"
+        ""
+        "# AI stuff"
+        ".pi-lens"
+        ".pi-subagents"
+        "**/.claude/settings.local.json"
+      ];
 
     delta = {
       enable = true;
@@ -139,7 +163,6 @@ in
       };
       core = {
         editor = "code --wait";
-        excludesfile = "~/.config/git/ignore";
         autocrlf = "input";
         safecrlf = true;
       };

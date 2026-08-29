@@ -1,3 +1,9 @@
+{ ... }:
+
+{
+  programs.vim = {
+    enable = true;
+    extraConfig = ''
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set nocompatible " VI compatible mode is disabled so that VIm things work
@@ -92,3 +98,6 @@ nnoremap j gj
 nnoremap k gk
 " highlight last inserted text
 nnoremap gV `[v`]
+    '';
+  };
+}

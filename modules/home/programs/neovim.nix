@@ -1,3 +1,9 @@
+{ ... }:
+
+{
+  programs.neovim = {
+    enable = true;
+    extraConfig = ''
 set nocompatible
 
 " encode setting
@@ -47,3 +53,6 @@ nnoremap <silent> coh :call gruvbox#hls_toggle()<CR>
 nnoremap * :let @/ = ""<CR>:call gruvbox#hls_show()<CR>*
 nnoremap / :let @/ = ""<CR>:call gruvbox#hls_show()<CR>/
 nnoremap ? :let @/ = ""<CR>:call gruvbox#hls_show()<CR>?
+    '';
+  };
+}

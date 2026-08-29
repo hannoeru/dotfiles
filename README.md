@@ -60,7 +60,7 @@ Update inputs (nixpkgs, antidote, nanorc, ...):
 - `flake.nix` — machine definitions
 - `hosts/` — per-machine entry points (`Han-MBP`, `LX-240047`)
 - `modules/darwin.nix` — shared nix-darwin system configuration (defaults, Homebrew)
-- `modules/home.nix` — shared home-manager configuration
+- `modules/home/` — shared home-manager configuration (`default.nix` plus one module per program in `programs/`)
 - `files/` — dotfiles, applied verbatim to `$HOME`
 - `scripts/bootstrap.sh` — fresh machine bootstrap
 

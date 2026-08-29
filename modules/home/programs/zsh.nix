@@ -1,3 +1,49 @@
+{ config, ... }:
+
+{
+  programs.zsh = {
+    enable = true;
+    dotDir = "${config.home.homeDirectory}/.config/zsh";
+    initContent = ''
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+setopt HIST_SAVE_NO_DUPS
+setopt INC_APPEND_HISTORY
+setopt PUSHD_IGNORE_DUPS
+
+# Move to directories without cd
+setopt autocd
+
+# Antidote plugin manager
+function is-macos() { [[ $OSTYPE == darwin* ]] }
+function is-linux() { [[ $OSTYPE == linux* ]] }
+
+source $HOME/.antidote/antidote.zsh
+antidote load ''${ZDOTDIR:-$HOME}/.zsh_plugins.txt
+
+# Init zoxide
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
+# starship and mise are initialized by home-manager's zsh integrations
+
+# Load custom configs
+for file in $HOME/.config/zsh/conf.d/*.zsh; do
+  [ -r "$file" ] && source "$file"
+done
+
+# Load aliases
+if [ -f ~/.aliases ]; then
+  source ~/.aliases
+fi
+
+# Deduplicate paths
+typeset -gU cdpath fpath mailpath path
+    '';
+    profileExtra = ''
 # init homebrew
 if [ $(uname) = "Darwin" ]; then
   if [ -e "/opt/homebrew/bin/brew" ]; then
@@ -9,7 +55,7 @@ fi
 
 # export HOMEBREW_NO_ENV_HINTS=true
 if type brew &>/dev/null; then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+  FPATH="$(brew --prefix)/share/zsh/site-functions:''${FPATH}"
 fi
 
 # better defaults
@@ -52,3 +98,6 @@ fi
 if [ -f ~/.envfile ]; then
   source ~/.envfile
 fi
+    '';
+  };
+}
