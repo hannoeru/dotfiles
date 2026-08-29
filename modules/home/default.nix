@@ -118,6 +118,15 @@ in
     ".ssh/config".source = ../../files/.ssh/config;
   };
 
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      navigate = true;
+      line-numbers = true;
+    };
+  };
+
   programs.git = {
     enable = true;
     # Written to ~/.config/git/ignore (git's default excludes file).
@@ -150,14 +159,6 @@ in
       ".pi-subagents"
       "**/.claude/settings.local.json"
     ];
-
-    delta = {
-      enable = true;
-      options = {
-        navigate = true;
-        line-numbers = true;
-      };
-    };
 
     # ~/.config/git/signing.gitconfig is written by
     # home.activation.personalSecrets when 1Password is available; git
