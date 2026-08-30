@@ -10,3 +10,5 @@
 - Always write commit messages that follow the Conventional Commits specification.
 - Always write review comments that follow the Conventional Comments standard.
 - Comment only to explain WHY, not WHAT. No obvious comments, and no comments that repeat what the code already says. Use self-documenting code instead.
+- Never use fixed delays or elapsed time to infer command completion or readiness. Wait for the process to exit or poll an explicit completion/readiness condition; use timeouts only as safety limits for stuck commands.
+
