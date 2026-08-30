@@ -68,7 +68,7 @@ case "$(uname)" in
     case "$host" in
       ubuntu) home_config="hanlee@ubuntu" ;;
       # Ephemeral machines (containers, devcontainers, WSL).
-      *) home_config="hanlee" ;;
+      *) home_config="ephemeral" ;;
     esac
     echo "==> Applying home configuration: $home_config"
     case "$(uname -m)" in

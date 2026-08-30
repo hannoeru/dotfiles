@@ -52,7 +52,7 @@
   };
 
   # Ephemeral machines (containers, devcontainers, WSL).
-  hanlee = {
+  ephemeral = {
     os = "linux";
     username = "hanlee";
     personal = false;
