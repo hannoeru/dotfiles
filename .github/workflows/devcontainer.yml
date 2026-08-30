@@ -121,15 +121,23 @@ jobs:
       - name: Enforce image size budget
         # The summed compressed layer size is what a pull downloads; gate it
         # per architecture so the image cannot quietly grow by gigabytes.
+        # Each per-arch push is an index of image manifest plus provenance
+        # attestation, so the layer sizes live on the leaf manifests the
+        # merged tag points to.
         working-directory: /tmp/digests
         run: |
           budget_mib=1536
-          for digest_file in *; do
-            size_mib=$(( $(docker manifest inspect "${IMAGE_NAME}@sha256:${digest_file}" \
+          fail=0
+          while read -r arch digest; do
+            size_mib=$(( $(docker manifest inspect "${IMAGE_NAME}@${digest}" \
               | jq '[.layers[].size] | add') / 1048576 ))
-            echo "${digest_file}: ${size_mib} MiB (budget ${budget_mib} MiB)"
+            echo "${arch}: ${size_mib} MiB (budget ${budget_mib} MiB)"
             if [ "$size_mib" -gt "$budget_mib" ]; then
-              echo "::error::arch ${digest_file} exceeds the size budget"
-              exit 1
+              echo "::error::arch ${arch} exceeds the size budget"
+              fail=1
             fi
-          done
+          done < <(docker manifest inspect "${IMAGE_NAME}:latest" \
+              | jq -r '.manifests[]
+                  | select(.platform.os == "linux")
+                  | "\(.platform.architecture) \(.digest)"')
+          exit "$fail"
