@@ -1,0 +1,119 @@
+name: build devcontainer image
+
+# Builds containers/devcontainer/Dockerfile (Ubuntu + Nix + this repo's
+# home-manager activation) and publishes it to GHCR. flake.lock updates
+# land on main once a week, which keeps the image fresh. Each architecture
+# is built natively on its own runner and pushed by digest; a merge job
+# stitches the digests into multi-arch tags.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/devcontainer.yml
+      - .dockerignore
+      - containers/devcontainer/**
+      - machines.nix
+      - flake.nix
+      - flake.lock
+      - modules/**
+      - home/**
+  workflow_dispatch:
+
+concurrency:
+  # Overlapping runs would race on the mutable :latest tag and on the
+  # buildcache tags; keep only the newest run.
+  group: devcontainer
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/devcontainer
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-latest
+          - arch: arm64
+            # Native arm runner; QEMU builds of the Nix store take hours.
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    # Cold builds download a multi-GB Nix closure and upload the layer cache
+    # on the slower arm runner; only the cold run pays this.
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Resolve image name
+        # GHCR only accepts lowercase repository names.
+        run: echo "IMAGE_NAME=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
+
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: containers/devcontainer/Dockerfile
+          platforms: linux/${{ matrix.arch }}
+          # Push by digest only; the merge job creates the final tags. Digest
+          # pushes are immutable, so overlapping runs cannot race on tags.
+          outputs: type=image,name=${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          # Layer cache lives next to the image in GHCR; the Nix store layer
+          # is several GB, larger than the GitHub Actions cache limit.
+          cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ matrix.arch }}
+          cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ matrix.arch }},mode=max
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          touch "/tmp/digests/${DIGEST#sha256:}"
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.arch }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve image name
+        run: echo "IMAGE_NAME=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge into multi-arch tags
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create \
+            --tag "${IMAGE_NAME}:latest" \
+            --tag "${IMAGE_NAME}:${GITHUB_SHA::7}" \
+            $(printf "${IMAGE_NAME}@sha256:%s " *)

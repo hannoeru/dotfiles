@@ -15,6 +15,7 @@ let
   # Tools managed by their home-manager modules (zsh, starship, gh, mise,
   # neovim, vim, ghostty, zoxide, bash) are not repeated here.
   sharedPackages = with pkgs; [
+    docker
     eza
     git-filter-repo
     git-lfs
@@ -31,7 +32,6 @@ let
   darwinPackages = with pkgs; [
     awscli2
     azure-cli
-    docker
     opentofu
   ];
 

@@ -1,0 +1,8 @@
+# Excluded from the image build context: none of these affect the flake
+# evaluation or the home-manager activation.
+.git
+.github
+.devcontainer
+**/node_modules
+result
+.pi-subagents

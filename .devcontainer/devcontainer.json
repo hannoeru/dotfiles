@@ -1,0 +1,5 @@
+{
+  "name": "dotfiles",
+  "image": "ghcr.io/hannoeru/devcontainer:latest",
+  "remoteUser": "hanlee"
+}

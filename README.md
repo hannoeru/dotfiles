@@ -12,10 +12,10 @@ Defined once in `machines.nix`; the key is the flake configuration name.
 | `darwinConfigurations.Han-MBP`     | Personal MacBook Pro                                |
 | `darwinConfigurations.work`        | Work MacBook Pro                                    |
 | `homeConfigurations.hanlee@ubuntu` | Personal Linux                                      |
-| `homeConfigurations.hanlee`        | Ephemeral machines (containers, devcontainers, WSL) |
+| `homeConfigurations.ephemeral`    | Ephemeral machines (containers, devcontainers, WSL) |
 
 
-Linux configurations also exist with an `-aarch64` suffix (e.g. `hanlee-aarch64`) for ARM.
+Linux configurations also exist with an `-aarch64` suffix (e.g. `ephemeral-aarch64`) for ARM.
 
 ## Install
 
@@ -36,7 +36,7 @@ sudo darwin-rebuild switch --flake ~/dotfiles#work
 Linux:
 
 ```
-home-manager switch --flake ~/dotfiles#hanlee
+home-manager switch --flake ~/dotfiles#ephemeral
 ```
 
 Update inputs:
@@ -57,12 +57,21 @@ A scheduled workflow opens a pull request every Monday to update `flake.lock`.
 Because that pull request is opened with the default workflow token, GitHub
 does not run the `check` workflow on it; the check runs after the merge.
 
+## Dev container
+
+`containers/devcontainer/Dockerfile` builds a base image (Ubuntu + Nix + this
+repo's `ephemeral` configuration, including mise runtimes) and CI publishes it
+to `ghcr.io/hannoeru/devcontainer` for amd64 and arm64. `.devcontainer/devcontainer.json` uses
+that image, so any repository can adopt the same environment by referencing
+it.
+
 ## Layout
 
 - `machines.nix` — all machine definitions (single source of truth)
 - `modules/darwin.nix` — shared nix-darwin system config
 - `modules/home/` — shared home-manager config (`programs/` holds one module per program)
 - `home/` — dotfiles applied verbatim to `$HOME`
+- `containers/devcontainer/` — devcontainer base image
 - `scripts/bootstrap.sh` — fresh machine bootstrap
 
 ## Notes
