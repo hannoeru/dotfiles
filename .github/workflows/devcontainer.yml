@@ -117,3 +117,19 @@ jobs:
             --tag "${IMAGE_NAME}:latest" \
             --tag "${IMAGE_NAME}:${GITHUB_SHA::7}" \
             $(printf "${IMAGE_NAME}@sha256:%s " *)
+
+      - name: Enforce image size budget
+        # The summed compressed layer size is what a pull downloads; gate it
+        # per architecture so the image cannot quietly grow by gigabytes.
+        working-directory: /tmp/digests
+        run: |
+          budget_mib=1536
+          for digest_file in *; do
+            size_mib=$(( $(docker manifest inspect "${IMAGE_NAME}@sha256:${digest_file}" \
+              | jq '[.layers[].size] | add') / 1048576 ))
+            echo "${digest_file}: ${size_mib} MiB (budget ${budget_mib} MiB)"
+            if [ "$size_mib" -gt "$budget_mib" ]; then
+              echo "::error::arch ${digest_file} exceeds the size budget"
+              exit 1
+            fi
+          done

@@ -40,11 +40,11 @@ RUN curl --proto '=https' --tlsv1.2 -sSf -L \
     && rm /tmp/nix-installer.sh \
     # Docker's default seccomp profile blocks the user namespaces the Nix
     # build sandbox requires, so builds run unsandboxed instead.
-    && printf 'experimental-features = nix-command flakes\nsandbox = false\n' > /etc/nix/nix.conf
-
-# The user operates the store directly; no daemon runs during the build or
-# inside the devcontainer.
-RUN chown -R "$USER_UID:$USER_GID" /nix/var /nix/store
+    && printf 'experimental-features = nix-command flakes\nsandbox = false\n' > /etc/nix/nix.conf \
+    # The user operates the store directly; no daemon runs during the build
+    # or inside the devcontainer. A metadata-only chown in its own layer
+    # would copy the store bytes again, so ownership is fixed here.
+    && chown -R "$USER_UID:$USER_GID" /nix/var /nix/store
 
 USER "$USERNAME"
 # home-manager's wrapper requires $USER; docker build sets neither HOME nor USER.
@@ -62,6 +62,10 @@ COPY --chown="$USER_UID:$USER_GID" . /tmp/dotfiles
 RUN if [ "$TARGETARCH" = "arm64" ]; then home_config="ephemeral-aarch64"; else home_config="ephemeral"; fi \
     && nix run /tmp/dotfiles#home-manager -- switch -b backup --flake "/tmp/dotfiles#$home_config" \
     && /home/$USERNAME/.nix-profile/bin/mise install \
+    # Build-time paths that no gcroot reaches must go in this same RUN; a
+    # later RUN could not shrink this layer. Optimize hardlinks the rest.
+    && nix store gc \
+    && nix store optimize \
     && rm -rf /tmp/dotfiles
 
 # zsh comes from home-manager; chsh needs the path in /etc/shells.
