@@ -62,7 +62,7 @@ does not run the `check` workflow on it; the check runs after the merge.
 - `machines.nix` — all machine definitions (single source of truth)
 - `modules/darwin.nix` — shared nix-darwin system config
 - `modules/home/` — shared home-manager config (`programs/` holds one module per program)
-- `files/` — dotfiles applied verbatim to `$HOME`
+- `home/` — dotfiles applied verbatim to `$HOME`
 - `scripts/bootstrap.sh` — fresh machine bootstrap
 
 ## Notes

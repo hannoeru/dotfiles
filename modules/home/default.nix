@@ -90,37 +90,37 @@ in
   ];
 
   home.file = {
-    ".aliases".source = ../../files/.aliases;
-    ".envfile".source = ../../files/.envfile;
-    ".nanorc".source = ../../files/.nanorc;
-    ".nirc".source = ../../files/.nirc;
-    ".npmrc".source = ../../files/.npmrc;
-    ".psqlrc".source = ../../files/.psqlrc;
-    ".simple-git-hooks.rc".source = ../../files/.simple-git-hooks.rc;
+    ".aliases".source = ../../home/.aliases;
+    ".envfile".source = ../../home/.envfile;
+    ".nanorc".source = ../../home/.nanorc;
+    ".nirc".source = ../../home/.nirc;
+    ".npmrc".source = ../../home/.npmrc;
+    ".psqlrc".source = ../../home/.psqlrc;
+    ".simple-git-hooks.rc".source = ../../home/.simple-git-hooks.rc;
 
     ".nano".source = nanorc;
 
     ".pi" = {
-      source = ../../files/.pi;
+      source = ../../home/.pi;
       recursive = true;
     };
 
     ".config/zsh/conf.d" = {
-      source = ../../files/.config/zsh/conf.d;
+      source = ../../home/.config/zsh/conf.d;
       recursive = true;
     };
     # Both git-hook tools run `mise activate bash`; one shared source.
-    ".config/husky/init.sh".source = ../../files/.simple-git-hooks.rc;
-    ".config/zsh-abbr/user-abbreviations".source = ../../files/.config/zsh-abbr/user-abbreviations;
+    ".config/husky/init.sh".source = ../../home/.simple-git-hooks.rc;
+    ".config/zsh-abbr/user-abbreviations".source = ../../home/.config/zsh-abbr/user-abbreviations;
   }
   // lib.optionalAttrs darwin {
     ".config/karabiner" = {
-      source = ../../files/.config/karabiner;
+      source = ../../home/.config/karabiner;
       recursive = true;
     };
   }
   // lib.optionalAttrs machine.personal {
-    ".ssh/config".source = ../../files/.ssh/config;
+    ".ssh/config".source = ../../home/.ssh/config;
   };
 
   programs.delta = {
