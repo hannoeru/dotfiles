@@ -63,9 +63,9 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then home_config="ephemeral-aarch64"; else h
     && nix run /tmp/dotfiles#home-manager -- switch -b backup --flake "/tmp/dotfiles#$home_config" \
     && /home/$USERNAME/.nix-profile/bin/mise install \
     # Build-time paths that no gcroot reaches must go in this same RUN; a
-    # later RUN could not shrink this layer. Optimize hardlinks the rest.
+    # later RUN could not shrink this layer. Optimise hardlinks the rest.
     && nix store gc \
-    && nix store optimize \
+    && nix store optimise \
     && rm -rf /tmp/dotfiles
 
 # zsh comes from home-manager; chsh needs the path in /etc/shells.
