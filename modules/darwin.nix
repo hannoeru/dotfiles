@@ -67,6 +67,12 @@ in
   # Keep Touch ID for sudo.
   security.pam.services.sudo_local.touchIdAuth = true;
 
+  # The application firewall is off on a fresh macOS install.
+  networking.applicationFirewall = {
+    enable = true;
+    enableStealthMode = true;
+  };
+
   # Nix is installed by the Determinate installer, which manages the
   # daemon itself; nix-darwin must not manage it.
   nix.enable = false;
