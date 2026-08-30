@@ -1,6 +1,9 @@
 # Sourced from the zsh profile and .bashrc, after Homebrew's shellenv has
 # run. Pure variables and paths live in home-manager's sessionVariables and
 # sessionPath instead.
+#
+# No secrets here: this file is tracked in a public repository. Secrets
+# come from the 1Password CLI during activation.
 
 function add_to_path() {
   # Add a directory to PATH only if it is non-empty and exists

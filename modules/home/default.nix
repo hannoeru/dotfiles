@@ -57,7 +57,6 @@ in
     DOCKER_BUILDKIT = "1";
     DENO_DIR = "$HOME/.deno";
     GOPATH = "$HOME/go";
-    CARGOPATH = "$HOME/.cargo";
     SIMPLE_GIT_HOOKS_RC = "$HOME/.simple-git-hooks.rc";
   }
   // lib.optionalAttrs darwin {
@@ -110,11 +109,8 @@ in
       source = ../../files/.config/zsh/conf.d;
       recursive = true;
     };
-    ".config/fish" = {
-      source = ../../files/.config/fish;
-      recursive = true;
-    };
-    ".config/husky/init.sh".source = ../../files/.config/husky/init.sh;
+    # Both git-hook tools run `mise activate bash`; one shared source.
+    ".config/husky/init.sh".source = ../../files/.simple-git-hooks.rc;
     ".config/zsh-abbr/user-abbreviations".source = ../../files/.config/zsh-abbr/user-abbreviations;
   }
   // lib.optionalAttrs darwin {
@@ -250,6 +246,7 @@ in
       $DRY_RUN_CMD mkdir -p "$HOME/.ssh"
       $DRY_RUN_CMD chmod 700 "$HOME/.ssh"
       $DRY_RUN_CMD mkdir -p "$HOME/.ssh/config.d"
+      $DRY_RUN_CMD chmod 700 "$HOME/.ssh/config.d"
     '';
 
     personalSecrets = lib.hm.dag.entryAfter [ "sshSetup" ] (

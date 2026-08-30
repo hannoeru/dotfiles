@@ -12,7 +12,6 @@
       font-family = "MesloLGS Nerd Font Mono";
       font-size = 14;
       font-thicken = true;
-      font-synthetic-style = true;
       window-padding-x = 10;
       background-opacity = 0.95;
       background-blur-radius = 20;

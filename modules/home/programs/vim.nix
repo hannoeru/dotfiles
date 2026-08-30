@@ -13,8 +13,6 @@
 
       " Colors
       """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-      let g:molokai_original = 1
-      " colorscheme badwolf         " awesome colorscheme
       syntax enable           " enable syntax processing
 
       " Spaces & Tabs
@@ -58,7 +56,7 @@
       "inoremap jk <esc>
       " edit vimrc/zshrc and load vimrc bindings
       nnoremap <leader>ev :vsp $MYVIMRC<CR>
-      nnoremap <leader>ez :vsp ~/.zshrc<CR>
+      nnoremap <leader>ez :vsp ~/.config/zsh/.zshrc<CR>
       nnoremap <leader>sv :source $MYVIMRC<CR>
       " save session,  After saving a Vim session, you can reopen it with vim -S.
       nnoremap <leader>s :mksession<CR>

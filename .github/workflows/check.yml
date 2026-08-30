@@ -6,6 +6,14 @@ on:
   pull_request:
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@v22
+      # Eval-only: catches broken flake outputs for every system without building.
+      - run: nix flake check --all-systems --no-build
+
   format:
     runs-on: ubuntu-latest
     steps:

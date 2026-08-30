@@ -12,9 +12,13 @@ flake_dir="$(cd -P "$script_dir/.." && pwd -P)"
 
 if ! command -v nix >/dev/null 2>&1; then
   echo "==> Installing Nix"
+  installer="$(mktemp)"
+  # Download first: `curl | sh` would hide a failed download, since an
+  # empty script exits 0 and `set -e` would never fire.
   curl --proto '=https' --tlsv1.2 -sSf -L \
     https://install.determinate.systems/nix/tag/v3.22.2/nix-installer.sh \
-    | sh -s -- install
+    -o "$installer"
+  sh "$installer" install
 fi
 
 # The installer cannot modify this shell's environment; add the Nix
@@ -29,13 +33,30 @@ case "$(uname)" in
   Darwin)
     if ! command -v brew >/dev/null 2>&1; then
       echo "==> Installing Homebrew"
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      installer="$(mktemp)"
+      curl -fsSL \
+        https://raw.githubusercontent.com/Homebrew/install/150c69df1e54b0b74c9fcca5a201410a2300816a/install.sh \
+        -o "$installer"
+      /bin/bash "$installer"
     fi
     hostname="$(scutil --get LocalHostName)"
     case "$hostname" in
       Han-MBP) darwin_config="Han-MBP" ;;
-      *) darwin_config="work" ;;
+      *)
+        # The work machine's host name is set by the employer's device
+        # management and is intentionally not declared; an undeclared
+        # host name selects the work configuration only when the machine
+        # is actually MDM-enrolled, otherwise the machine is unknown.
+        if profiles status -type enrollment 2>/dev/null | grep -q "MDM enrollment: Yes"; then
+          darwin_config="work"
+        else
+          echo "error: unknown host name '$hostname' and no MDM enrollment" >&2
+          echo "Add this machine to machines.nix, then re-run bootstrap" >&2
+          exit 1
+        fi
+        ;;
     esac
+    echo "==> Applying darwin configuration: $darwin_config"
     # Build as the user, activate as root (same script darwin-rebuild runs).
     toplevel="$(nix build --no-link --print-out-paths \
       "$flake_dir#darwinConfigurations.$darwin_config.system")"
@@ -46,8 +67,10 @@ case "$(uname)" in
     host="$(hostname -s)"
     case "$host" in
       ubuntu) home_config="hanlee@ubuntu" ;;
+      # Ephemeral machines (containers, devcontainers, WSL).
       *) home_config="hanlee" ;;
     esac
+    echo "==> Applying home configuration: $home_config"
     case "$(uname -m)" in
       x86_64) ;;
       aarch64 | arm64) home_config="$home_config-aarch64" ;;

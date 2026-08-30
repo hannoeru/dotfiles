@@ -46,7 +46,9 @@ export default function (pi: ExtensionAPI) {
 			"set -e",
 			'cd "$1"',
 			'export GIT_INDEX_FILE="$3"',
-			"git add -A",
+			// Private keys and certificates are excluded: a checkpoint commit is
+			// durable and could leak through mirrors or clones if snapshotted.
+			"git add -A -- ':!*.pem' ':!*.key' ':!id_rsa*' ':!id_ed25519*' ':!id_ecdsa*' ':!*.p12' ':!*.pfx'",
 			"tree=$(git write-tree)",
 			'if git rev-parse -q --verify HEAD >/dev/null 2>&1; then',
 			'  commit=$(git commit-tree "$tree" -p HEAD -m "$4")',

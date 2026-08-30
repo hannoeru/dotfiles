@@ -62,10 +62,7 @@ in
     home = "/Users/${machine.username}";
     shell = pkgs.zsh;
   };
-  environment.shells = [
-    pkgs.zsh
-    "/opt/homebrew/bin/fish"
-  ];
+  environment.shells = [ pkgs.zsh ];
 
   # Keep Touch ID for sudo.
   security.pam.services.sudo_local.touchIdAuth = true;
@@ -169,7 +166,6 @@ in
     # ~/.envfile adds to PATH. VS Code extensions are not managed here.
     brews = [
       "curl"
-      "fish"
       "openssl@3"
       "grep"
     ];

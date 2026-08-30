@@ -75,7 +75,7 @@
         lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system: {
           home-manager = mkApp home-manager.packages.${system}.home-manager;
         })
-        // lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" ] (system: {
+        // lib.genAttrs [ "aarch64-darwin" ] (system: {
           darwin-rebuild = mkApp (
             (import nixpkgs {
               inherit system;
@@ -84,7 +84,7 @@
           );
         });
 
-      formatter = lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" "x86_64-linux" "aarch64-linux" ] (
+      formatter = lib.genAttrs [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ] (
         system: nixpkgs.legacyPackages.${system}.nixfmt
       );
     };
