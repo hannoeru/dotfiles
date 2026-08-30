@@ -21,7 +21,7 @@
         "npm:tsx" = "latest";
         bun = "latest";
         node = "lts";
-        pnpm = "latest";
+        pnpm = "12";
         python = "latest";
         yarn = "latest";
       };
