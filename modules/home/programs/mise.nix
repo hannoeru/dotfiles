@@ -19,6 +19,7 @@
         "npm:actions-up" = "latest";
         "npm:taze" = "latest";
         "npm:tsx" = "latest";
+        bun = "latest";
         node = "lts";
         pnpm = "latest";
         python = "latest";
