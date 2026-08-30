@@ -29,12 +29,6 @@ let
     zsh-completions
   ];
 
-  darwinPackages = with pkgs; [
-    awscli2
-    azure-cli
-    opentofu
-  ];
-
   sshSignProgram =
     if darwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else "op-ssh-sign";
 in
@@ -51,7 +45,7 @@ in
   # triggers a Nix warning at eval time; read the docs online instead.
   manual.manpages.enable = false;
 
-  home.packages = sharedPackages ++ lib.optionals darwin darwinPackages;
+  home.packages = sharedPackages;
 
   home.sessionVariables = {
     DOCKER_BUILDKIT = "1";

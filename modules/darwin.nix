@@ -23,7 +23,6 @@ let
     "font-input"
     "font-meslo-lg-nerd-font"
     "font-monaspace"
-    "gcloud-cli"
     "google-chrome"
     "google-chrome@canary"
     "google-japanese-ime"
