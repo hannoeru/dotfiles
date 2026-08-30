@@ -47,7 +47,9 @@ RUN curl --proto '=https' --tlsv1.2 -sSf -L \
 RUN chown -R "$USER_UID:$USER_GID" /nix/var /nix/store
 
 USER "$USERNAME"
+# home-manager's wrapper requires $USER; docker build sets neither HOME nor USER.
 ENV HOME=/home/$USERNAME
+ENV USER=$USERNAME
 ENV PATH="/home/$USERNAME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
 ENV NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 WORKDIR /home/$USERNAME
