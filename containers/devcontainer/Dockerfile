@@ -54,14 +54,14 @@ ENV PATH="/home/$USERNAME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PA
 ENV NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 WORKDIR /home/$USERNAME
 
-# Apply the dotfiles and pre-install the language runtimes. The build
-# context is this repository; the flake exposes one home configuration
-# per architecture.
+# Apply the dotfiles. Language runtimes are not pre-installed: mise's
+# auto-install hook installs each one the first time it is used, which
+# keeps the image small. The build context is this repository; the flake
+# exposes one home configuration per architecture.
 ARG TARGETARCH
 COPY --chown="$USER_UID:$USER_GID" . /tmp/dotfiles
 RUN if [ "$TARGETARCH" = "arm64" ]; then home_config="ephemeral-aarch64"; else home_config="ephemeral"; fi \
     && nix run /tmp/dotfiles#home-manager -- switch -b backup --flake "/tmp/dotfiles#$home_config" \
-    && /home/$USERNAME/.nix-profile/bin/mise install \
     # Build-time paths that no gcroot reaches must go in this same RUN; a
     # later RUN could not shrink this layer. Optimise hardlinks the rest.
     && nix store gc \

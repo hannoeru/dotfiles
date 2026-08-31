@@ -60,10 +60,11 @@ does not run the `check` workflow on it; the check runs after the merge.
 ## Dev container
 
 `containers/devcontainer/Dockerfile` builds a base image (Ubuntu + Nix + this
-repo's `ephemeral` configuration, including mise runtimes) and CI publishes it
-to `ghcr.io/hannoeru/devcontainer` for amd64 and arm64. `.devcontainer/devcontainer.json` uses
+repo's `ephemeral` configuration) and CI publishes it to
+`ghcr.io/hannoeru/devcontainer` for amd64 and arm64. `.devcontainer/devcontainer.json` uses
 that image, so any repository can adopt the same environment by referencing
-it.
+it. mise runtimes are not pre-installed in the image; mise installs each one
+on first use.
 
 ## Layout
 
@@ -77,7 +78,7 @@ it.
 ## Notes
 
 - GUI apps and fonts come from Homebrew (managed by nix-darwin); manually installed packages are left alone.
-- Language runtimes (node, python, ...) come from [mise](https://mise.jdx.dev); run `mise install` after first activation (bootstrap does this).
+- Language runtimes (node, python, ...) come from [mise](https://mise.jdx.dev); run `mise install` after first activation (bootstrap does this), or rely on mise's auto-install on first use (the devcontainer does).
 - Personal secrets (git signing key, SSH config) come from the [1Password CLI](https://developer.1password.com/docs/cli/) during activation; if it is missing, they are skipped. Run the switch a second time after installing it.
 - Clean the Nix store occasionally: `nix-collect-garbage --delete-older-than 30d`.
 
