@@ -9,6 +9,6 @@
 - Always talk in ASD-STE100 Simplified Technical English. Always read CONTEXT.md files, and use their ubiquitous language.
 - Always write commit messages that follow the Conventional Commits specification.
 - Always write review comments that follow the Conventional Comments standard.
-- Comment only to explain WHY, not WHAT. No obvious comments, and no comments that repeat what the code already says. Use self-documenting code instead.
+- Default to no comments; make the code explain itself. Add a comment only for a WHY the code cannot express — a constraint, a workaround, or a bug link — not for WHAT a reader can already see.
 - Never use fixed delays or elapsed time to infer command completion or readiness. Wait for the process to exit or poll an explicit completion/readiness condition; use timeouts only as safety limits for stuck commands.
 
