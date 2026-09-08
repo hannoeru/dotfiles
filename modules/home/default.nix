@@ -31,6 +31,24 @@ let
 
   sshSignProgram =
     if darwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else "op-ssh-sign";
+
+  signingKeyRead =
+    if machine ? sshSigningKeyItem then
+      ''"$op_bin" item get '${machine.sshSigningKeyItem}' --format json | ${pkgs.jq}/bin/jq -r '.fields[] | select(.label == "public key") | .value' ''
+    else
+      null;
+
+  findOnePasswordCli = ''
+    op_bin="$(command -v op || true)"
+    if [ -z "$op_bin" ]; then
+      for candidate in /opt/homebrew/bin/op "$HOME/.local/bin/op"; do
+        if [ -x "$candidate" ]; then
+          op_bin="$candidate"
+          break
+        fi
+      done
+    fi
+  '';
 in
 {
   # mkDefault: as a nix-darwin module these come from users.users.<name>
@@ -160,7 +178,7 @@ in
     ];
 
     # ~/.config/git/signing.gitconfig is written by
-    # home.activation.personalSecrets when 1Password is available; git
+    # home.activation.signingKey when 1Password is available; git
     # silently ignores missing include files.
     includes = [
       { path = "~/.config/git/signing.gitconfig"; }
@@ -243,22 +261,13 @@ in
       $DRY_RUN_CMD chmod 700 "$HOME/.ssh/config.d"
     '';
 
-    personalSecrets = lib.hm.dag.entryAfter [ "sshSetup" ] (
-      if machine.personal then
+    signingKey = lib.hm.dag.entryAfter [ "sshSetup" ] (
+      if signingKeyRead != null then
         ''
-          op_bin="$(command -v op || true)"
-          if [ -z "$op_bin" ]; then
-            for candidate in /opt/homebrew/bin/op "$HOME/.local/bin/op"; do
-              if [ -x "$candidate" ]; then
-                op_bin="$candidate"
-                break
-              fi
-            done
-          fi
-
+          ${findOnePasswordCli}
           if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
             $DRY_RUN_CMD mkdir -p "$HOME/.config/git"
-            key="$($op_bin read 'op://Private/GitHub SSH Key/public key' || true)"
+            key="$(${signingKeyRead} || true)"
             if [ -n "$key" ]; then
               tmp="$(mktemp)"
               {
@@ -275,7 +284,19 @@ in
             else
               echo "warning: could not fetch git signing key from 1Password" >&2
             fi
+          else
+            echo "warning: 1Password CLI not available, skipped git signing key" >&2
+          fi
+        ''
+      else
+        ""
+    );
 
+    personalSshConfig = lib.hm.dag.entryAfter [ "sshSetup" ] (
+      if machine.personal then
+        ''
+          ${findOnePasswordCli}
+          if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
             tmp="$(mktemp)"
             if "$op_bin" document lqhaym7u7wa5jjfpcmenk7xo4y > "$tmp"; then
               $DRY_RUN_CMD mv "$tmp" "$HOME/.ssh/config.d/personal.conf"
@@ -287,7 +308,7 @@ in
               echo "warning: could not fetch ssh config from 1Password" >&2
             fi
           else
-            echo "warning: 1Password CLI not available, skipped personal secrets" >&2
+            echo "warning: 1Password CLI not available, skipped personal ssh config" >&2
           fi
         ''
       else

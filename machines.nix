@@ -8,6 +8,7 @@
 #   personal  - whether this machine may read personal secrets from 1Password
 #   name      - git user name
 #   email     - git user email
+#   sshSigningKeyItem - optional 1Password item UUID for the SSH signing key
 #
 # darwin only:
 #   hostname  - host name to manage; omit to leave the machine's own name
@@ -23,6 +24,7 @@
       "zh-Hant-JP"
     ];
     personal = true;
+    sshSigningKeyItem = "ansddacrnp3ibgfs3sfbg3unt4";
     name = "Han";
     email = "me@hanlee.co";
   };
@@ -38,6 +40,7 @@
       "zh-Hant-JP"
     ];
     personal = false;
+    sshSigningKeyItem = "xr5pzbrwuzuuh24ksg5g3n34oy";
     name = "";
     email = "";
   };
@@ -47,6 +50,7 @@
     os = "linux";
     username = "hanlee";
     personal = true;
+    sshSigningKeyItem = "ansddacrnp3ibgfs3sfbg3unt4";
     name = "Han";
     email = "me@hanlee.co";
   };
