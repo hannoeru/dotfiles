@@ -300,7 +300,7 @@ in
           ${findOnePasswordCli}
           if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
             tmp="$(mktemp)"
-            if "$op_bin" document lqhaym7u7wa5jjfpcmenk7xo4y > "$tmp"; then
+            if "$op_bin" document get lqhaym7u7wa5jjfpcmenk7xo4y > "$tmp"; then
               $DRY_RUN_CMD mv "$tmp" "$HOME/.ssh/config.d/personal.conf"
               if [ -f "$HOME/.ssh/config.d/personal.conf" ]; then
                 $DRY_RUN_CMD chmod 600 "$HOME/.ssh/config.d/personal.conf"
