@@ -72,6 +72,24 @@ in
     enableStealthMode = true;
   };
 
+  # Remote Login (sshd): key-only login, Ed25519 host key only.
+  services.openssh = {
+    enable = true;
+    hostKeys = [
+      {
+        type = "ed25519";
+        path = "/etc/ssh/ssh_host_ed25519_key";
+      }
+    ];
+    extraConfig = ''
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      PermitRootLogin no
+      PubkeyAuthentication yes
+      PubkeyAcceptedAlgorithms ssh-ed25519
+    '';
+  };
+
   # Nix is installed by the Determinate installer, which manages the
   # daemon itself; nix-darwin must not manage it.
   nix.enable = false;

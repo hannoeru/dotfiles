@@ -132,6 +132,13 @@ in
       source = ../../home/.config/karabiner;
       recursive = true;
     };
+
+    # The 1Password SSH agent socket path is macOS-specific, so it
+    # cannot live in the shared ~/.ssh/config that Linux boxes use.
+    ".ssh/config.d/10-agent.conf".text = ''
+      Host *
+        IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    '';
   }
   // lib.optionalAttrs machine.personal {
     ".ssh/config".source = ../../home/.ssh/config;
