@@ -117,6 +117,8 @@ in
       recursive = true;
     };
 
+    ".config/herdr/config.toml".source = ../../home/.config/herdr/config.toml;
+
     ".config/zsh/conf.d" = {
       source = ../../home/.config/zsh/conf.d;
       recursive = true;

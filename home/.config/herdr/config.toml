@@ -1,0 +1,58 @@
+# Herdr configuration.
+#
+# Reference: https://herdr.dev/docs/config-reference/
+# Only the config file is linked into ~/.config/herdr; Herdr keeps live
+# runtime state (logs, sockets, session.json) in that same directory, so the
+# directory itself must NOT be linked into this repo.
+#
+# Reload a running server after editing: `herdr server reload-config`.
+
+# Skip the first-run onboarding flow.
+onboarding = false
+
+[terminal]
+# Start login shells on macOS so PATH setup (path_helper, Homebrew) runs in
+# new panes; keeps non-login behavior on other platforms.
+shell_mode = "auto"
+# New panes, tabs, and workspaces inherit the source pane working directory.
+new_cwd = "follow"
+
+[server]
+# Virtual terminal size used for headless orchestration when no client is
+# attached.
+headless_cols = 160
+headless_rows = 50
+
+[session]
+# Resume supported agent conversations after a server restart.
+resume_agents_on_restore = true
+
+[worktrees]
+# Root for Git worktree checkouts created from the sidebar. Checkouts land
+# under <directory>/<repo>/<branch-slug>.
+directory = "~/projects/herdr-worktrees"
+
+[theme]
+# Follow the host terminal (Ghostty vitesse) ANSI palette.
+name = "terminal"
+
+[ui]
+# Distinguish agent states by shape as well as color.
+status_indicators = "symbols"
+
+[ui.toast]
+# Outer-terminal notifications work in Ghostty and over SSH.
+delivery = "terminal"
+delay_seconds = 1
+
+[ui.sidebar.agents]
+row_gap = 0
+rows = [
+  ["state_icon", "agent", "state_text"],
+  ["workspace", "tab"],
+]
+
+[keys]
+# tmux-style prefix. Keep the default so Herdr never steals input from
+# shells, editors, or terminal apps.
+prefix = "ctrl+b"
