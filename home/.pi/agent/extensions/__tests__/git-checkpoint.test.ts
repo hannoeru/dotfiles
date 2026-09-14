@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 import { afterEach, test } from "node:test";
 import type { ExtensionAPI, ExtensionContext, ExtensionHandler, TurnStartEvent } from "@earendil-works/pi-coding-agent";
-import gitCheckpoint from "./git-checkpoint.ts";
+import gitCheckpoint from "../git-checkpoint.ts";
 
 const execFileAsync = promisify(execFile);
 const repositories: string[] = [];

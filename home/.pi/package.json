@@ -4,7 +4,7 @@
   "packageManager": "pnpm@12.1.0",
   "type": "module",
   "scripts": {
-    "test": "node --test agent/extensions/*.test.ts",
+    "test": "node --test \"agent/extensions/**/*.test.ts\"",
     "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
   "devDependencies": {
