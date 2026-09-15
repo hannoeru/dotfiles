@@ -73,8 +73,9 @@ in
   };
 
   # Remote Login (sshd): key-only login, Ed25519 host key only.
+  # Per-machine toggle (machines.nix); false actively turns sshd off.
   services.openssh = {
-    enable = true;
+    enable = machine.enableSsh;
     hostKeys = [
       {
         type = "ed25519";

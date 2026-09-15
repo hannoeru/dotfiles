@@ -12,6 +12,7 @@
 #
 # darwin only:
 #   hostname  - host name to manage; omit to leave the machine's own name
+#   enableSsh - whether to enable Remote Login (sshd)
 #   languages - preferred UI languages, most preferred first
 {
   "Han-MBP" = {
@@ -24,6 +25,7 @@
       "zh-Hant-JP"
     ];
     personal = true;
+    enableSsh = true;
     sshSigningKeyItem = "ansddacrnp3ibgfs3sfbg3unt4";
     name = "Han";
     email = "me@hanlee.co";
@@ -40,6 +42,7 @@
       "zh-Hant-JP"
     ];
     personal = false;
+    enableSsh = false;
     sshSigningKeyItem = "xr5pzbrwuzuuh24ksg5g3n34oy";
     name = "";
     email = "";
