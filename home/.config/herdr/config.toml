@@ -39,6 +39,8 @@ name = "terminal"
 [ui]
 # Distinguish agent states by shape as well as color.
 status_indicators = "symbols"
+# Do not copy selected text to the clipboard automatically.
+copy_on_select = false
 
 [ui.toast]
 # Outer-terminal notifications work in Ghostty and over SSH.
