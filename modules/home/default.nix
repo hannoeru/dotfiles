@@ -102,6 +102,9 @@ in
   ];
 
   home.file = {
+    # Suppress the "Last login" message on interactive shells.
+    ".hushlogin".text = "";
+
     ".aliases".source = ../../home/.aliases;
     ".envfile".source = ../../home/.envfile;
     ".nanorc".source = ../../home/.nanorc;
