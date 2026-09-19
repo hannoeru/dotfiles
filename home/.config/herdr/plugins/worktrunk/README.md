@@ -32,22 +32,18 @@ Merged from two MIT-licensed plugins:
 ## Install
 
 The plugin ships with these dotfiles as `home/.config/herdr/plugins/worktrunk`
-and is linked to `~/.config/herdr/plugins/worktrunk`. Register it with herdr
-once per machine:
+and is linked to `~/.config/herdr/plugins/worktrunk`. The dotfiles register it
+with herdr automatically on each rebuild, so a fresh Mac needs no manual step.
+
+The manual equivalent (also useful to refresh herdr's cached manifest after
+editing `herdr-plugin.toml`):
 
 ```bash
 herdr plugin link ~/.config/herdr/plugins/worktrunk
 ```
 
-Then reload the session/config so the workspace context menu and keybindings
-pick it up. herdr caches the manifest at link time, so after editing
-`herdr-plugin.toml` relink:
-
-```bash
-herdr plugin unlink worktrunk && herdr plugin link ~/.config/herdr/plugins/worktrunk
-```
-
-Edits to the shell scripts are picked up on the next run.
+Edits to the shell scripts are picked up on the next run; manifest edits need
+the relink above, which the next rebuild performs automatically.
 
 ## Configuration
 
