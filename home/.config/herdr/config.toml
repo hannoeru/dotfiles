@@ -58,3 +58,39 @@ rows = [
 # tmux-style prefix. Keep the default so Herdr never steals input from
 # shells, editors, or terminal apps.
 prefix = "ctrl+b"
+
+# The Worktrunk plugin's [[keys.command]] bindings below replace these
+# built-ins on the same chords; unbind them so the plugin actions win.
+new_worktree = ""
+close_workspace = ""
+rename_pane = ""
+
+[[keys.command]]
+key = "prefix+shift+g"
+type = "plugin_action"
+command = "worktrunk.open"
+description = "Worktree: switch / create"
+
+[[keys.command]]
+key = "prefix+shift+c"
+type = "plugin_action"
+command = "worktrunk.open-current"
+description = "Worktree: create from current"
+
+[[keys.command]]
+key = "prefix+shift+d"
+type = "plugin_action"
+command = "worktrunk.remove"
+description = "Worktree: remove"
+
+[[keys.command]]
+key = "prefix+shift+m"
+type = "plugin_action"
+command = "worktrunk.merge"
+description = "Worktree: merge"
+
+[[keys.command]]
+key = "prefix+shift+p"
+type = "plugin_action"
+command = "worktrunk.pull"
+description = "Worktree: pull branch / PR / issue"

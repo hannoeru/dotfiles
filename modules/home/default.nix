@@ -17,6 +17,7 @@ let
   sharedPackages = with pkgs; [
     docker
     eza
+    fzf
     git-filter-repo
     git-lfs
     jq
@@ -97,6 +98,7 @@ in
     ./programs/neovim.nix
     ./programs/starship.nix
     ./programs/vim.nix
+    ./programs/worktrunk.nix
     ./programs/zoxide.nix
     ./programs/zsh.nix
   ];
@@ -121,6 +123,11 @@ in
     };
 
     ".config/herdr/config.toml".source = ../../home/.config/herdr/config.toml;
+
+    ".config/herdr/plugins/worktrunk" = {
+      source = ../../home/.config/herdr/plugins/worktrunk;
+      recursive = true;
+    };
 
     ".config/zsh/conf.d" = {
       source = ../../home/.config/zsh/conf.d;
