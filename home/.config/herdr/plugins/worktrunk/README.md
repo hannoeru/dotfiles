@@ -13,7 +13,7 @@ Merged from two MIT-licensed plugins:
 
 ## Actions
 
-- **Worktree: switch / create from default branch** (`open`) — fzf over existing worktrees and local branches. `Enter` on a match switches to it; type a new name to create it from worktrunk's default base. Type `pr:` (or `pr:123`, a title fragment, or just `pr:` to list) to browse open pull requests via `gh`.
+- **Worktree: switch / create from default branch** (`open`) — fzf over existing worktrees and local branches. `Enter` on a match switches to it; type a new name to create it from worktrunk's default base. Press `Tab` to switch the picker to a searchable list of open pull requests (`Shift-Tab` to return).
 - **Worktree: switch / create from current branch** (`open-current`) — same, but new names branch from the current worktree.
 - **Worktree: switch / create from local or remote branches** (`open-with-remotes`) — includes remote-tracking branches.
 - **Worktree: pull branch / PR / issue** (`pull`) — a menu of issue / remote branch / PR, using `gh` and `wt switch pr:N`.

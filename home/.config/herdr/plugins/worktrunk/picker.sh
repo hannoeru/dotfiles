@@ -45,31 +45,45 @@ fi
 
 worktrunk_fzf_layout
 
-# fzf over existing worktree branches; --print-query returns a typed-but-unmatched
-# name so we can create it, and alt-↵ (print-query) forces the typed name even when
-# it fuzzy-matches an existing branch (fzf then prints only the query, so the
-# last-line parse below lands on it). Falls back to a plain read if fzf isn't on PATH.
+# Two candidate lists toggle with Tab / Shift-Tab inside fzf: worktrees/branches
+# and open PRs. PR entries are self-identifying (`pr:<number>`), so the selection
+# needs no extra mode tracking — the shortcut pass-through below handles them.
+# Falls back to a plain read when fzf isn't on PATH.
 if command -v fzf >/dev/null; then
+  wt_list=$(mktemp)
+  pr_list=$(mktemp)
+
+  # Refs first: `git for-each-ref` answers instantly and in refname order,
+  # while `wt list` stats every checkout — seconds on a repo with many
+  # worktrees. Drop origin/HEAD: its short form is bare "origin", so filter
+  # on the full refname (refs/remotes/origin/HEAD), then emit the short name.
+  {
+    git for-each-ref --format='%(refname) %(refname:short)' "${branch_refs[@]}" 2>/dev/null \
+      | awk '$1 !~ /\/HEAD$/ {print $2}'
+    wt list --format=json 2>/dev/null \
+      | worktrunk_list_items \
+      | jq -r 'select(.branch != null) | .branch'
+  } | awk '!seen[$0]++ { print; fflush() }' >"$wt_list"
+
+  : >"$pr_list"
+  if command -v gh >/dev/null 2>&1; then
+    gh pr list --state open --limit 50 --json number,title,headRefName,author 2>/dev/null \
+      | jq -r '.[] | "pr:\(.number)\t\(.title)\t\(.headRefName // "")"' >"$pr_list"
+  fi
+
   choice=$(
-    {
-      # Refs first: `git for-each-ref` answers instantly and in refname order,
-      # while `wt list` stats every checkout — seconds on a repo with many
-      # worktrees. Drop origin/HEAD: its short form is bare "origin", so filter
-      # on the full refname (refs/remotes/origin/HEAD), then emit the short name.
-      git for-each-ref --format='%(refname) %(refname:short)' "${branch_refs[@]}" 2>/dev/null \
-        | awk '$1 !~ /\/HEAD$/ {print $2}'
-      wt list --format=json 2>/dev/null \
-        | worktrunk_list_items \
-        | jq -r 'select(.branch != null) | .branch'
-    } | awk '!seen[$0]++ { print; fflush() }' \
+    cat "$wt_list" \
       | fzf --print-query --reverse --info=inline "${WORKTRUNK_FZF_LAYOUT[@]}" \
             --bind=alt-enter:print-query \
+            --delimiter=$'\t' --with-nth=1,2 \
             --prompt='worktree ❯ ' \
-            --header="↵ on a match → switch · type a new name + ↵ → create from ${create_base_label} · alt-↵ → force typed name · esc → cancel"
+            --header="↵ switch/create · tab → search PR · shift-tab → back · alt-↵ force typed · esc cancel" \
+            --bind="tab:reload-sync(cat $pr_list)+change-prompt(pr ❯ )" \
+            --bind="shift-tab:reload-sync(cat $wt_list)+change-prompt(worktree ❯ )"
   )
   ret=$?
+  rm -f "$wt_list" "$pr_list"
   [[ $ret -gt 1 ]] && exit 0      # 130 = esc/abort → cancel (0 = picked, 1 = typed-new)
-  query=${choice%%$'\n'*}         # first line: what the user typed in the box
   name=${choice##*$'\n'}          # last line: the selection if any, else the typed query
 else
   printf 'Branch (existing → switch · new → create from %s): ' "$create_base_label"
@@ -77,10 +91,9 @@ else
 fi
 [[ -z $name ]] && exit 0
 
-# A typed `pr:` query opens a gh-backed picker so PRs can be browsed by number
-# or title; `mr:` and PR/MR URLs stay on worktrunk's own shortcut path.
-if [[ $query == pr:* ]]; then
-  name=$(worktrunk_pick_pr pr: "${query#pr:}") || exit 0
+# A picked PR entry carries its display fields after the number; keep only pr:N.
+if [[ $name == pr:* ]]; then
+  name=${name%%$'\t'*}
 fi
 
 open_mode=$(worktrunk_open_mode)
