@@ -1,4 +1,9 @@
-{ lib, pkgs, machine, ... }:
+{
+  lib,
+  pkgs,
+  machine,
+  ...
+}:
 
 let
   wt = lib.getExe pkgs.worktrunk;
