@@ -69,12 +69,19 @@ if command -v fzf >/dev/null; then
   )
   ret=$?
   [[ $ret -gt 1 ]] && exit 0      # 130 = esc/abort → cancel (0 = picked, 1 = typed-new)
+  query=${choice%%$'\n'*}         # first line: what the user typed in the box
   name=${choice##*$'\n'}          # last line: the selection if any, else the typed query
 else
   printf 'Branch (existing → switch · new → create from %s): ' "$create_base_label"
   read -r name
 fi
 [[ -z $name ]] && exit 0
+
+# A typed `pr:` query opens a gh-backed picker so PRs can be browsed by number
+# or title; `mr:` and PR/MR URLs stay on worktrunk's own shortcut path.
+if [[ $query == pr:* ]]; then
+  name=$(worktrunk_pick_pr pr: "${query#pr:}") || exit 0
+fi
 
 open_mode=$(worktrunk_open_mode)
 

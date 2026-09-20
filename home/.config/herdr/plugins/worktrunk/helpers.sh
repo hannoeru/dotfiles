@@ -173,3 +173,39 @@ worktrunk_tab_command() {
     *) printf '%s && %s\n' "$wt" "$relabel_cmd" ;;
   esac
 }
+
+# Open a gh-backed picker over open pull requests. Used when the switch picker's
+# typed query is `pr:` so the user can browse by number or title instead of
+# remembering the exact number. Prints `pr:<number>` on success, or returns
+# nonzero on cancel. WORKTRUNK_FZF_LAYOUT must already be set.
+worktrunk_pick_pr() {
+  local prefix=$1 fragment=${2:-} selection number
+
+  if ! command -v gh >/dev/null 2>&1; then
+    printf '\033[31m%s\033[0m\n' 'gh not found on PATH' >&2
+    sleep 2
+    return 1
+  fi
+
+  local prs
+  prs=$(gh pr list --state open --limit 50 --json number,title,headRefName,author 2>/dev/null \
+    | jq -r '.[] | "\(.number)\t\(.title)\t\(.headRefName // "")\t@\(.author.login // "unknown")"') || true
+  if [[ -z $prs ]]; then
+    printf '\033[31m%s\033[0m\n' 'no open pull requests found' >&2
+    sleep 2
+    return 1
+  fi
+
+  selection=$(printf '%s\n' "$prs" \
+    | fzf --reverse --info=inline "${WORKTRUNK_FZF_LAYOUT[@]}" \
+          --query="$fragment" \
+          --delimiter=$'\t' --with-nth=1,2 \
+          --preview='gh pr view {1} 2>/dev/null | head -80' \
+          --preview-window='right:55%:wrap' \
+          --prompt="${prefix} " \
+          --header='pick a pull request → check out · esc → cancel')
+  [[ -z $selection ]] && return 1
+
+  number=${selection%%$'\t'*}
+  printf '%s\n' "${prefix}${number}"
+}
