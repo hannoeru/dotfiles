@@ -54,7 +54,7 @@ Plugin config lives in the directory printed by
 # open_mode = "workspace"   # default: register a native linked-worktree workspace
 # open_mode = "tab"         # open a tab and type `wt switch` into its shell
 # show_remote_branches = true
-# picker_placement = "popup"  # default: "split"
+# picker_placement = "split"  # default: "popup"
 # popup_width = "70%"
 # popup_height = 24
 # merge_flags = "--no-squash --no-rebase"

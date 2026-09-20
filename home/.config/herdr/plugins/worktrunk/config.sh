@@ -61,23 +61,24 @@ worktrunk_open_mode() {
   esac
 }
 
-# Print how the picker itself is presented: a split pane below the workspace
-# (the default) or a session-modal popup over it. Popups need herdr 0.7.4.
+# Print how the picker itself is presented: a session-modal popup over the
+# current layout (the default) or a split pane below the workspace. Popups
+# need herdr 0.7.4.
 worktrunk_picker_placement() {
   local placement
 
   placement=$(worktrunk_config_value picker_placement)
 
   case "$placement" in
-    ""|split)
-      printf '%s\n' split
-      ;;
-    popup)
+    ""|popup)
       printf '%s\n' popup
       ;;
-    *)
-      printf '\033[33mWarning:\033[0m unsupported picker_placement %q; using split\n' "$placement" >&2
+    split)
       printf '%s\n' split
+      ;;
+    *)
+      printf '\033[33mWarning:\033[0m unsupported picker_placement %q; using popup\n' "$placement" >&2
+      printf '%s\n' popup
       ;;
   esac
 }
