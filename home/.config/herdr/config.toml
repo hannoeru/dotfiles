@@ -55,9 +55,8 @@ rows = [
 ]
 
 [keys]
-# tmux-style prefix. Keep the default so Herdr never steals input from
-# shells, editors, or terminal apps.
-prefix = "ctrl+b"
+# tmux-style prefix.
+prefix = "ctrl+a"
 
 # The Worktrunk plugin's [[keys.command]] bindings below replace these
 # built-ins on the same chords; unbind them so the plugin actions win.
