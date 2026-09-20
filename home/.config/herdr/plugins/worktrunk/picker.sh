@@ -77,9 +77,8 @@ if command -v fzf >/dev/null; then
             --bind=alt-enter:print-query \
             --delimiter=$'\t' --with-nth=1,2 \
             --prompt='worktree ❯ ' \
-            --header="↵ switch/create · tab → search PR · shift-tab → back · alt-↵ force typed · esc cancel" \
-            --bind="tab:reload-sync(cat $pr_list)+change-prompt(pr ❯ )" \
-            --bind="shift-tab:reload-sync(cat $wt_list)+change-prompt(worktree ❯ )"
+            --header="↵ switch/create · tab → toggle worktree / PR · alt-↵ force typed · esc cancel" \
+            --bind="tab:transform:case \$FZF_PROMPT in *pr*) echo 'reload-sync(cat $wt_list)+change-prompt(worktree ❯ )' ;; *) echo 'reload-sync(cat $pr_list)+change-prompt(pr ❯ )' ;; esac"
   )
   ret=$?
   rm -f "$wt_list" "$pr_list"
