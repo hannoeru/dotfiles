@@ -328,5 +328,15 @@ in
       else
         ""
     );
+
+    # Pi extensions resolve runtime dependencies from ~/.pi/node_modules at
+    # load time. That directory is not part of the nix-store .pi copy (the
+    # source links file-by-file), so materialize it after links are generated.
+    piNodeModules = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      if [ -x "${pkgs.pnpm}/bin/pnpm" ] && [ -s "$HOME/.pi/pnpm-lock.yaml" ]; then
+        $DRY_RUN_CMD "${pkgs.pnpm}/bin/pnpm" --dir "$HOME/.pi" install --frozen-lockfile --ignore-scripts >/dev/null 2>&1 \
+          || echo "warning: pnpm install in ~/.pi failed; pi extensions may not load runtime deps" >&2
+      fi
+    '';
   };
 }
