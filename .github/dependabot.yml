@@ -8,6 +8,10 @@ updates:
       prefix: "chore(deps)"
     labels:
       - dependencies
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: npm
     directory: /home/.pi
@@ -17,6 +21,10 @@ updates:
       prefix: "chore(deps)"
     labels:
       - dependencies
+    groups:
+      npm:
+        patterns:
+          - "*"
 
   - package-ecosystem: docker
     directory: /containers/devcontainer
@@ -26,3 +34,7 @@ updates:
       prefix: "chore(deps)"
     labels:
       - dependencies
+    groups:
+      docker:
+        patterns:
+          - "*"
