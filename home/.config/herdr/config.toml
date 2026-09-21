@@ -39,8 +39,8 @@ name = "terminal"
 [ui]
 # Distinguish agent states by shape as well as color.
 status_indicators = "symbols"
-# Do not copy selected text to the clipboard automatically.
-copy_on_select = false
+# Copy selected text to the clipboard automatically.
+copy_on_select = true
 
 [ui.toast]
 # Outer-terminal notifications work in Ghostty and over SSH.
@@ -55,8 +55,9 @@ rows = [
 ]
 
 [keys]
-# tmux-style prefix.
-prefix = "ctrl+a"
+# tmux-style prefix. Keep the default so Herdr never steals input from
+# shells, editors, or terminal apps.
+prefix = "ctrl+b"
 
 # The Worktrunk plugin's [[keys.command]] bindings below replace these
 # built-ins on the same chords; unbind them so the plugin actions win.
