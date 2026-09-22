@@ -9,6 +9,6 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["*/extensions/**/*.ts"],
+  "include": ["*/extensions/**/*.ts", "*/tests/**/*.ts"],
   "exclude": ["*/extensions/orca-*.ts"]
 }

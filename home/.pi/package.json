@@ -4,13 +4,14 @@
   "packageManager": "pnpm@12.4.1",
   "type": "module",
   "scripts": {
-    "test": "node --test \"agent/extensions/**/*.test.ts\"",
+    "test": "vitest run",
     "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
   "devDependencies": {
     "@earendil-works/pi-ai": "^0.85.1",
     "@earendil-works/pi-coding-agent": "^0.85.1",
     "@types/node": "^26.6.1",
-    "@typescript/native-preview": "7.0.0-dev.20260707.2"
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
+    "vitest": "^5.0.1"
   }
 }
