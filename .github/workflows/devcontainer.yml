@@ -141,3 +141,16 @@ jobs:
                   | select(.platform.os == "linux")
                   | "\(.platform.architecture) \(.digest)"')
           exit "$fail"
+
+  cleanup:
+    needs: merge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
+        with:
+          package: devcontainer
+          keep-n-tagged: 10
+          exclude-tags: latest,buildcache-amd64,buildcache-arm64
+          # Platform manifests and attestations appear as untagged rows. Delete
+          # them only with their old parent index, never as a global sweep.
+          validate: true
