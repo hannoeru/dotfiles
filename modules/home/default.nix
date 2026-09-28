@@ -98,6 +98,7 @@ in
     ./programs/neovim.nix
     ./programs/starship.nix
     ./programs/vim.nix
+    ./programs/vscode.nix
     ./programs/worktrunk.nix
     ./programs/zoxide.nix
     ./programs/zsh.nix
