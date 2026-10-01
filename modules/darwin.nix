@@ -28,6 +28,7 @@ let
     "qlmarkdown"
     "quicklook-video"
     "raycast"
+    "mos"
     "slack"
     "stats"
     "syntax-highlight"
