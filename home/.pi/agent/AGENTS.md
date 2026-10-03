@@ -13,3 +13,14 @@
 - Default to no code comments. Add one only to explain a constraint, workaround, or bug link that the code cannot express.
 - Never use fixed delays or elapsed time to infer command completion or readiness. Wait for the process to exit or poll an explicit completion/readiness condition; use timeouts only as safety limits for stuck commands.
 
+## Herdr agent defaults
+
+When running inside Herdr (`HERDR_ENV=1`):
+
+- Use the installed Herdr skill for agent orchestration.
+- Always use `pi` as the default agent kind.
+- Start all helper agents with `herdr agent start <name> --kind pi --pane <pane-id>`.
+- Never select another agent kind unless I explicitly request it.
+- Create the target pane first and use the pane ID returned by Herdr.
+- Do not control Herdr when `HERDR_ENV=1` is not set.
+
