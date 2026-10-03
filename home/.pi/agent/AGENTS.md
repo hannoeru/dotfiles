@@ -8,7 +8,19 @@
 - Code, comments, docs, and tests describe the present; use Git history for historical context.
 - Always talk in ASD-STE100 Simplified Technical English. Always read CONTEXT.md files, and use their ubiquitous language.
 - Always write commit messages that follow the Conventional Commits specification.
-- Always write review comments that follow the Conventional Comments standard.
-- Default to no comments; make the code explain itself. Add a comment only for a WHY the code cannot express — a constraint, a workaround, or a bug link — not for WHAT a reader can already see.
+- Write review findings as short, direct comments. Explain the defect, when it occurs, and why it matters.
+- Write replies to review comments as short, factual responses. State the change made or the reason for disagreement.
+- Default to no code comments. Add one only to explain a constraint, workaround, or bug link that the code cannot express.
 - Never use fixed delays or elapsed time to infer command completion or readiness. Wait for the process to exit or poll an explicit completion/readiness condition; use timeouts only as safety limits for stuck commands.
+
+## Herdr agent defaults
+
+When running inside Herdr (`HERDR_ENV=1`):
+
+- Use the installed Herdr skill for agent orchestration.
+- Always use `pi` as the default agent kind.
+- Start all helper agents with `herdr agent start <name> --kind pi --pane <pane-id>`.
+- Never select another agent kind unless I explicitly request it.
+- Create the target pane first and use the pane ID returned by Herdr.
+- Do not control Herdr when `HERDR_ENV=1` is not set.
 
