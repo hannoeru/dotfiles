@@ -4,7 +4,7 @@ This review covers `flake.nix`, `flake.lock`, `machines.nix`, `modules/darwin.ni
 
 ## Summary
 
-The repository has a sound base. It pins inputs, shares one Nixpkgs input, uses the supported nix-darwin and Home Manager module interfaces, and declares platforms explicitly. This review found a broken plain `nix fmt` command, an unavailable Linux apply command in the README, and custom Home Manager activation code that performed some work during dry runs. The formatter and Linux apply command are now fixed.
+The repository has a sound base. It pins inputs, shares one Nixpkgs input, uses the supported nix-darwin and Home Manager module interfaces, and declares platforms explicitly. This review found a broken plain `nix fmt` command, an unavailable Linux apply command in the README, custom Home Manager activation code that performed some work during dry runs, and missing AArch64 Linux build coverage in CI. The formatter, Linux apply command, and dry-run behavior are now fixed.
 
 ## Established guidance
 
@@ -36,11 +36,11 @@ Keep `useGlobalPkgs = true`. Home Manager documents that this reuses nix-darwin'
 
 Keep `scripts/check.sh` as the fast evaluation check. Local verification with Determinate Nix 3.22.2 and Nix 2.35.2 showed that `nix flake check --all-systems --no-build` evaluated all four `homeConfigurations` and both `darwinConfigurations`, then reported each as a build-skipped success. Its eval-only description is accurate. `--all-systems` checks every system, while `--no-build` skips building derivations. Keep the explicit Linux and macOS builds in `.github/workflows/check.yml` for build coverage. [Nix `flake check` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake-check.html)
 
-### Correct Home Manager dry-run behavior
+### Home Manager dry-run behavior
 
-Keep custom activation entries after `linkGeneration`; Home Manager defines `linkGeneration` after `writeBoundary`, the point after which persistent changes are allowed. Activation entries must be idempotent and must report rather than perform changes during a dry run. [Home Manager activation option](https://home-manager.dev/manual/unstable/options/home-manager/home.html) · [Home Manager file activation source](https://github.com/nix-community/home-manager/blob/master/modules/files.nix)
+Custom activation entries remain after `linkGeneration`; Home Manager defines `linkGeneration` after `writeBoundary`, the point after which persistent changes are allowed. Activation entries must be idempotent and must report rather than perform changes during a dry run. [Home Manager activation option](https://home-manager.dev/manual/unstable/options/home-manager/home.html) · [Home Manager file activation source](https://github.com/nix-community/home-manager/blob/master/modules/files.nix)
 
-`signingKey` and `personalSshConfig` currently run `mktemp`, fetch secrets, and write temporary files even when `DRY_RUN` is active. Guard the complete mutating branch or use Home Manager's activation `run` helper so a dry run performs no writes. The `piNodeModules` and `linkWorktrunkPlugin` mutations already pass through `DRY_RUN_CMD`. [Home Manager activation option](https://home-manager.dev/manual/unstable/options/home-manager/home.html)
+`signingKey` and `personalSshConfig` now guard their complete mutating branches with Home Manager's `DRY_RUN` flag. A dry run reports each target without calling 1Password, creating temporary files, or writing configuration. The `piNodeModules` and `linkWorktrunkPlugin` mutations continue to use `DRY_RUN_CMD`. [Home Manager activation option](https://home-manager.dev/manual/unstable/options/home-manager/home.html)
 
 ### Flake formatter
 

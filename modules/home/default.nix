@@ -162,28 +162,32 @@ in
     signingKey = lib.hm.dag.entryAfter [ "sshSetup" ] (
       if signingKeyRead != null then
         ''
-          ${findOnePasswordCli}
-          if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
-            $DRY_RUN_CMD mkdir -p "$HOME/.config/git"
-            key="$(${signingKeyRead} || true)"
-            if [ -n "$key" ]; then
-              tmp="$(mktemp)"
-              {
-                echo "[user]"
-                echo "  signingkey = $key"
-                echo "[commit]"
-                echo "  gpgsign = true"
-                echo "[gpg]"
-                echo "  format = ssh"
-                echo "[gpg \"ssh\"]"
-                echo "  program = ${sshSignProgram}"
-              } > "$tmp"
-              $DRY_RUN_CMD mv "$tmp" "$HOME/.config/git/signing.gitconfig"
-            else
-              echo "warning: could not fetch git signing key from 1Password" >&2
-            fi
+          if [[ -v DRY_RUN ]]; then
+            echo "Would update $HOME/.config/git/signing.gitconfig from 1Password"
           else
-            echo "warning: 1Password CLI not available, skipped git signing key" >&2
+            ${findOnePasswordCli}
+            if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
+              mkdir -p "$HOME/.config/git"
+              key="$(${signingKeyRead} || true)"
+              if [ -n "$key" ]; then
+                tmp="$(mktemp)"
+                {
+                  echo "[user]"
+                  echo "  signingkey = $key"
+                  echo "[commit]"
+                  echo "  gpgsign = true"
+                  echo "[gpg]"
+                  echo "  format = ssh"
+                  echo "[gpg \"ssh\"]"
+                  echo "  program = ${sshSignProgram}"
+                } > "$tmp"
+                mv "$tmp" "$HOME/.config/git/signing.gitconfig"
+              else
+                echo "warning: could not fetch git signing key from 1Password" >&2
+              fi
+            else
+              echo "warning: 1Password CLI not available, skipped git signing key" >&2
+            fi
           fi
         ''
       else
@@ -193,20 +197,22 @@ in
     personalSshConfig = lib.hm.dag.entryAfter [ "sshSetup" ] (
       if machine.personal then
         ''
-          ${findOnePasswordCli}
-          if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
-            tmp="$(mktemp)"
-            if "$op_bin" document get lqhaym7u7wa5jjfpcmenk7xo4y > "$tmp"; then
-              $DRY_RUN_CMD mv "$tmp" "$HOME/.ssh/config.d/personal.conf"
-              if [ -f "$HOME/.ssh/config.d/personal.conf" ]; then
-                $DRY_RUN_CMD chmod 600 "$HOME/.ssh/config.d/personal.conf"
+          if [[ -v DRY_RUN ]]; then
+            echo "Would update $HOME/.ssh/config.d/personal.conf from 1Password"
+          else
+            ${findOnePasswordCli}
+            if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
+              tmp="$(mktemp)"
+              if "$op_bin" document get lqhaym7u7wa5jjfpcmenk7xo4y > "$tmp"; then
+                mv "$tmp" "$HOME/.ssh/config.d/personal.conf"
+                chmod 600 "$HOME/.ssh/config.d/personal.conf"
+              else
+                rm -f "$tmp"
+                echo "warning: could not fetch ssh config from 1Password" >&2
               fi
             else
-              rm -f "$tmp"
-              echo "warning: could not fetch ssh config from 1Password" >&2
+              echo "warning: 1Password CLI not available, skipped personal ssh config" >&2
             fi
-          else
-            echo "warning: 1Password CLI not available, skipped personal ssh config" >&2
           fi
         ''
       else
