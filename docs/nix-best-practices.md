@@ -4,7 +4,7 @@ This review covers `flake.nix`, `flake.lock`, `machines.nix`, `modules/darwin.ni
 
 ## Summary
 
-The repository has a sound base. It pins inputs, shares one Nixpkgs input, uses the supported nix-darwin and Home Manager module interfaces, and declares platforms explicitly. The concrete issues are a broken plain `nix fmt` command, an unavailable Linux apply command in the README, and custom Home Manager activation code that performs some work during dry runs.
+The repository has a sound base. It pins inputs, shares one Nixpkgs input, uses the supported nix-darwin and Home Manager module interfaces, and declares platforms explicitly. This review found a broken plain `nix fmt` command, an unavailable Linux apply command in the README, and custom Home Manager activation code that performed some work during dry runs. The formatter and Linux apply command are now fixed.
 
 ## Established guidance
 
@@ -48,15 +48,15 @@ The formatter now uses `nixfmt-tree`. Before this change, plain `nix fmt` invoke
 
 `nix fmt` now formats the repository, and CI uses `nix fmt -- --ci` to fail if formatting changes a file. `nix fmt` runs `formatter.<system>`, and the current Nix reference and official nixfmt README use `nixfmt-tree` for project-wide flake formatting. [Nix `fmt` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-fmt.html) · [official nixfmt README](https://github.com/NixOS/nixfmt/blob/master/README.md)
 
-### Fix the documented Linux apply command
+### Linux apply command
 
-The README tells Linux users to run `home-manager switch`, but the standalone configurations leave `programs.home-manager.enable` disabled and do not add the Home Manager package to `home.packages`. Local verification found no `home-manager` command after activation. Use the flake app that this repository already defines:
+The README now uses the flake's Home Manager app:
 
 ```sh
-nix run ~/dotfiles#home-manager -- switch --flake ~/dotfiles#ephemeral
+nix run ~/dotfiles#home-manager -- switch -b backup --flake ~/dotfiles#ephemeral
 ```
 
-Another valid choice is to enable `programs.home-manager.enable`, which installs the Home Manager command and lets Home Manager manage its own installation. The existing flake app is simpler because bootstrap already uses it. [Home Manager `programs.home-manager.enable` option](https://home-manager.dev/manual/unstable/options/home-manager/home.html)
+The README also gives the `ephemeral-aarch64` command for AArch64 Linux. The previous command assumed that `home-manager` was on `PATH`, but the standalone configurations leave `programs.home-manager.enable` disabled and do not add the Home Manager package to `home.packages`. Using the flake app and backup extension also matches the bootstrap script. Another valid choice is to enable `programs.home-manager.enable`, which installs the Home Manager command and lets Home Manager manage its own installation. [Home Manager `programs.home-manager.enable` option](https://home-manager.dev/manual/unstable/options/home-manager/home.html)
 
 ### Keep source files tracked
 

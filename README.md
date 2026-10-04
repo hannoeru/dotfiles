@@ -33,10 +33,16 @@ sudo darwin-rebuild switch --flake ~/dotfiles#Han-MBP
 sudo darwin-rebuild switch --flake ~/dotfiles#work
 ```
 
-Linux:
+Linux (x86_64):
 
 ```
-home-manager switch --flake ~/dotfiles#ephemeral
+nix run ~/dotfiles#home-manager -- switch -b backup --flake ~/dotfiles#ephemeral
+```
+
+Linux (aarch64):
+
+```
+nix run ~/dotfiles#home-manager -- switch -b backup --flake ~/dotfiles#ephemeral-aarch64
 ```
 
 Update inputs:
