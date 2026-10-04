@@ -4,7 +4,7 @@ This review covers `flake.nix`, `flake.lock`, `machines.nix`, `modules/darwin.ni
 
 ## Summary
 
-The repository has a sound base. It pins inputs, shares one Nixpkgs input, uses the supported nix-darwin and Home Manager module interfaces, and declares platforms explicitly. This review found a broken plain `nix fmt` command, an unavailable Linux apply command in the README, custom Home Manager activation code that performed some work during dry runs, and missing AArch64 Linux build coverage in CI. The formatter, Linux apply command, and dry-run behavior are now fixed.
+The repository has a sound base. It pins inputs, shares one Nixpkgs input, uses the supported nix-darwin and Home Manager module interfaces, and declares platforms explicitly. This review found a broken plain `nix fmt` command, an unavailable Linux apply command in the README, custom Home Manager activation code that performed some work during dry runs, and missing AArch64 Linux build coverage in CI. All four findings are now fixed.
 
 ## Established guidance
 
@@ -34,7 +34,7 @@ Keep `useGlobalPkgs = true`. Home Manager documents that this reuses nix-darwin'
 
 ### Keep the eval-only check
 
-Keep `scripts/check.sh` as the fast evaluation check. Local verification with Determinate Nix 3.22.2 and Nix 2.35.2 showed that `nix flake check --all-systems --no-build` evaluated all four `homeConfigurations` and both `darwinConfigurations`, then reported each as a build-skipped success. Its eval-only description is accurate. `--all-systems` checks every system, while `--no-build` skips building derivations. Keep the explicit Linux and macOS builds in `.github/workflows/check.yml` for build coverage. [Nix `flake check` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake-check.html)
+Keep `scripts/check.sh` as the fast evaluation check. Local verification with Determinate Nix 3.22.2 and Nix 2.35.2 showed that `nix flake check --all-systems --no-build` evaluated all four `homeConfigurations` and both `darwinConfigurations`, then reported each as a build-skipped success. Its eval-only description is accurate. `--all-systems` checks every system, while `--no-build` skips building derivations. The CI matrix now builds both standalone Home Manager configurations on native x86_64 and AArch64 Linux runners, while the macOS job builds both nix-darwin configurations. [Nix `flake check` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake-check.html)
 
 ### Home Manager dry-run behavior
 
@@ -66,7 +66,7 @@ Add new Nix modules and dotfiles to Git before evaluating the flake. For a local
 
 These changes are not required by the module interfaces. They are repository policy choices.
 
-1. **Add first-class build checks.** The eval-only script covers all six configurations. CI builds both Macs and the two x86_64 Linux activation packages, but it does not build the two aarch64 Linux activation packages. I would expose configuration derivations as checks only if the repository should use `nix flake check` as its common build-test interface. The standard output and build behavior come from the [Nix `flake check` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake-check.html).
+1. **Add first-class build checks.** The eval-only script and native CI jobs now cover all six configurations. I would expose configuration derivations as checks only if the repository should use `nix flake check` as its common build-test interface. The standard output and build behavior come from the [Nix `flake check` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake-check.html).
 
 2. **Disable Homebrew auto-update during ordinary activation.** I would set `homebrew.onActivation.autoUpdate = false` and update Homebrew on a separate schedule. This reduces network-dependent changes during `darwin-rebuild`; nix-darwin documents that `autoUpdate` runs `brew update` before `brew bundle`. [nix-darwin Homebrew options](https://nix-darwin.github.io/nix-darwin/manual/)
 

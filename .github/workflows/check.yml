@@ -25,12 +25,19 @@ jobs:
       - run: nix fmt -- --ci
 
   home:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            suffix: ""
+          - runner: ubuntu-24.04-arm
+            suffix: -aarch64
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
-      - run: nix build --no-link .#homeConfigurations.ephemeral.activationPackage
-      - run: nix build --no-link .#homeConfigurations."hanlee@ubuntu".activationPackage
+      - run: nix build --no-link ".#homeConfigurations.ephemeral${{ matrix.suffix }}.activationPackage"
+      - run: nix build --no-link ".#homeConfigurations.hanlee@ubuntu${{ matrix.suffix }}.activationPackage"
 
   darwin:
     runs-on: macos-latest
