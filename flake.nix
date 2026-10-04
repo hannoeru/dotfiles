@@ -85,7 +85,7 @@
         });
 
       formatter = lib.genAttrs [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ] (
-        system: nixpkgs.legacyPackages.${system}.nixfmt
+        system: nixpkgs.legacyPackages.${system}.nixfmt-tree
       );
     };
 }

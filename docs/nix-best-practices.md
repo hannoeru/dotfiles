@@ -42,11 +42,11 @@ Keep custom activation entries after `linkGeneration`; Home Manager defines `lin
 
 `signingKey` and `personalSshConfig` currently run `mktemp`, fetch secrets, and write temporary files even when `DRY_RUN` is active. Guard the complete mutating branch or use Home Manager's activation `run` helper so a dry run performs no writes. The `piNodeModules` and `linkWorktrunkPlugin` mutations already pass through `DRY_RUN_CMD`. [Home Manager activation option](https://home-manager.dev/manual/unstable/options/home-manager/home.html)
 
-### Fix the flake formatter
+### Flake formatter
 
-Replace bare `nixfmt` in `formatter.<system>` with `nixfmt-tree`. Local verification showed that plain `nix fmt -- --check` invokes bare `nixfmt` without file arguments, so it reads empty standard input and fails. This makes the repository's documented plain `nix fmt` interface broken even though CI succeeds by supplying `$(git ls-files '*.nix')`.
+The formatter now uses `nixfmt-tree`. Before this change, plain `nix fmt` invoked bare `nixfmt` without file arguments, so it read empty standard input and failed. CI passed only because it supplied an explicit file list.
 
-`nix fmt` runs `formatter.<system>`, and the current Nix reference and official nixfmt README use `nixfmt-tree` for project-wide flake formatting. Keep a formatter output for each supported platform, but use the tree wrapper so plain `nix fmt` and `nix fmt -- --check` operate on the repository. [Nix `fmt` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-fmt.html) · [official nixfmt README](https://github.com/NixOS/nixfmt/blob/master/README.md)
+`nix fmt` now formats the repository, and CI uses `nix fmt -- --ci` to fail if formatting changes a file. `nix fmt` runs `formatter.<system>`, and the current Nix reference and official nixfmt README use `nixfmt-tree` for project-wide flake formatting. [Nix `fmt` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-fmt.html) · [official nixfmt README](https://github.com/NixOS/nixfmt/blob/master/README.md)
 
 ### Fix the documented Linux apply command
 
