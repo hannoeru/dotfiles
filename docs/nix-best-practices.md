@@ -4,7 +4,7 @@ This review covers `flake.nix`, `flake.lock`, `machines.nix`, `modules/darwin.ni
 
 ## Summary
 
-The repository has a sound base. It pins inputs, shares one Nixpkgs input, uses the supported nix-darwin and Home Manager module interfaces, and declares platforms explicitly. This review found a broken plain `nix fmt` command, an unavailable Linux apply command in the README, custom Home Manager activation code that performed some work during dry runs, and missing AArch64 Linux build coverage in CI. All four findings are now fixed.
+The repository pins inputs, shares one Nixpkgs input, uses the supported nix-darwin and Home Manager module interfaces, and declares platforms explicitly. Plain `nix fmt` formats the repository, the README uses the pinned Home Manager app, custom activation code honors dry runs, and CI builds every declared configuration on its native platform.
 
 ## Established guidance
 
@@ -34,29 +34,27 @@ Keep `useGlobalPkgs = true`. Home Manager documents that this reuses nix-darwin'
 
 ### Keep the eval-only check
 
-Keep `scripts/check.sh` as the fast evaluation check. Local verification with Determinate Nix 3.22.2 and Nix 2.35.2 showed that `nix flake check --all-systems --no-build` evaluated all four `homeConfigurations` and both `darwinConfigurations`, then reported each as a build-skipped success. Its eval-only description is accurate. `--all-systems` checks every system, while `--no-build` skips building derivations. The CI matrix now builds both standalone Home Manager configurations on native x86_64 and AArch64 Linux runners, while the macOS job builds both nix-darwin configurations. [Nix `flake check` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake-check.html)
+Keep `scripts/check.sh` as the fast evaluation check. Local verification with Determinate Nix 3.22.2 and Nix 2.35.2 showed that `nix flake check --all-systems --no-build` evaluated all four `homeConfigurations` and both `darwinConfigurations`, then reported each as a build-skipped success. Its eval-only description is accurate. `--all-systems` checks every system, while `--no-build` skips building derivations. The CI matrix builds both standalone Home Manager configurations on native x86_64 and AArch64 Linux runners, while the macOS job builds both nix-darwin configurations. [Nix `flake check` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake-check.html)
 
 ### Home Manager dry-run behavior
 
 Custom activation entries remain after `linkGeneration`; Home Manager defines `linkGeneration` after `writeBoundary`, the point after which persistent changes are allowed. Activation entries must be idempotent and must report rather than perform changes during a dry run. [Home Manager activation option](https://home-manager.dev/manual/unstable/options/home-manager/home.html) · [Home Manager file activation source](https://github.com/nix-community/home-manager/blob/master/modules/files.nix)
 
-`signingKey` and `personalSshConfig` now guard their complete mutating branches with Home Manager's `DRY_RUN` flag. A dry run reports each target without calling 1Password, creating temporary files, or writing configuration. The `piNodeModules` and `linkWorktrunkPlugin` mutations continue to use `DRY_RUN_CMD`. [Home Manager activation option](https://home-manager.dev/manual/unstable/options/home-manager/home.html)
+`signingKey` and `personalSshConfig` guard their complete mutating branches with Home Manager's `DRY_RUN` flag. A dry run reports each target without calling 1Password, creating temporary files, or writing configuration. The `piNodeModules` and `linkWorktrunkPlugin` mutations continue to use `DRY_RUN_CMD`. [Home Manager activation option](https://home-manager.dev/manual/unstable/options/home-manager/home.html)
 
 ### Flake formatter
 
-The formatter now uses `nixfmt-tree`. Before this change, plain `nix fmt` invoked bare `nixfmt` without file arguments, so it read empty standard input and failed. CI passed only because it supplied an explicit file list.
-
-`nix fmt` now formats the repository, and CI uses `nix fmt -- --ci` to fail if formatting changes a file. `nix fmt` runs `formatter.<system>`, and the current Nix reference and official nixfmt README use `nixfmt-tree` for project-wide flake formatting. [Nix `fmt` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-fmt.html) · [official nixfmt README](https://github.com/NixOS/nixfmt/blob/master/README.md)
+The formatter uses `nixfmt-tree`. Plain `nix fmt` formats the repository, and CI uses `nix fmt -- --ci` to fail if formatting changes a file. `nix fmt` runs `formatter.<system>`, and the current Nix reference and official nixfmt README use `nixfmt-tree` for project-wide flake formatting. [Nix `fmt` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-fmt.html) · [official nixfmt README](https://github.com/NixOS/nixfmt/blob/master/README.md)
 
 ### Linux apply command
 
-The README now uses the flake's Home Manager app:
+The README uses the flake's Home Manager app:
 
 ```sh
 nix run ~/dotfiles#home-manager -- switch -b backup --flake ~/dotfiles#ephemeral
 ```
 
-The README also gives the `ephemeral-aarch64` command for AArch64 Linux. The previous command assumed that `home-manager` was on `PATH`, but the standalone configurations leave `programs.home-manager.enable` disabled and do not add the Home Manager package to `home.packages`. Using the flake app and backup extension also matches the bootstrap script. Another valid choice is to enable `programs.home-manager.enable`, which installs the Home Manager command and lets Home Manager manage its own installation. [Home Manager `programs.home-manager.enable` option](https://home-manager.dev/manual/unstable/options/home-manager/home.html)
+The README also gives the `ephemeral-aarch64` command for AArch64 Linux. The standalone configurations leave `programs.home-manager.enable` disabled and do not add the Home Manager package to `home.packages`, so the apply commands invoke the flake app instead of assuming that `home-manager` is on `PATH`. Using the flake app and backup extension also matches the bootstrap script. Another valid choice is to enable `programs.home-manager.enable`, which installs the Home Manager command and lets Home Manager manage its own installation. [Home Manager `programs.home-manager.enable` option](https://home-manager.dev/manual/unstable/options/home-manager/home.html)
 
 ### Keep source files tracked
 
@@ -66,7 +64,7 @@ Add new Nix modules and dotfiles to Git before evaluating the flake. For a local
 
 These changes are not required by the module interfaces. They are repository policy choices.
 
-1. **Add first-class build checks.** The eval-only script and native CI jobs now cover all six configurations. I would expose configuration derivations as checks only if the repository should use `nix flake check` as its common build-test interface. The standard output and build behavior come from the [Nix `flake check` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake-check.html).
+1. **Add first-class build checks.** The eval-only script and native CI jobs cover all six configurations. I would expose configuration derivations as checks only if the repository should use `nix flake check` as its common build-test interface. The standard output and build behavior come from the [Nix `flake check` reference](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake-check.html).
 
 2. **Disable Homebrew auto-update during ordinary activation.** I would set `homebrew.onActivation.autoUpdate = false` and update Homebrew on a separate schedule. This reduces network-dependent changes during `darwin-rebuild`; nix-darwin documents that `autoUpdate` runs `brew update` before `brew bundle`. [nix-darwin Homebrew options](https://nix-darwin.github.io/nix-darwin/manual/)
 
