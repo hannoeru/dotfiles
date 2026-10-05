@@ -15,3 +15,9 @@ pnpm typecheck
 - `agent/extensions/git-interceptor.ts` prevents Git commands from opening an interactive editor and blocks Git hook bypass flags.
 - `agent/extensions/handoff.ts` creates a focused prompt for a new Pi session.
 - `agent/extensions/go.ts` adds `/go` to resume the agent loop without sending any new prompt text to the model.
+- `agent/extensions/vitesse-system-theme.ts` follows the macOS system appearance with the Vitesse themes.
+
+## Themes
+
+- `agent/themes/vitesse-dark.json` provides the Vitesse dark palette.
+- `agent/themes/vitesse-light.json` provides the Vitesse light palette.
