@@ -26,6 +26,7 @@
   "workbench.preferredDarkColorTheme": "Vitesse Dark",
   "workbench.productIconTheme": "icons-carbon",
   "workbench.sideBar.location": "right",
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
   "workbench.startupEditor": "newUntitledFile",
   "workbench.tree.expandMode": "singleClick",
   "workbench.tree.indent": 10,
