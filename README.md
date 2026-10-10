@@ -63,6 +63,8 @@ A scheduled workflow opens a pull request every Monday to update `flake.lock`.
 Because that pull request is opened with the default workflow token, GitHub
 does not run the `check` workflow on it; the check runs after the merge.
 
+Configure categorized agent skills with [the managed skills module](docs/skills.md).
+
 ## Dev container
 
 `containers/devcontainer/Dockerfile` builds a base image (Ubuntu + Nix + this

@@ -91,12 +91,14 @@ in
   ];
 
   imports = [
+    ./skills.nix
     ./programs/bash.nix
     ./programs/gh.nix
     ./programs/ghostty.nix
     ./programs/git.nix
     ./programs/mise.nix
     ./programs/neovim.nix
+    ./programs/skills.nix
     ./programs/starship.nix
     ./programs/vim.nix
     ./programs/vscode.nix
