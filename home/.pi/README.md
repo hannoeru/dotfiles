@@ -1,7 +1,9 @@
 # Pi configuration
 
 This directory is deployed to `~/.pi` by the Home Manager configuration.
-The shared skills catalogue installs skills under `~/.agents/skills`.
+The shared skills catalogue installs portable skills under `~/.agents/skills`.
+`verify-dotfiles` is not one of them. It stays in this checkout at
+`.agents/skills/verify-dotfiles`.
 
 ## Validate changes
 

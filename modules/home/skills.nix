@@ -122,10 +122,10 @@ let
     "Design/frontend-design" = anthropics + "/skills/frontend-design";
     "Browser/agent-browser" = agentBrowser + "/skills/agent-browser";
 
-    # Repo-local skills. Pi also scans ~/.pi/agent/skills; ~/.agents/skills is enough.
+    # Authored in this repository and linked for every machine.
+    # Pi also scans ~/.pi/agent/skills; ~/.agents/skills is enough.
     "Writing/bro" = ../../home/skills/bro;
     "Vue & Nuxt/nuxt-cloudflare" = ../../home/skills/nuxt-cloudflare;
-    "Workflow/verify-dotfiles" = ../../home/skills/verify-dotfiles;
   };
 in
 {
