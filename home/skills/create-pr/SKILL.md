@@ -7,8 +7,6 @@ description: Open one GitHub pull request for the current change. Use when the u
 
 Open one pull request for one change. A reviewer should understand the changed behavior from the body alone. Explain what changed and why. Keep the body proportional to the change.
 
-The workflow below follows Anthony Fu's `antfu-create-pr` skill. The title is a Conventional Commit. The body template follows Matt Pocock's `pr` skill. Sources are listed at the end.
-
 ## Workflow
 
 1. Inspect the repo: `git status`, the current branch, remotes, the default branch, `.github/PULL_REQUEST_TEMPLATE*`, and `AGENTS.md` or `CONTRIBUTING.md` for PR rules.
@@ -97,7 +95,3 @@ A two-way door is cheap to reverse. A one-way door is a destructive action or a 
 - Link an issue with `closes #123`, `fixes #123`, or `refs #123` when this change belongs to one. If several issues apply and the user has not chosen one, ask before opening the PR.
 - For a stacked PR, name the parent and which commits belong to this PR.
 - If an agent wrote the PR, say so in one line at the end of the body.
-
-## Sources
-
-Workflow adapted from Anthony Fu's [`antfu-create-pr`](https://github.com/antfu/skills/tree/feb0f3aba6566426f12230e7fc7a10d97c1293bb/skills/antfu-create-pr) (`feb0f3aba6566426f12230e7fc7a10d97c1293bb`). Body template adapted from Matt Pocock's [`pr`](https://github.com/mattpocock/skills/tree/49dd158d1076134a641b33efb035946536778336/skills/engineering/pr) (`49dd158d1076134a641b33efb035946536778336`).
