@@ -105,10 +105,10 @@ let
     "Workflow/improve" = shadcnImprove + "/skills/improve";
     "Workflow/dry-refactoring" = jscpd + "/skills/dry-refactoring";
     "Workflow/antfu" = antfu + "/skills/antfu";
-    "Workflow/antfu-create-pr" = antfu + "/skills/antfu-create-pr";
 
     "Writing/simple-english" = simpleEnglish + "/skills/simple-english";
     "Writing/unslop" = cursorPlugins + "/pstack/skills/unslop";
+    "Writing/bro" = cursorPlugins + "/pstack/skills/bro";
     "Writing/i-have-adhd" = iHaveAdhd + "/skills/i-have-adhd";
 
     "Vue & Nuxt/vue-best-practices" = vuejs + "/skills/vue-best-practices";
@@ -124,7 +124,11 @@ let
 
     # Authored in this repository and linked for every machine.
     # Pi also scans ~/.pi/agent/skills; ~/.agents/skills is enough.
-    "Writing/bro" = ../../home/skills/bro;
+    "Workflow/analyze-issue" = ../../home/skills/analyze-issue;
+    "Workflow/create-pr" = ../../home/skills/create-pr;
+    "Workflow/deslop" = ../../home/skills/deslop;
+    "Workflow/review-pr" = ../../home/skills/review-pr;
+    "Workflow/wrap-up" = ../../home/skills/wrap-up;
     "Vue & Nuxt/nuxt-cloudflare" = ../../home/skills/nuxt-cloudflare;
   };
 in

@@ -1,10 +1,14 @@
 ---
-description: Review PRs from URLs with structured issue and code analysis
-argument-hint: "<PR-URL>"
+name: review-pr
+description: Review one or more GitHub pull requests from their URLs. Use when the user wants a structured review of the description, linked issues, diff, tests, and docs without checking out the PR branch.
 ---
-You are given one or more GitHub PR URLs: $@
+
+# Review pull requests
+
+The user provides one or more GitHub pull request URLs.
 
 For each PR URL, do the following in order:
+
 1. Add the `inprogress` label to the PR via GitHub CLI before analysis starts. If adding the label fails, report that explicitly and continue.
 2. Read the PR page in full. Include description, all comments, all commits, and all changed files.
 3. Identify any linked issues referenced in the PR body, comments, commit messages, or cross links. Read each issue in full, including all comments.
@@ -20,6 +24,8 @@ For each PR URL, do the following in order:
    - Open questions for you: only things blocking a merge decision that need the user's input. Omit the section entirely if there are none.
 
 Output format per PR:
+
+```text
 PR: <url>
 What it does:
 - ...
@@ -33,5 +39,6 @@ Tests:
 - ...
 Open questions for you:
 - ...
+```
 
 If no issues are found, say so under Bad and Ugly.

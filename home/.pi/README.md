@@ -4,6 +4,9 @@ This directory is deployed to `~/.pi` by the Home Manager configuration.
 The shared skills catalogue installs portable skills under `~/.agents/skills`.
 `verify-dotfiles` is not one of them. It stays in this checkout at
 `.agents/skills/verify-dotfiles`.
+The prompt templates that lived in `agent/prompts` are the Workflow skills
+`analyze-issue`, `deslop`, `review-pr`, and `wrap-up`. This directory does not
+install `agent/prompts`.
 
 ## Validate changes
 
