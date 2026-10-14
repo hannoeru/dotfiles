@@ -13,5 +13,5 @@ Pi loads `~/.agents/skills` and `~/.pi/agent/skills`. This module uses the
 first path. Pi walks category directories, so a second link is unnecessary.
 
 The copies are read-only Nix store paths. `nix flake update` does not bump
-them; change the pin in `skills.nix`. Pi and other agents that read
+remote pins; change those in `skills.nix`. Agents that read
 `~/.agents/skills` discover the `SKILL.md` files on their next load.
