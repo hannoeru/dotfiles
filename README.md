@@ -63,6 +63,18 @@ A scheduled workflow opens a pull request every Monday to update `flake.lock`.
 Because that pull request is opened with the default workflow token, GitHub
 does not run the `check` workflow on it; the check runs after the merge.
 
+Configure categorized agent skills with [the managed skills module](docs/skills.md).
+`bro` is the upstream `cursor/plugins` skill at `pstack/skills/bro`, linked as
+`Writing/bro`. This repository does not keep its own copy.
+The Pi prompts are Workflow skills: `analyze-issue`, `deslop`, `review-pr`,
+and `wrap-up`, each under `home/skills/`. They are not installed as
+`~/.pi/agent/prompts`.
+`create-pr` (`home/skills/create-pr`) replaces the pinned `antfu-create-pr`
+skill. `Workflow/antfu` still uses the `antfu/skills` pin.
+`verify-dotfiles` is a skill for this repository only. It lives at
+[`.agents/skills/verify-dotfiles`](.agents/skills/verify-dotfiles/SKILL.md) and
+is not installed into `~/.agents/skills`.
+
 ## Dev container
 
 `containers/devcontainer/Dockerfile` builds a base image (Ubuntu + Nix + this
@@ -78,6 +90,7 @@ on first use.
 - `modules/darwin.nix` — shared nix-darwin system config
 - `modules/home/` — shared home-manager config (`programs/` holds one module per program)
 - `home/` — dotfiles applied verbatim to `$HOME`
+- `.agents/skills/verify-dotfiles/` — verification skill for this repository (not installed globally)
 - `containers/devcontainer/` — devcontainer base image
 - `scripts/bootstrap.sh` — fresh machine bootstrap
 

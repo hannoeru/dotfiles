@@ -91,6 +91,7 @@ in
   ];
 
   imports = [
+    ./skills.nix
     ./programs/bash.nix
     ./programs/gh.nix
     ./programs/ghostty.nix

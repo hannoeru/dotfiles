@@ -1,6 +1,9 @@
 ---
-description: simplify a completed workpackage
+name: deslop
+description: Simplify a completed workpackage without changing its intended behavior. Use after a change is implemented, when the user wants the affected code made more direct by removing speculative abstraction, duplication, and defensive branches.
 ---
+
+# Simplify a completed workpackage
 
 Review the completed workpackage and simplify its implementation without changing its intended behavior.
 
