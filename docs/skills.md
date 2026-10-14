@@ -4,9 +4,13 @@
 catalogue into `~/.agents/skills/<category>/<name>`. Home Manager creates the
 links from `home.file`. Activation does not download or install skills.
 
-Each entry is a subdirectory of a `fetchFromGitHub` pin. The directory name is
-the skill name agents see. To add or change a skill, update that file: pin the
-repository (`rev` and `hash`) and point a category path at the skill directory.
+Remote entries are subdirectories of a `fetchFromGitHub` pin. Repo-local skills
+live in [`home/skills`](../home/skills) and use the same category paths. To add
+or change a skill, edit `skills.nix`: pin a repository (`rev` and `hash`) or
+point a category path at a directory in `home/skills`.
+
+Pi loads `~/.agents/skills` and `~/.pi/agent/skills`. This module uses the
+first path. Pi walks category directories, so a second link is unnecessary.
 
 The copies are read-only Nix store paths. `nix flake update` does not bump
 them; change the pin in `skills.nix`. Pi and other agents that read
