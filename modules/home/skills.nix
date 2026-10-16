@@ -89,6 +89,12 @@ let
     rev = "1165952d74ceed98fdc2dd97190ad41f44dd0e24";
     hash = "sha256-WIg6WAnk3728NrZVh8JYtu2iRoHi8lYT2e5CDgOg2Sc=";
   };
+  herdr = github {
+    owner = "herdrdev";
+    repo = "herdr";
+    rev = "2ecf19a92fc3a7fff75b6ce3655ef04f4625ec01";
+    hash = "sha256-N7e7oCKxeCoxek6UT8Lweq16rSsQQi34QMb7C2iNpm8=";
+  };
 
   # category/name -> skill directory
   skills = {
@@ -121,6 +127,7 @@ let
 
     "Design/frontend-design" = anthropics + "/skills/frontend-design";
     "Browser/agent-browser" = agentBrowser + "/skills/agent-browser";
+    "Terminal/herdr" = herdr + "/skills/herdr";
 
     # Authored in this repository and linked for every machine.
     # Pi also scans ~/.pi/agent/skills; ~/.agents/skills is enough.

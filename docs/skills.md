@@ -14,6 +14,10 @@ repository (`rev` and `hash`) or point a category path at a directory in
 at `pstack/skills/bro`, the same pin as `Writing/unslop`. The `home.file` link
 is `~/.agents/skills/Writing/bro`. This repository does not keep a copy.
 
+`Terminal/herdr` is the upstream skill from the pinned `herdrdev/herdr`
+checkout at `skills/herdr`. The `home.file` link is
+`~/.agents/skills/Terminal/herdr`. This repository does not keep a copy.
+
 Repository skills linked from `home/skills`:
 
 | Category path | Directory |

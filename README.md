@@ -66,6 +66,8 @@ does not run the `check` workflow on it; the check runs after the merge.
 Configure categorized agent skills with [the managed skills module](docs/skills.md).
 `bro` is the upstream `cursor/plugins` skill at `pstack/skills/bro`, linked as
 `Writing/bro`. This repository does not keep its own copy.
+`herdr` is the upstream `herdrdev/herdr` skill at `skills/herdr`, linked as
+`Terminal/herdr`.
 The Pi prompts are Workflow skills: `analyze-issue`, `deslop`, `review-pr`,
 and `wrap-up`, each under `home/skills/`. They are not installed as
 `~/.pi/agent/prompts`.
