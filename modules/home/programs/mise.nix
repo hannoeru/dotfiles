@@ -4,8 +4,7 @@
   programs.mise = {
     enable = true;
     enableZshIntegration = true;
-    # Keep the main config.toml writable by `mise use --global`.
-    enableMutableConfig = true;
+    mutableSettings = true;
     globalConfig = {
       tools = {
         "npm:@antfu/ni" = "latest";
