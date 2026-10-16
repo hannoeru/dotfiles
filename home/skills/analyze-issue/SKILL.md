@@ -9,7 +9,7 @@ The user provides one or more GitHub issues as numbers or URLs.
 
 For each issue:
 
-1. If running under CI (`CI=true`), do not add the `inprogress` label and do not assign the issue. Otherwise, add the `inprogress` label to the issue via GitHub CLI and assign the issue to the local `gh` user before analysis starts. If either action fails, report that explicitly and continue.
+1. If running under CI (`CI=true`), do not assign the issue. Otherwise, assign the issue to the local `gh` user before analysis starts. If assigning the issue fails, report that explicitly and continue.
 2. Read the issue in full, including all comments and linked issues/PRs. Use fields supported by GitHub CLI, for example:
 
    ```sh
