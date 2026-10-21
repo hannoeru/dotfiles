@@ -15,8 +15,8 @@
 
 ## Global task defaults
 
-- For every task, read and follow the `/poteto-mode` skill, even when hidden from model invocation.
-- When `HERDR_ENV` is not `1`, continue the task in the current directory without Herdr. The Herdr instructions below apply only when `HERDR_ENV=1`.
+- For every task, read and follow the `/poteto-mode` skill if installed, even when hidden from model invocation. If it is not installed, continue without it.
+- When `HERDR_ENV` is not `1` or the `/herdr` skill is not installed, continue the task in the current directory without Herdr. The Herdr instructions below apply only when `HERDR_ENV=1` and the skill is installed.
 - Read and follow the `/herdr` skill.
 - Before task work, inspect Herdr worktrees. Reuse the matching task branch and worktree, or create one with `herdr worktree create`.
 - Use the absolute checkout path returned by Herdr for all task commands and edits. If the current session cwd differs, launch Pi in that worktree pane and continue the task there.
