@@ -91,10 +91,12 @@ if [ -z "$BASH" ]; then
 fi
 
 if which eza >/dev/null 2>&1; then
-  alias l="eza -g --icons"
+  alias l="eza -g --icons=auto --group-directories-first"
   alias ls="l"
-  alias ll="l -l"
+  alias la="l -a"
+  alias ll="l -l --git --time-style=long-iso"
   alias lla="ll -a"
+  alias lt="l --tree --level=2"
 fi
 
 if [[ $OSTYPE == darwin* ]]; then
