@@ -13,14 +13,14 @@
 - Default to no code comments. Add one only to explain a constraint, workaround, or bug link that the code cannot express.
 - Never use fixed delays or elapsed time to infer command completion or readiness. Wait for the process to exit or poll an explicit completion/readiness condition; use timeouts only as safety limits for stuck commands.
 
-## Herdr agent defaults
+## Global task defaults
 
-When running inside Herdr (`HERDR_ENV=1`):
-
-- Use the installed Herdr skill for agent orchestration.
-- Always use `pi` as the default agent kind.
-- Start all helper agents with `herdr agent start <name> --kind pi --pane <pane-id>`.
+- For every task, read and follow the `/poteto-mode` skill if installed, even when hidden from model invocation. If it is not installed, continue without it.
+- When `HERDR_ENV` is not `1` or the `/herdr` skill is not installed, continue the task in the current directory without Herdr. The Herdr instructions below apply only when `HERDR_ENV=1` and the skill is installed.
+- Read and follow the `/herdr` skill.
+- Before task work, inspect Herdr worktrees. Reuse the matching task branch and worktree, or create one with `herdr worktree create`.
+- Use the absolute checkout path returned by Herdr for all task commands and edits. If the current session cwd differs, launch Pi in that worktree pane and continue the task there.
+- Same-task helpers share the task worktree. Distinct tasks use separate worktrees.
+- Create the target pane first, with its cwd set to the task worktree. Use the pane ID returned by Herdr in `herdr agent start <name> --kind pi --pane <pane-id>`.
 - Never select another agent kind unless I explicitly request it.
-- Create the target pane first and use the pane ID returned by Herdr.
-- Do not control Herdr when `HERDR_ENV=1` is not set.
 
