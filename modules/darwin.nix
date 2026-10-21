@@ -39,7 +39,6 @@ let
   personalCasks = [
     "google-drive"
     "keka"
-    "orbstack"
     "spotify"
   ];
 in
