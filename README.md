@@ -51,6 +51,33 @@ Update inputs:
 nix flake update
 ```
 
+## Containers on macOS
+
+Nix installs Colima and Docker on both Mac configurations. The Docker package
+includes the `docker compose` and `docker buildx` plugins. Linux keeps its existing
+Docker package without the Colima service.
+
+Home Manager starts Colima at login. Colima runs Docker in a Linux virtual machine
+with Apple's Virtualization framework and VirtioFS file sharing. The first start
+needs network access to download the virtual machine image. Colima selects the
+`colima` Docker context when it starts.
+
+After you apply the macOS configuration, inspect the service and Docker plugins:
+
+```sh
+colima status
+docker context show
+docker info
+docker compose version
+docker buildx version
+docker run --rm hello-world
+```
+
+To start Colima before the next login, run `colima start`. Service logs are in
+`~/.local/state/colima/default.log`. Nix does not install OrbStack or load its shell
+integration. An existing OrbStack installation and its data remain unchanged.
+Stop OrbStack before you start Colima to avoid competing Docker contexts.
+
 ## Development
 
 ```

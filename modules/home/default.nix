@@ -92,6 +92,7 @@ in
 
   imports = [
     ./skills.nix
+    ./colima.nix
     ./programs/bash.nix
     ./programs/gh.nix
     ./programs/ghostty.nix
