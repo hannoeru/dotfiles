@@ -91,7 +91,7 @@ if [ -z "$BASH" ]; then
 fi
 
 if which eza >/dev/null 2>&1; then
-  alias l="eza -g --icons"
+  alias l="eza -g --icons=auto"
   alias ls="l"
   alias ll="l -l"
   alias lla="ll -a"
