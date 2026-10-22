@@ -38,6 +38,10 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
       - run: nix build --no-link ".#homeConfigurations.ephemeral${{ matrix.suffix }}.activationPackage"
       - run: nix build --no-link ".#homeConfigurations.hanlee@ubuntu${{ matrix.suffix }}.activationPackage"
+      - run: |
+          activation_script="$(mktemp)"
+          nix eval --raw --no-write-lock-file ".#homeConfigurations.hanlee@ubuntu${{ matrix.suffix }}.config.home.activation.signingKey.data" > "$activation_script"
+          python3 scripts/test-signing-key.py "$activation_script"
 
   darwin:
     runs-on: macos-latest
