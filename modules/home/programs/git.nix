@@ -1,4 +1,4 @@
-{ machine, ... }:
+{ lib, machine, ... }:
 
 {
   programs.delta = {
@@ -46,13 +46,16 @@
     # ~/.config/git/signing.gitconfig is written by
     # home.activation.signingKey when 1Password is available; git
     # silently ignores missing include files.
-    includes = [
-      { path = "~/.config/git/signing.gitconfig"; }
-      {
-        path = "~/projects/.gitconfig";
-        condition = "gitdir:~/projects/";
-      }
-    ];
+    includes =
+      lib.optionals (machine.onePassword or true) [
+        { path = "~/.config/git/signing.gitconfig"; }
+      ]
+      ++ [
+        {
+          path = "~/projects/.gitconfig";
+          condition = "gitdir:~/projects/";
+        }
+      ];
 
     settings = {
       user = {
