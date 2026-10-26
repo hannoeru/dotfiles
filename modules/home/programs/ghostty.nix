@@ -3,7 +3,7 @@
 {
   programs.ghostty = {
     enable = true;
-    # The app itself comes from the Homebrew cask on macOS.
+    # The app itself comes from the ghostty@tip Homebrew cask on macOS.
     package = null;
     # Config-only on Linux; there is no ghostty binary to wrap in a service.
     systemd.enable = false;
@@ -22,6 +22,7 @@
       copy-on-select = false;
       clipboard-read = "allow";
       clipboard-write = "allow";
+      auto-update-channel = "tip";
       shell-integration = "detect";
       shell-integration-features = [
         "cursor"

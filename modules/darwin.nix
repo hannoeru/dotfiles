@@ -15,12 +15,11 @@ let
     "1password-cli"
     "alt-tab"
     "appcleaner"
-    "arc"
     "bettertouchtool"
     "font-input"
     "font-meslo-lg-nerd-font"
     "font-monaspace"
-    "ghostty"
+    "ghostty@tip"
     "google-chrome"
     "google-japanese-ime"
     "input-source-pro"
@@ -34,6 +33,7 @@ let
     "syntax-highlight"
     "thaw"
     "visual-studio-code"
+    "zen"
   ];
 
   personalCasks = [
