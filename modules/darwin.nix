@@ -11,11 +11,6 @@
 
 let
   sharedCasks = [
-    "1password"
-    "1password-cli"
-    "alt-tab"
-    "appcleaner"
-    "bettertouchtool"
     "font-input"
     "font-meslo-lg-nerd-font"
     "font-monaspace"
@@ -24,22 +19,27 @@ let
     "google-japanese-ime"
     "input-source-pro"
     "karabiner-elements"
-    "qlmarkdown"
-    "quicklook-video"
     "raycast"
-    "mos"
     "slack"
-    "stats"
-    "syntax-highlight"
-    "thaw"
     "visual-studio-code"
     "zen"
   ];
 
   personalCasks = [
+    "1password"
+    "1password-cli"
+    "alt-tab"
+    "appcleaner"
+    "bettertouchtool"
     "google-drive"
     "keka"
+    "mos"
+    "qlmarkdown"
+    "quicklook-video"
     "spotify"
+    "stats"
+    "syntax-highlight"
+    "thaw"
   ];
 in
 {

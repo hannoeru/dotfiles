@@ -5,7 +5,8 @@
 # Per machine:
 #   os        - "darwin" or "linux"
 #   username  - login name of the primary user
-#   personal  - whether this machine may read personal secrets from 1Password
+#   personal  - whether to install personal apps and allow personal secret lookups
+#   onePassword - enable 1Password SSH agent, signing, and secret lookups (default: true)
 #   name      - git user name
 #   email     - git user email
 #   sshSigningKeyItem - optional 1Password item UUID for the SSH signing key
@@ -42,8 +43,8 @@
       "zh-Hant-JP"
     ];
     personal = false;
+    onePassword = false;
     enableSsh = false;
-    sshSigningKeyItem = "xr5pzbrwuzuuh24ksg5g3n34oy";
     name = "";
     email = "";
   };

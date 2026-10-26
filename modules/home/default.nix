@@ -11,6 +11,7 @@
 
 let
   darwin = machine.os == "darwin";
+  onePassword = machine.onePassword or true;
 
   # Tools managed by their home-manager modules (zsh, starship, gh, mise,
   # neovim, vim, ghostty, zoxide, bash) are not repeated here.
@@ -141,7 +142,8 @@ in
       source = ../../home/.config/karabiner;
       recursive = true;
     };
-
+  }
+  // lib.optionalAttrs (darwin && onePassword) {
     # The 1Password SSH agent socket path is macOS-specific, so it
     # cannot live in the shared ~/.ssh/config that Linux boxes use.
     ".ssh/config.d/10-agent.conf".text = ''
@@ -162,7 +164,7 @@ in
     '';
 
     signingKey = lib.hm.dag.entryAfter [ "sshSetup" ] (
-      if signingKeyRead != null then
+      if onePassword && signingKeyRead != null then
         ''
           if [[ -v DRY_RUN ]]; then
             echo "Would update $HOME/.config/git/signing.gitconfig from 1Password"
@@ -197,7 +199,7 @@ in
     );
 
     personalSshConfig = lib.hm.dag.entryAfter [ "sshSetup" ] (
-      if machine.personal then
+      if onePassword && machine.personal then
         ''
           if [[ -v DRY_RUN ]]; then
             echo "Would update $HOME/.ssh/config.d/personal.conf from 1Password"
