@@ -19,8 +19,8 @@ let
     "google-japanese-ime"
     "input-source-pro"
     "karabiner-elements"
-    "raycast"
     "slack"
+    "abue-ammar/tinycast/tinycast"
     "visual-studio-code"
     "zen"
   ];
@@ -172,6 +172,12 @@ in
 
   homebrew = {
     enable = true;
+    taps = [
+      {
+        name = "abue-ammar/tinycast";
+        trusted = true;
+      }
+    ];
     onActivation = {
       autoUpdate = true;
       upgrade = false;

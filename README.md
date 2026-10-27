@@ -51,6 +51,18 @@ Update inputs:
 nix flake update
 ```
 
+## Tinycast on macOS
+
+Both Mac configurations install [Tinycast](https://github.com/abue-ammar/tinycast)
+through the Homebrew cask `abue-ammar/tinycast/tinycast`.
+This cask requires Apple silicon and macOS 26 or later. The tap is trusted
+through `homebrew.taps` with `trusted = true`. No manual `brew trust` command
+is needed.
+
+Tinycast is self-signed. Its cask removes the quarantine attribute on each
+install and upgrade so macOS can launch the app. An existing launcher is not
+automatically removed because `homebrew.onActivation.cleanup` is `"none"`.
+
 ## Containers on macOS
 
 Nix installs Colima and Docker on both Mac configurations. The Docker package
