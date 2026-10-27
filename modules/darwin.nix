@@ -52,7 +52,6 @@ in
   # Installed into /Library/Fonts/Nix Fonts by nix-darwin.
   fonts.packages = with pkgs; [
     input-fonts
-    monaspace
     nerd-fonts.meslo-lg
   ];
 
