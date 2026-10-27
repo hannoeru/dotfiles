@@ -11,9 +11,6 @@
 
 let
   sharedCasks = [
-    "font-input"
-    "font-meslo-lg-nerd-font"
-    "font-monaspace"
     "ghostty@tip"
     "google-chrome"
     "google-japanese-ime"
@@ -44,6 +41,20 @@ let
 in
 {
   nixpkgs.hostPlatform = "aarch64-darwin";
+
+  # Input is unfree: free for private use, and accepting its license is
+  # required to build it. https://input.djr.com/license/
+  nixpkgs.config = {
+    allowUnfreePredicate = pkg: lib.getName pkg == "input-fonts";
+    input-fonts.acceptLicense = true;
+  };
+
+  # Installed into /Library/Fonts/Nix Fonts by nix-darwin.
+  fonts.packages = with pkgs; [
+    input-fonts
+    nerd-fonts.meslo-lg
+  ];
+
   # The host name is not managed when unset; the machine keeps its own.
   networking.hostName = machine.hostname or null;
   system.primaryUser = machine.username;
@@ -185,7 +196,7 @@ in
     };
 
     # CLI tools come from nixpkgs; Homebrew keeps only what Nix cannot
-    # provide: GUI apps, fonts, and the keg-only formulae whose paths
+    # provide: GUI apps and the keg-only formulae whose paths
     # ~/.envfile adds to PATH. VS Code extensions are not managed here.
     brews = [
       "curl"
