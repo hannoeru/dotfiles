@@ -146,8 +146,7 @@ in
     # Tinycast rewrites this file when settings change in the app, so link it
     # to the checkout (~/dotfiles) instead of a read-only store path.
     ".config/tinycast/settings.json".source =
-      config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/dotfiles/home/.config/tinycast/settings.json";
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home/.config/tinycast/settings.json";
   }
   // lib.optionalAttrs (darwin && onePassword) {
     # The 1Password SSH agent socket path is macOS-specific, so it
