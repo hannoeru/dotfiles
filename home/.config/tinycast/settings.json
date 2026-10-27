@@ -42,7 +42,23 @@
       "/System/Library/CoreServices/Finder.app",
       "~/Applications"
     ],
-    "apps": {}
+    "apps": {
+      "app.zen-browser.zen": {
+        "shortcut": "shift+cmd+return",
+        "alias": "web",
+        "showInLauncher": true
+      },
+      "com.mitchellh.ghostty": {
+        "shortcut": "cmd+return",
+        "alias": "term",
+        "showInLauncher": true
+      },
+      "com.readdle.SparkDesktop": {
+        "shortcut": "shift+cmd+e",
+        "alias": "mail",
+        "showInLauncher": true
+      }
+    }
   },
   "systemSettings": {
     "enabled": true,
