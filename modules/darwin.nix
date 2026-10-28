@@ -143,6 +143,8 @@ in
 
     WindowManager.EnableStandardClickToShowDesktop = false;
 
+    controlcenter.BatteryShowPercentage = true;
+
     menuExtraClock = {
       ShowDate = 1;
       ShowDayOfWeek = true;
