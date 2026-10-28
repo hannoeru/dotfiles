@@ -13,6 +13,7 @@
 - Always talk in ASD-STE100 Simplified Technical English. Always read CONTEXT.md files, and use their ubiquitous language.
 - Use short, descriptive branch names.
 - Always write commit messages and PR titles that follow the Conventional Commits specification.
+- Keep the PR body current. After you push more work to an open PR, rewrite the body with `gh pr edit` in the same turn. The work is done when every summary item, note, and test result in the body matches the final diff.
 - Write review findings as short, direct comments. Explain the defect, when it occurs, and why it matters.
 - Write replies to review comments as short, factual responses. State the change made or the reason for disagreement.
 - Default to no code comments. Add one only to explain a constraint, workaround, or bug link that the code cannot express.
