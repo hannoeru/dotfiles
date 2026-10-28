@@ -34,7 +34,6 @@ let
     "qlmarkdown"
     "quicklook-video"
     "spotify"
-    "stats"
     "syntax-highlight"
     "thaw"
   ];
@@ -144,6 +143,8 @@ in
 
     WindowManager.EnableStandardClickToShowDesktop = false;
 
+    controlcenter.BatteryShowPercentage = true;
+
     menuExtraClock = {
       ShowDate = 1;
       ShowDayOfWeek = true;
@@ -179,6 +180,9 @@ in
     uid="$(id -u ${machine.username})"
     launchctl asuser "$uid" sudo -u ${machine.username} \
       defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+    # 18 shows the Battery module in the menu bar, 24 hides it.
+    launchctl asuser "$uid" sudo -u ${machine.username} \
+      defaults -currentHost write com.apple.controlcenter Battery -int 18
   '';
 
   homebrew = {
