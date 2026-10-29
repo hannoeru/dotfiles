@@ -33,6 +33,7 @@
       "*.out"
       ""
       "# Application specific files"
+      ".envrc"
       "venv"
       "node_modules"
       ".sass-cache"

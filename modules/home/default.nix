@@ -95,6 +95,7 @@ in
     ./skills.nix
     ./colima.nix
     ./programs/bash.nix
+    ./programs/direnv.nix
     ./programs/gh.nix
     ./programs/ghostty.nix
     ./programs/git.nix

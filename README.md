@@ -114,6 +114,7 @@ on first use.
 
 - GUI apps and fonts come from Homebrew (managed by nix-darwin); manually installed packages are left alone.
 - Language runtimes (node, python, ...) come from [mise](https://mise.jdx.dev); run `mise install` after first activation (bootstrap does this), or rely on mise's auto-install on first use (the devcontainer does).
+- direnv with nix-direnv is enabled in Bash and Zsh. The whitelist uses the absolute home path with a `/projects/` suffix to automatically approve `.envrc` files under `~/projects`, including cloned repositories. The trailing slash excludes names such as `~/projects-other`. Files elsewhere are blocked unless explicitly approved with `direnv allow`; the whitelist is not a strict path restriction.
 - Personal Homebrew apps, including 1Password and its CLI, follow `personal` in `machines.nix`.
 - `onePassword` in `machines.nix` defaults to `true` and controls the SSH agent config, Git signing include, and secret lookups, not app installation. The work Mac sets it to `false`. When enabled, personal secrets (git signing key, SSH config) come from the [1Password CLI](https://developer.1password.com/docs/cli/) during activation; if it is missing, they are skipped. Run the switch a second time after installing it.
 - Clean the Nix store occasionally: `nix-collect-garbage --delete-older-than 30d`.
