@@ -21,7 +21,12 @@ Relative references use the source paths in the generated prompt.
 Poteto Mode applies by default, but explicit mode off takes precedence.
 Herdr applies only when `HERDR_ENV=1`.
 The generated instructions do not change pstack's stored mode state.
-A trusted project `.pi/APPEND_SYSTEM.md` replaces the global file in Pi.
+
+The preloaded-skills extension reads the generated file when the extension loads.
+Before each run, it places those instructions in a dedicated system-prompt section.
+It removes the same text from the append section to avoid duplication.
+A trusted project's `.pi/APPEND_SYSTEM.md` keeps its normal precedence.
+The dedicated section preserves both skill bodies alongside the project instructions.
 
 ## Validate changes
 
@@ -36,6 +41,7 @@ pnpm typecheck
 - `agent/extensions/git-interceptor.ts` prevents Git commands from opening an interactive editor and blocks Git hook bypass flags.
 - `agent/extensions/handoff.ts` creates a focused prompt for a new Pi session.
 - `agent/extensions/go.ts` adds `/go` to resume the agent loop without sending any new prompt text to the model.
+- `agent/extensions/preloaded-skills.ts` preserves the generated skill instructions when a project supplies its own append file.
 
 ## Themes
 
