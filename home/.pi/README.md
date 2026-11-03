@@ -8,6 +8,21 @@ The prompt templates that lived in `agent/prompts` are the Workflow skills
 `analyze-issue`, `deslop`, `review-pr`, and `wrap-up`. This directory does not
 install `agent/prompts`.
 
+## Default instructions
+
+`agent/AGENTS.md` contains the shared policy and GitHub CLI rules.
+Home Manager generates `~/.pi/agent/APPEND_SYSTEM.md` from the pinned Herdr
+and poteto-mode skills in `modules/home/skills.nix`.
+Pi receives both skill bodies before the first model request.
+It loads their task-specific references only when needed.
+
+Update the source pins in `modules/home/skills.nix` to change the preloaded versions.
+Relative references use the source paths in the generated prompt.
+Poteto Mode applies by default, but explicit mode off takes precedence.
+Herdr applies only when `HERDR_ENV=1`.
+The generated instructions do not change pstack's stored mode state.
+A trusted project `.pi/APPEND_SYSTEM.md` replaces the global file in Pi.
+
 ## Validate changes
 
 ```sh

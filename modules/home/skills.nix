@@ -96,6 +96,21 @@ let
     hash = "sha256-N7e7oCKxeCoxek6UT8Lweq16rSsQQi34QMb7C2iNpm8=";
   };
 
+  pstack = builtins.fetchTarball {
+    url = "https://registry.npmjs.org/@zenspc/pi-pstack/-/pi-pstack-0.9.0.tgz";
+    sha256 = "sha256-ucN9Y1cGzUUeXyN2h1WmahPW6q1UgxYFP+fzz+arIYM=";
+  };
+
+  renderSkill = name: path: ''
+    ## ${name}
+
+    Skill source: `${path}`.
+    Resolve relative references from this file's directory.
+    These instructions are already loaded. Read only the references needed for the task.
+
+    ${lib.concatStringsSep "\n---\n" (lib.tail (lib.splitString "\n---\n" (builtins.readFile path)))}
+  '';
+
   # category/name -> skill directory
   skills = {
     "Workflow/grill-me" = mattpocock + "/skills/productivity/grill-me";
@@ -140,11 +155,27 @@ let
   };
 in
 {
-  home.file = lib.mapAttrs' (
-    path: source:
-    lib.nameValuePair ".agents/skills/${path}" {
-      inherit source;
-      recursive = true;
-    }
-  ) skills;
+  home.file =
+    (lib.mapAttrs' (
+      path: source:
+      lib.nameValuePair ".agents/skills/${path}" {
+        inherit source;
+        recursive = true;
+      }
+    ) skills)
+    // {
+      ".pi/agent/APPEND_SYSTEM.md".text = ''
+        # Preloaded skills
+
+        Nix generates this file from pinned skill sources.
+        Follow Poteto Mode by default unless the user disables it.
+        Apply Herdr instructions only when `HERDR_ENV=1`.
+        Explicit user restrictions take precedence over these skill defaults.
+        The task defaults in AGENTS.md authorize Herdr worktree and helper use.
+        Preloading applies instructions. It does not set pstack's stored mode state.
+
+        ${renderSkill "Poteto Mode" (pstack + "/skills/poteto-mode/SKILL.md")}
+        ${renderSkill "Herdr" (herdr + "/skills/herdr/SKILL.md")}
+      '';
+    };
 }
