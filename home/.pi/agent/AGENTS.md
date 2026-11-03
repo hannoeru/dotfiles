@@ -23,12 +23,15 @@
 
 ## Global task defaults
 
-- For every task, read and follow the `/poteto-mode` skill if installed, even when hidden from model invocation. If it is not installed, continue without it.
-- When `HERDR_ENV` is not `1` or the `/herdr` skill is not installed, continue the task in the current directory without Herdr. The Herdr instructions below apply only when `HERDR_ENV=1` and the skill is installed.
-- Read and follow the `/herdr` skill.
+- Follow the preloaded Poteto Mode instructions by default. Respect explicit mode off and user restrictions on scope, worktrees, delegation, and external actions.
+- The system prompt includes the Poteto Mode and Herdr skill bodies. Read only task-specific references, not those skill files again.
+- When `HERDR_ENV` is not `1`, continue in the current directory without Herdr. The Herdr defaults below apply only when `HERDR_ENV=1`.
 - Before task work, inspect Herdr worktrees. Reuse the matching task branch and worktree, or create one with `herdr worktree create`.
 - Use the absolute checkout path returned by Herdr for all task commands and edits. If the current session cwd differs, launch Pi in that worktree pane and continue the task there.
 - Same-task helpers share the task worktree. Distinct tasks use separate worktrees.
 - Create the target pane first, with its cwd set to the task worktree. Use the pane ID returned by Herdr in `herdr agent start <name> --kind pi --pane <pane-id>`.
 - Never select another agent kind unless I explicitly request it.
 
+# GitHub
+
+Use the GitHub CLI (`gh`) for every GitHub-related task. Use a dedicated `gh` command when available; otherwise, use `gh api`. Do not use `curl` or a browser for GitHub tasks.
