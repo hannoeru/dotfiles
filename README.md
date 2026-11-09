@@ -87,8 +87,9 @@ scripts/check.sh           # eval-only check of all flake outputs
 ```
 
 A scheduled workflow opens a pull request every Monday to update `flake.lock`.
-Because that pull request is opened with the default workflow token, GitHub
-does not run the `check` workflow on it; the check runs after the merge.
+The same workflow then dispatches the `check` workflow on the pull request
+branch, because GitHub does not run `pull_request` checks for a pull request
+opened with the default workflow token.
 
 See [Managed skills](docs/skills.md).
 
