@@ -4,9 +4,8 @@ This directory is deployed to `~/.pi` by the Home Manager configuration.
 The shared skills catalogue installs portable skills under `~/.agents/skills`.
 `verify-dotfiles` is not one of them. It stays in this checkout at
 `.agents/skills/verify-dotfiles`.
-The prompt templates that lived in `agent/prompts` are the Workflow skills
-`analyze-issue`, `deslop`, `review-pr`, and `wrap-up`. This directory does not
-install `agent/prompts`.
+`analyze-issue`, `deslop`, `review-pr`, and `wrap-up` are Workflow skills in
+the shared skills catalogue. This directory does not install `agent/prompts`.
 
 ## Default instructions
 
@@ -70,7 +69,5 @@ pi --use-theme vitesse-light/vitesse-dark
 ```
 
 After deploying this checkout with Home Manager or nix-darwin, run `/reload`
-in each existing Pi session when it is idle. This stops the old extension's
-polling timer. New sessions use the deployed configuration.
-Removing the extension from this checkout does not change an installed Nix
-store copy or stop an extension that a running session has already loaded.
+in each existing Pi session when it is idle. New sessions use the deployed
+configuration.
