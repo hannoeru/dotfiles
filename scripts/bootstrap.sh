@@ -23,7 +23,8 @@ fi
 
 # The installer cannot modify this shell's environment; add the Nix
 # profile paths so the commands below can run.
-export PATH="/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:$PATH"
+PATH="/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:/etc/profiles/per-user/$(id -un)/bin:$PATH"
+export PATH
 
 # flakes are enabled persistently by the darwin configuration;
 # this makes the first run work before that has been applied
