@@ -20,7 +20,7 @@
       scrollback-limit = 100000;
       mouse-hide-while-typing = true;
       copy-on-select = false;
-      clipboard-read = "allow";
+      clipboard-read = "ask";
       clipboard-write = "allow";
       auto-update-channel = "tip";
       shell-integration = "detect";
