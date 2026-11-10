@@ -1,105 +1,27 @@
 # Portable skills linked at ~/.agents/skills/<category>/<name>.
 # Directories are the ones the Skills CLI publishes for this catalogue.
-# Pins are explicit so activation does not fetch or install anything.
+# Sources are flake inputs, so activation does not fetch or install anything.
 {
   lib,
-  pkgs,
+  skillInputs,
   ...
 }:
 let
-  github =
-    {
-      owner,
-      repo,
-      rev,
-      hash,
-    }:
-    pkgs.fetchFromGitHub {
-      inherit
-        owner
-        repo
-        rev
-        hash
-        ;
-    };
-
-  mattpocock = github {
-    owner = "mattpocock";
-    repo = "skills";
-    rev = "49dd158d1076134a641b33efb035946536778336";
-    hash = "sha256-NljCSZNI3sZ+vbCw7pRdrwR7try4BxOFp4gdjuWYtzs=";
-  };
-  shadcnImprove = github {
-    owner = "shadcn";
-    repo = "improve";
-    rev = "cac56e1ebd3c279aa9153616cfeac7b174ab90f9";
-    hash = "sha256-czQV2LzhVddiT6kz0Wf3z+hHqGBgl4Zh/qw6hN3qEQw=";
-  };
-  jscpd = github {
-    owner = "kucherenko";
-    repo = "jscpd";
-    rev = "19f2c88515a5d3089f27de98e17d5dc6bb47985b";
-    hash = "sha256-mQBlSyxRz2O9qL3txXbExR0rDIvpoaw6hLYI+JXrv1Q=";
-  };
-  simpleEnglish = github {
-    owner = "AminBlg";
-    repo = "SimpleEnglish";
-    rev = "a6fcb4fde098b33617cc1578d151ebf58774b883";
-    hash = "sha256-p1ffLp/3Yg1yBfCikBwua3ieVBCNyZfTZH6GBAxNREA=";
-  };
-  cursorPlugins = github {
-    owner = "cursor";
-    repo = "plugins";
-    rev = "5108b719a7aa484ef1a9781f587c7bbeac793f92";
-    hash = "sha256-oHxsrzvuQPGri0QFZpL0WVX++4a3OV2SEcuYRbkm4XU=";
-  };
-  iHaveAdhd = github {
-    owner = "ayghri";
-    repo = "i-have-adhd";
-    rev = "1ecea1993b7fce257ffbd686c070948b5e07eda6";
-    hash = "sha256-GTqrnZxQvzo/ogAuUrffkOaMK1BYm/4rAZsnfmDt7DU=";
-  };
-  antfu = github {
-    owner = "antfu";
-    repo = "skills";
-    rev = "feb0f3aba6566426f12230e7fc7a10d97c1293bb";
-    hash = "sha256-o/OH4HGRhBH9p08UfUX8K31JuISSIDO9O4zZDrwzJL4=";
-  };
-  vuejs = github {
-    owner = "vuejs-ai";
-    repo = "skills";
-    rev = "c9d355ff23f654309dd02006be671859df0a134c";
-    hash = "sha256-h/4Zbs/c9a7EiglvTTzZ9hpHIsK5tiwl5sZH7ptGkdM=";
-  };
-  nuxt = github {
-    owner = "onmax";
-    repo = "nuxt-skills";
-    rev = "46aaca09d588767c26e13781318a1593a7260fb5";
-    hash = "sha256-95Jkm3p5/ukFnsy9BUEb6OpXSFkLWIlPoEEVnuZfIZ4=";
-  };
-  anthropics = github {
-    owner = "anthropics";
-    repo = "skills";
-    rev = "dbd4588f9e1033efb41dad4bef2f7947c8993d44";
-    hash = "sha256-+UIqBnzyeIOvJSKYaDaE3GYPEpLw7qQqyUw5S971AfU=";
-  };
-  agentBrowser = github {
-    owner = "vercel-labs";
-    repo = "agent-browser";
-    rev = "1165952d74ceed98fdc2dd97190ad41f44dd0e24";
-    hash = "sha256-WIg6WAnk3728NrZVh8JYtu2iRoHi8lYT2e5CDgOg2Sc=";
-  };
-  herdr = github {
-    owner = "herdrdev";
-    repo = "herdr";
-    rev = "2ecf19a92fc3a7fff75b6ce3655ef04f4625ec01";
-    hash = "sha256-N7e7oCKxeCoxek6UT8Lweq16rSsQQi34QMb7C2iNpm8=";
-  };
-
-  pstack = builtins.fetchTarball {
-    url = "https://registry.npmjs.org/@zenspc/pi-pstack/-/pi-pstack-0.9.0.tgz";
-    sha256 = "sha256-ucN9Y1cGzUUeXyN2h1WmahPW6q1UgxYFP+fzz+arIYM=";
-  };
+  inherit (skillInputs)
+    mattpocock
+    shadcnImprove
+    jscpd
+    simpleEnglish
+    cursorPlugins
+    iHaveAdhd
+    antfu
+    vuejs
+    nuxt
+    anthropics
+    agentBrowser
+    herdr
+    pstack
+    ;
 
   renderSkill = name: path: ''
     ## ${name}

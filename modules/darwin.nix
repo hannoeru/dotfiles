@@ -6,6 +6,7 @@
   lib,
   machine,
   nanorc,
+  skillInputs,
   ...
 }:
 
@@ -215,7 +216,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit machine nanorc; };
+    extraSpecialArgs = { inherit machine nanorc skillInputs; };
     users.${machine.username} = {
       imports = [ ./home ];
     };

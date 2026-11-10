@@ -15,7 +15,7 @@ and poteto-mode skills in `modules/home/skills.nix`.
 Pi receives both skill bodies before the first model request.
 It loads their task-specific references only when needed.
 
-Update the source pins in `modules/home/skills.nix` to change the preloaded versions.
+Update the skill inputs in `flake.nix` and `flake.lock` to change the preloaded versions.
 Relative references use the source paths in the generated prompt.
 Poteto Mode applies by default, but explicit mode off takes precedence.
 Herdr applies only when `HERDR_ENV=1`.
