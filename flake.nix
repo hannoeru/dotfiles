@@ -88,6 +88,7 @@
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
       nix-darwin,
       home-manager,
@@ -131,6 +132,7 @@
           modules = [
             ./modules/darwin.nix
             home-manager.darwinModules.home-manager
+            { system.configurationRevision = self.rev or self.dirtyRev or null; }
           ];
         }
       ) (lib.filterAttrs (_name: machine: machine.os == "darwin") machines);
