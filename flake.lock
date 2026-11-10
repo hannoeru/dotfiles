@@ -1,5 +1,85 @@
 {
   "nodes": {
+    "agentBrowser": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791914688,
+        "narHash": "sha256-WIg6WAnk3728NrZVh8JYtu2iRoHi8lYT2e5CDgOg2Sc=",
+        "owner": "vercel-labs",
+        "repo": "agent-browser",
+        "rev": "1165952d74ceed98fdc2dd97190ad41f44dd0e24",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vercel-labs",
+        "repo": "agent-browser",
+        "type": "github"
+      }
+    },
+    "antfu": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791527794,
+        "narHash": "sha256-o/OH4HGRhBH9p08UfUX8K31JuISSIDO9O4zZDrwzJL4=",
+        "owner": "antfu",
+        "repo": "skills",
+        "rev": "feb0f3aba6566426f12230e7fc7a10d97c1293bb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "antfu",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
+    "anthropics": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791571549,
+        "narHash": "sha256-+UIqBnzyeIOvJSKYaDaE3GYPEpLw7qQqyUw5S971AfU=",
+        "owner": "anthropics",
+        "repo": "skills",
+        "rev": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
+    "cursorPlugins": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791938066,
+        "narHash": "sha256-oHxsrzvuQPGri0QFZpL0WVX++4a3OV2SEcuYRbkm4XU=",
+        "owner": "cursor",
+        "repo": "plugins",
+        "rev": "5108b719a7aa484ef1a9781f587c7bbeac793f92",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cursor",
+        "repo": "plugins",
+        "type": "github"
+      }
+    },
+    "herdr": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791993401,
+        "narHash": "sha256-N7e7oCKxeCoxek6UT8Lweq16rSsQQi34QMb7C2iNpm8=",
+        "owner": "herdrdev",
+        "repo": "herdr",
+        "rev": "2ecf19a92fc3a7fff75b6ce3655ef04f4625ec01",
+        "type": "github"
+      },
+      "original": {
+        "owner": "herdrdev",
+        "repo": "herdr",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -17,6 +97,54 @@
       "original": {
         "owner": "nix-community",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "iHaveAdhd": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791734634,
+        "narHash": "sha256-GTqrnZxQvzo/ogAuUrffkOaMK1BYm/4rAZsnfmDt7DU=",
+        "owner": "ayghri",
+        "repo": "i-have-adhd",
+        "rev": "1ecea1993b7fce257ffbd686c070948b5e07eda6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ayghri",
+        "repo": "i-have-adhd",
+        "type": "github"
+      }
+    },
+    "jscpd": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791814056,
+        "narHash": "sha256-mQBlSyxRz2O9qL3txXbExR0rDIvpoaw6hLYI+JXrv1Q=",
+        "owner": "kucherenko",
+        "repo": "jscpd",
+        "rev": "19f2c88515a5d3089f27de98e17d5dc6bb47985b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kucherenko",
+        "repo": "jscpd",
+        "type": "github"
+      }
+    },
+    "mattpocock": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791543409,
+        "narHash": "sha256-NljCSZNI3sZ+vbCw7pRdrwR7try4BxOFp4gdjuWYtzs=",
+        "owner": "mattpocock",
+        "repo": "skills",
+        "rev": "49dd158d1076134a641b33efb035946536778336",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpocock",
+        "repo": "skills",
         "type": "github"
       }
     },
@@ -72,12 +200,102 @@
         "type": "github"
       }
     },
+    "nuxt": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791785726,
+        "narHash": "sha256-95Jkm3p5/ukFnsy9BUEb6OpXSFkLWIlPoEEVnuZfIZ4=",
+        "owner": "onmax",
+        "repo": "nuxt-skills",
+        "rev": "46aaca09d588767c26e13781318a1593a7260fb5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "onmax",
+        "repo": "nuxt-skills",
+        "type": "github"
+      }
+    },
+    "pstack": {
+      "flake": false,
+      "locked": {
+        "lastModified": 499162500,
+        "narHash": "sha256-ucN9Y1cGzUUeXyN2h1WmahPW6q1UgxYFP+fzz+arIYM=",
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/@zenspc/pi-pstack/-/pi-pstack-0.9.0.tgz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/@zenspc/pi-pstack/-/pi-pstack-0.9.0.tgz"
+      }
+    },
     "root": {
       "inputs": {
+        "agentBrowser": "agentBrowser",
+        "antfu": "antfu",
+        "anthropics": "anthropics",
+        "cursorPlugins": "cursorPlugins",
+        "herdr": "herdr",
         "home-manager": "home-manager",
+        "iHaveAdhd": "iHaveAdhd",
+        "jscpd": "jscpd",
+        "mattpocock": "mattpocock",
         "nanorc": "nanorc",
         "nix-darwin": "nix-darwin",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "nuxt": "nuxt",
+        "pstack": "pstack",
+        "shadcnImprove": "shadcnImprove",
+        "simpleEnglish": "simpleEnglish",
+        "vuejs": "vuejs"
+      }
+    },
+    "shadcnImprove": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789212568,
+        "narHash": "sha256-czQV2LzhVddiT6kz0Wf3z+hHqGBgl4Zh/qw6hN3qEQw=",
+        "owner": "shadcn",
+        "repo": "improve",
+        "rev": "cac56e1ebd3c279aa9153616cfeac7b174ab90f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "shadcn",
+        "repo": "improve",
+        "type": "github"
+      }
+    },
+    "simpleEnglish": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791214717,
+        "narHash": "sha256-p1ffLp/3Yg1yBfCikBwua3ieVBCNyZfTZH6GBAxNREA=",
+        "owner": "AminBlg",
+        "repo": "SimpleEnglish",
+        "rev": "a6fcb4fde098b33617cc1578d151ebf58774b883",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AminBlg",
+        "repo": "SimpleEnglish",
+        "type": "github"
+      }
+    },
+    "vuejs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774504225,
+        "narHash": "sha256-h/4Zbs/c9a7EiglvTTzZ9hpHIsK5tiwl5sZH7ptGkdM=",
+        "owner": "vuejs-ai",
+        "repo": "skills",
+        "rev": "c9d355ff23f654309dd02006be671859df0a134c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vuejs-ai",
+        "repo": "skills",
+        "type": "github"
       }
     }
   },
