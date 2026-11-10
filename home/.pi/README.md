@@ -66,7 +66,9 @@ Sign in once in a Pi session.
 /mcp login notion
 ```
 
-A `notion` server in `~/.pi/agent/mcp.json` takes precedence over the registered server.
+A `notion` server in `~/.pi/agent/mcp.json` takes precedence over the registered server, and its tool exposure replaces the extension's.
+Remove that entry with `pi mcp remove notion`.
+Pi keeps sign-ins by server name and URL, so the registered server uses the same sign-in.
 
 ## Themes
 

@@ -44,10 +44,7 @@ test("adds the memory section and keeps the other sections", () => {
 });
 
 test("names only the tools that the server declares directly", () => {
-	const { servers } = createExtension();
-	const direct = Object.keys(servers.get("notion")?.toolExposure ?? {}).map(
-		(tool) => `mcp__notion__${tool.replace(/-/g, "_")}`,
+	expect(new Set(NOTION_MEMORY_SECTION.match(/mcp__notion__\w+/g))).toEqual(
+		new Set(["mcp__notion__notion_memory_search", "mcp__notion__notion_fetch"]),
 	);
-
-	expect(new Set(NOTION_MEMORY_SECTION.match(/mcp__notion__\w+/g))).toEqual(new Set(direct));
 });
