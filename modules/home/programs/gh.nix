@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ machine, pkgs, ... }:
 
 {
   programs.gh = {
@@ -8,7 +8,7 @@
     settings = {
       git_protocol = "https";
       expiring_credentials = "enabled";
-      editor = "code --wait";
+      editor = if machine.os == "darwin" then "code --wait" else "nano";
       aliases = {
         co = "pr checkout";
       };

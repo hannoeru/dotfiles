@@ -64,7 +64,7 @@
         email = machine.email;
       };
       core = {
-        editor = "code --wait";
+        editor = if machine.os == "darwin" then "code --wait" else "nano";
         autocrlf = "input";
         safecrlf = true;
       };
