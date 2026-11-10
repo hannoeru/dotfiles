@@ -88,7 +88,6 @@
 
   outputs =
     inputs@{
-      self,
       nixpkgs,
       nix-darwin,
       home-manager,
@@ -96,7 +95,7 @@
       ...
     }:
     let
-      lib = nixpkgs.lib;
+      inherit (nixpkgs) lib;
       machines = import ./machines.nix;
       skillInputs = {
         inherit (inputs)
@@ -126,7 +125,7 @@
     in
     {
       darwinConfigurations = lib.mapAttrs (
-        name: machine:
+        _name: machine:
         nix-darwin.lib.darwinSystem {
           specialArgs = { inherit machine nanorc skillInputs; };
           modules = [
@@ -134,7 +133,7 @@
             home-manager.darwinModules.home-manager
           ];
         }
-      ) (lib.filterAttrs (name: machine: machine.os == "darwin") machines);
+      ) (lib.filterAttrs (_name: machine: machine.os == "darwin") machines);
 
       homeConfigurations = lib.concatMapAttrs (name: machine: {
         "${name}" = mkHome {
@@ -145,7 +144,7 @@
           system = "aarch64-linux";
           inherit machine;
         };
-      }) (lib.filterAttrs (name: machine: machine.os == "linux") machines);
+      }) (lib.filterAttrs (_name: machine: machine.os == "linux") machines);
 
       # Pinned entry points so bootstrap does not depend on the global
       # flake registry.
@@ -160,16 +159,50 @@
           home-manager = mkApp home-manager.packages.${system}.home-manager;
         })
         // lib.genAttrs [ "aarch64-darwin" ] (system: {
-          darwin-rebuild = mkApp (
-            (import nixpkgs {
-              inherit system;
-              overlays = [ nix-darwin.overlays.default ];
-            }).darwin-rebuild
-          );
+          darwin-rebuild =
+            mkApp
+              (import nixpkgs {
+                inherit system;
+                overlays = [ nix-darwin.overlays.default ];
+              }).darwin-rebuild;
         });
 
       formatter = lib.genAttrs [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ] (
-        system: nixpkgs.legacyPackages.${system}.nixfmt-tree
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          # statix fix takes one path per run; treefmt passes many files.
+          statix-files = pkgs.writeShellApplication {
+            name = "statix-files";
+            runtimeInputs = [ pkgs.statix ];
+            text = ''
+              for file in "$@"; do
+                statix fix "$file"
+                statix check "$file"
+              done
+            '';
+          };
+        in
+        pkgs.nixfmt-tree.override {
+          runtimeInputs = [
+            pkgs.deadnix
+            statix-files
+          ];
+          settings.formatter = {
+            deadnix = {
+              command = "deadnix";
+              options = [ "--edit" ];
+              includes = [ "*.nix" ];
+              priority = 1;
+            };
+            statix = {
+              command = "statix-files";
+              includes = [ "*.nix" ];
+              priority = 2;
+            };
+            nixfmt.priority = 3;
+          };
+        }
       );
     };
 }

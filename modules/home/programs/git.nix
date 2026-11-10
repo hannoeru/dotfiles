@@ -60,8 +60,7 @@
 
     settings = {
       user = {
-        name = machine.name;
-        email = machine.email;
+        inherit (machine) name email;
       };
       core = {
         editor = if machine.os == "darwin" then "code --wait" else "nano";

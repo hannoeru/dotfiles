@@ -1,7 +1,6 @@
 # Shared nix-darwin system configuration for all Macs.
 # Machine facts come from machines.nix via the `machine` module argument.
 {
-  config,
   pkgs,
   lib,
   machine,

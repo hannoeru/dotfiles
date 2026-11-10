@@ -81,7 +81,7 @@ Stop OrbStack before you start Colima to avoid competing Docker contexts.
 ## Development
 
 ```
-nix fmt                    # format Nix files
+nix fmt                    # format and lint Nix files (nixfmt, deadnix, statix)
 nix run .#darwin-rebuild   # pinned darwin-rebuild
 scripts/check.sh           # eval-only check of all flake outputs
 ```

@@ -1,0 +1,2 @@
+# Modules set options with dotted keys (home.username, home.file, ...).
+disabled = ["repeated_keys"]
