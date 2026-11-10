@@ -9,7 +9,22 @@ the shared skills catalogue. This directory does not install `agent/prompts`.
 
 ## Default instructions
 
-`agent/AGENTS.md` contains the shared policy and GitHub CLI rules.
+`agent/AGENTS.md` contains the shared policy, GitHub CLI rules, and Notion Memory rules.
+
+The Notion Memory rules apply only when Pi has Notion's MCP tools.
+To connect Notion, add its server and sign in:
+
+```sh
+pi mcp add notion --url https://mcp.notion.com/mcp
+pi mcp login notion
+```
+
+The memory tools have `codemode` exposure by default.
+To give them to the model directly, add this to the `notion` entry in `~/.pi/agent/mcp.json`:
+
+```json
+"toolExposure": { "notion-memory-search": "direct", "notion-fetch": "direct" }
+```
 Home Manager generates `~/.pi/agent/APPEND_SYSTEM.md` from the pinned Herdr
 and poteto-mode skills in `modules/home/skills.nix`.
 Pi receives both skill bodies before the first model request.
@@ -41,34 +56,6 @@ pnpm typecheck
 - `agent/extensions/handoff.ts` creates a focused prompt for a new Pi session.
 - `agent/extensions/go.ts` adds `/go` to resume the agent loop without sending any new prompt text to the model.
 - `agent/extensions/preloaded-skills.ts` preserves the generated skill instructions when a project supplies its own append file.
-- `agent/extensions/notion-memory.ts` connects Pi to Notion Memory and tells the model when to use it.
-
-## Notion memory
-
-Notion Memory holds context, preferences, and decisions that the AI tools save in Notion.
-The notion-memory extension registers Notion's MCP server as `notion`.
-It declares the `notion-memory-search` and `notion-fetch` tools directly.
-The other Notion tools are available through codemode.
-
-The extension also adds a system-prompt section with these rules:
-
-- At the start of each task, search Notion Memory with the key words of the task.
-- In the first task of a session, read the About page.
-- Before a memory is saved, updated, or forgotten, read Notion's memory guide.
-
-The model does the recall, because a `before_agent_start` handler cannot call MCP tools.
-Thus each task usually has one more tool call.
-
-Sign in once in a Pi session.
-`pi mcp login` does not load extensions, so use the slash command:
-
-```text
-/mcp login notion
-```
-
-A `notion` server in `~/.pi/agent/mcp.json` takes precedence over the registered server, and its tool exposure replaces the extension's.
-Remove that entry with `pi mcp remove notion`.
-Pi keeps sign-ins by server name and URL, so the registered server uses the same sign-in.
 
 ## Themes
 
