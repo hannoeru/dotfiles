@@ -39,7 +39,10 @@ first path. Pi walks category directories, so a second link is unnecessary.
 
 The copies are read-only Nix store paths. `flake.lock` holds the revision of
 each GitHub input, and `nix flake update` updates them. The URL of the `pstack`
-input holds its version; change the URL to update it. Agents that read
+input holds its version; change the URL to update it. Pi installs the pstack
+package itself from `~/.pi/agent/settings.json`, which pins the same version as
+`npm:@zenspc/pi-pstack@<version>`. Change both versions together, so that the
+preloaded Poteto Mode text matches the installed extension. Agents that read
 `~/.agents/skills` discover the `SKILL.md` files on their next load.
 
 `verify-dotfiles` is not in this catalogue. It verifies this repository only
