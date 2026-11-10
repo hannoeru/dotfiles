@@ -31,7 +31,7 @@
           "npm"
           "node"
         ];
-        minimum_release_age = "7d";
+        minimum_release_age = "3d";
       };
     };
   };
