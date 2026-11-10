@@ -182,8 +182,6 @@ in
               if [ -n "$key" ]; then
                 tmp="$(mktemp)"
                 {
-                  echo "[user]"
-                  echo "  signingkey = $key"
                   echo "[commit]"
                   echo "  gpgsign = true"
                   echo "[gpg]"
@@ -191,6 +189,7 @@ in
                   echo "[gpg \"ssh\"]"
                   echo "  program = ${sshSignProgram}"
                 } > "$tmp"
+                ${pkgs.git}/bin/git config --file "$tmp" user.signingkey "$key"
                 mv "$tmp" "$HOME/.config/git/signing.gitconfig"
               else
                 echo "warning: could not fetch git signing key from 1Password" >&2
