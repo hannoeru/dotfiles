@@ -33,6 +33,10 @@ sudo darwin-rebuild switch --flake ~/dotfiles#Han-MBP
 sudo darwin-rebuild switch --flake ~/dotfiles#work
 ```
 
+`darwin-version --configuration-revision` prints the commit of this repository
+that the running system was built from. A `-dirty` suffix means that the
+checkout had uncommitted changes.
+
 Linux (x86_64):
 
 ```
