@@ -29,11 +29,9 @@ Repository skills linked from `home/skills`:
 | `Workflow/wrap-up` | `home/skills/wrap-up` |
 | `Vue & Nuxt/nuxt-cloudflare` | `home/skills/nuxt-cloudflare` |
 
-`analyze-issue`, `deslop`, `review-pr`, and `wrap-up` are the former Pi prompt
-templates. Home Manager does not install `~/.pi/agent/prompts`.
+Home Manager does not install `~/.pi/agent/prompts`.
 
-`Workflow/create-pr` replaces the pinned `antfu-create-pr` skill. The `antfu`
-pin stays, because `Workflow/antfu` still uses it.
+The `antfu` pin provides `Workflow/antfu`.
 
 Pi loads `~/.agents/skills` and `~/.pi/agent/skills`. This module uses the
 first path. Pi walks category directories, so a second link is unnecessary.

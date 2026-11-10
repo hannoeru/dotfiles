@@ -113,7 +113,7 @@ on first use.
 
 ## Notes
 
-- GUI apps and fonts come from Homebrew (managed by nix-darwin); manually installed packages are left alone.
+- GUI apps come from Homebrew (managed by nix-darwin); manually installed packages are left alone. Fonts come from Nix through `fonts.packages` in `modules/darwin.nix`.
 - Language runtimes (node, python, ...) come from [mise](https://mise.jdx.dev); run `mise install` after first activation (bootstrap does this), or rely on mise's auto-install on first use (the devcontainer does).
 - direnv with nix-direnv is enabled in Bash and Zsh. The whitelist uses the absolute home path with a `/projects/` suffix to automatically approve `.envrc` files under `~/projects`, including cloned repositories. The trailing slash excludes names such as `~/projects-other`. Files elsewhere are blocked unless explicitly approved with `direnv allow`; the whitelist is not a strict path restriction.
 - Personal Homebrew apps, including 1Password and its CLI, follow `personal` in `machines.nix`.
