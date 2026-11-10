@@ -41,36 +41,32 @@ pnpm typecheck
 - `agent/extensions/handoff.ts` creates a focused prompt for a new Pi session.
 - `agent/extensions/go.ts` adds `/go` to resume the agent loop without sending any new prompt text to the model.
 - `agent/extensions/preloaded-skills.ts` preserves the generated skill instructions when a project supplies its own append file.
-- `agent/extensions/notion-memory/` recalls Notion Memory before each prompt.
+- `agent/extensions/notion-memory.ts` connects Pi to Notion Memory and tells the model when to use it.
 
 ## Notion memory
 
-Before each prompt, the notion-memory extension searches Notion Memory with the prompt text.
-It adds the new matches to the context in a hidden `<notion_memory>` message.
-The first prompt of a session also gets the About page.
-Short follow-up prompts, such as "ok", do not start a search.
-If Notion does not reply in 5 seconds, the prompt continues without memories.
+Notion Memory holds context, preferences, and decisions that the AI tools save in Notion.
+The notion-memory extension registers Notion's MCP server as `notion`.
+It declares the `notion-memory-search` and `notion-fetch` tools directly.
+The other Notion tools are available through codemode.
 
-The extension also adds Notion's memory guide to the system prompt.
-The model saves memories with the tools of the `notion` MCP server, so that server must be in `~/.pi/agent/mcp.json`:
+The extension also adds a system-prompt section with these rules:
 
-```sh
-pi mcp add notion --url https://mcp.notion.com/mcp
-pi mcp login notion
-```
+- At the start of each task, search Notion Memory with the key words of the task.
+- In the first task of a session, read the About page.
+- Before a memory is saved, updated, or forgotten, read Notion's memory guide.
 
-The extension has its own Notion connection, because a `before_agent_start` handler cannot call Pi's MCP tools.
-Its runtime packages, `@earendil-works/pi-mcp` and `proper-lockfile`, are in the `dependencies` of `package.json`.
-It also has its own OAuth grant, because Notion rotates refresh tokens and two clients cannot share one grant.
-Sign in once in a Pi session:
+The model does the recall, because a `before_agent_start` handler cannot call MCP tools.
+Thus each task usually has one more tool call.
+
+Sign in once in a Pi session.
+`pi mcp login` does not load extensions, so use the slash command:
 
 ```text
-/notion-memory login
+/mcp login notion
 ```
 
-The grant is in `~/.pi/agent/notion-memory-auth.json`.
-`/notion-memory status` shows the connection, and `/notion-memory logout` deletes the grant.
-The footer shows the number of memories recalled in the session.
+A `notion` server in `~/.pi/agent/mcp.json` takes precedence over the registered server.
 
 ## Themes
 
