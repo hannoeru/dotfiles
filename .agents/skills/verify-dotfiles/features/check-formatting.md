@@ -44,4 +44,5 @@ Preconditions:
 
 - Plain `nix fmt` can rewrite files. `nix fmt -- --ci` also writes its changes before it fails, so run it on a clean tree and inspect `git diff` after a failure.
 - The `--` passes `--ci` to `nixfmt-tree`.
+- The treefmt cache does not track `statix.toml`. After you change it, plain `nix fmt` can skip every file. Run `nix fmt -- --no-cache`. `--ci` never uses the cache.
 - The formatter traverses repository files. Its reported file count can change when files are added or removed.
