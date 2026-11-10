@@ -11,8 +11,15 @@
   },
   "appearance": {
     "theme": "system",
+    "animations": true,
     "interfaceSize": "standard",
     "compactMode": false,
+    "compactBarCommands": [
+      "command:clipboard-history",
+      "command:search-emoji",
+      "command:search-files",
+      "command:search-quicklinks"
+    ],
     "followCursorAcrossDisplays": true,
     "dragToReposition": false
   },
@@ -43,18 +50,18 @@
     ],
     "apps": {
       "app.zen-browser.zen": {
-        "alias": "web",
         "shortcut": "shift+cmd+return",
+        "alias": "web",
         "showInLauncher": true
       },
       "com.apple.mail": {
-        "alias": "mail",
         "shortcut": "shift+cmd+e",
+        "alias": "mail",
         "showInLauncher": true
       },
       "com.mitchellh.ghostty": {
-        "alias": "term",
         "shortcut": "cmd+return",
+        "alias": "term",
         "showInLauncher": true
       }
     }
@@ -88,6 +95,7 @@
     "enabled": false,
     "webSearch": false,
     "choices": true,
+    "expandsReasoning": false,
     "systemPrompt": "",
     "systemPromptEnabled": true,
     "retentionDays": "forever",
@@ -103,6 +111,7 @@
   "dictation": {
     "mode": "toggle",
     "shortcut": null,
+    "playsSounds": true,
     "model": "redux",
     "microphone": null,
     "destination": "paste",
@@ -125,6 +134,7 @@
     "enabled": false,
     "rendersMarkdown": true,
     "showsFormattingBar": true,
+    "showsInMenuBar": false,
     "folder": null,
     "commands": {}
   },
@@ -144,44 +154,50 @@
     "showInLauncher": true,
     "gap": 0,
     "cycle": "off",
+    "wrapDisplays": true,
+    "keepProportions": true,
     "layoutsShowInLauncher": true,
     "roomsShowInLauncher": true,
     "shortcuts": {
-      "almost-maximize": null,
+      "left-half": "ctrl+option+left",
+      "right-half": "ctrl+option+right",
+      "top-half": "ctrl+option+up",
       "bottom-half": "ctrl+option+down",
+      "top-left-quarter": "ctrl+option+u",
+      "top-right-quarter": "ctrl+option+i",
       "bottom-left-quarter": "ctrl+option+j",
       "bottom-right-quarter": "ctrl+option+k",
-      "center": "ctrl+option+c",
-      "center-half": null,
-      "center-third": "ctrl+option+f",
-      "center-two-thirds": "ctrl+option+r",
-      "first-third": "ctrl+option+d",
       "first-three-fourths": null,
-      "first-two-thirds": "ctrl+option+e",
-      "last-third": "ctrl+option+g",
       "last-three-fourths": null,
+      "first-third": "ctrl+option+d",
+      "center-third": "ctrl+option+f",
+      "last-third": "ctrl+option+g",
+      "first-two-thirds": "ctrl+option+e",
       "last-two-thirds": "ctrl+option+t",
-      "left-half": "ctrl+option+left",
-      "make-larger": "ctrl+option+=",
-      "make-smaller": "ctrl+option+-",
       "maximize": "ctrl+option+return",
+      "almost-maximize": null,
+      "reasonable-size": null,
       "maximize-height": "ctrl+option+shift+up",
       "maximize-width": null,
-      "move-down": null,
+      "center": "ctrl+option+c",
+      "center-half": null,
+      "center-two-thirds": "ctrl+option+r",
+      "make-larger": "ctrl+option+=",
+      "make-smaller": "ctrl+option+-",
+      "restore": "ctrl+option+delete",
       "move-left": null,
       "move-right": null,
       "move-up": null,
+      "move-down": null,
+      "move-to-left-edge": null,
+      "move-to-right-edge": null,
+      "move-to-top-edge": null,
+      "move-to-bottom-edge": null,
       "next-display": "ctrl+option+cmd+right",
-      "next-space": null,
       "previous-display": "ctrl+option+cmd+left",
-      "previous-space": null,
-      "reasonable-size": null,
-      "restore": "ctrl+option+delete",
-      "right-half": "ctrl+option+right",
       "toggle-fullscreen": null,
-      "top-half": "ctrl+option+up",
-      "top-left-quarter": "ctrl+option+u",
-      "top-right-quarter": "ctrl+option+i"
+      "previous-space": null,
+      "next-space": null
     },
     "aliases": {},
     "customSizes": [],
@@ -199,8 +215,8 @@
     ],
     "commands": {
       "clipboard-history": {
-        "alias": null,
         "shortcut": "shift+cmd+v",
+        "alias": null,
         "showInLauncher": true
       }
     }
@@ -214,7 +230,7 @@
     "showInLauncher": true,
     "launcherLimit": 5,
     "span": "todayAndTomorrow",
-    "joinWindowMinutes": 5,
+    "joinWindowMinutes": 1,
     "autoJoinConfirms": true,
     "autoJoinNamedProvidersOnly": false,
     "meetingBrowser": null,
