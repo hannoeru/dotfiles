@@ -76,7 +76,7 @@ export default function (pi: ExtensionAPI) {
 			const currentSessionFile = ctx.sessionManager.getSessionFile();
 
 			// Generate the handoff prompt with loader UI
-			const result = await ctx.ui.custom<string | null>((tui, theme, _kb, done) => {
+			const result = await ctx.ui.custom<{ prompt: string } | { error: string } | null>((tui, theme, _kb, done) => {
 				const loader = new BorderedLoader(tui, theme, `Generating handoff prompt...`);
 				loader.onAbort = () => done(null);
 
@@ -107,18 +107,25 @@ export default function (pi: ExtensionAPI) {
 						return null;
 					}
 
-					return response.content
+					if (response.stopReason === "error") {
+						throw new Error(response.errorMessage || "The model returned an error");
+					}
+
+					const prompt = response.content
 						.filter((c): c is { type: "text"; text: string } => c.type === "text")
 						.map((c) => c.text)
 						.join("\n");
+
+					if (!prompt.trim()) {
+						throw new Error("The model returned an empty prompt");
+					}
+
+					return { prompt };
 				};
 
 				doGenerate()
 					.then(done)
-					.catch((err) => {
-						console.error("Handoff generation failed:", err);
-						done(null);
-					});
+					.catch((err) => done({ error: err instanceof Error ? err.message : String(err) }));
 
 				return loader;
 			});
@@ -128,8 +135,13 @@ export default function (pi: ExtensionAPI) {
 				return;
 			}
 
+			if ("error" in result) {
+				ctx.ui.notify(`Handoff failed: ${result.error}`, "error");
+				return;
+			}
+
 			// Let user edit the generated prompt
-			const editedPrompt = await ctx.ui.editor("Edit handoff prompt", result);
+			const editedPrompt = await ctx.ui.editor("Edit handoff prompt", result.prompt);
 
 			if (editedPrompt === undefined) {
 				ctx.ui.notify("Cancelled", "info");
