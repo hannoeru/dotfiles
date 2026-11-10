@@ -13,7 +13,6 @@
     "theme": "system",
     "interfaceSize": "standard",
     "compactMode": false,
-    "showFavoritesInCompactMode": true,
     "followCursorAcrossDisplays": true,
     "dragToReposition": false
   },
@@ -44,18 +43,18 @@
     ],
     "apps": {
       "app.zen-browser.zen": {
-        "shortcut": "shift+cmd+return",
         "alias": "web",
+        "shortcut": "shift+cmd+return",
+        "showInLauncher": true
+      },
+      "com.apple.mail": {
+        "alias": "mail",
+        "shortcut": "shift+cmd+e",
         "showInLauncher": true
       },
       "com.mitchellh.ghostty": {
-        "shortcut": "cmd+return",
         "alias": "term",
-        "showInLauncher": true
-      },
-      "com.readdle.SparkDesktop": {
-        "shortcut": "shift+cmd+e",
-        "alias": "mail",
+        "shortcut": "cmd+return",
         "showInLauncher": true
       }
     }
@@ -148,41 +147,41 @@
     "layoutsShowInLauncher": true,
     "roomsShowInLauncher": true,
     "shortcuts": {
-      "left-half": "ctrl+option+left",
-      "right-half": "ctrl+option+right",
-      "top-half": "ctrl+option+up",
+      "almost-maximize": null,
       "bottom-half": "ctrl+option+down",
-      "top-left-quarter": "ctrl+option+u",
-      "top-right-quarter": "ctrl+option+i",
       "bottom-left-quarter": "ctrl+option+j",
       "bottom-right-quarter": "ctrl+option+k",
-      "first-three-fourths": null,
-      "last-three-fourths": null,
-      "first-third": "ctrl+option+d",
-      "center-third": "ctrl+option+f",
-      "last-third": "ctrl+option+g",
-      "first-two-thirds": "ctrl+option+e",
-      "last-two-thirds": "ctrl+option+t",
-      "maximize": "ctrl+option+return",
-      "almost-maximize": null,
-      "reasonable-size": null,
-      "maximize-height": "ctrl+option+shift+up",
-      "maximize-width": null,
       "center": "ctrl+option+c",
       "center-half": null,
+      "center-third": "ctrl+option+f",
       "center-two-thirds": "ctrl+option+r",
+      "first-third": "ctrl+option+d",
+      "first-three-fourths": null,
+      "first-two-thirds": "ctrl+option+e",
+      "last-third": "ctrl+option+g",
+      "last-three-fourths": null,
+      "last-two-thirds": "ctrl+option+t",
+      "left-half": "ctrl+option+left",
       "make-larger": "ctrl+option+=",
       "make-smaller": "ctrl+option+-",
-      "restore": "ctrl+option+delete",
+      "maximize": "ctrl+option+return",
+      "maximize-height": "ctrl+option+shift+up",
+      "maximize-width": null,
+      "move-down": null,
       "move-left": null,
       "move-right": null,
       "move-up": null,
-      "move-down": null,
       "next-display": "ctrl+option+cmd+right",
+      "next-space": null,
       "previous-display": "ctrl+option+cmd+left",
-      "toggle-fullscreen": null,
       "previous-space": null,
-      "next-space": null
+      "reasonable-size": null,
+      "restore": "ctrl+option+delete",
+      "right-half": "ctrl+option+right",
+      "toggle-fullscreen": null,
+      "top-half": "ctrl+option+up",
+      "top-left-quarter": "ctrl+option+u",
+      "top-right-quarter": "ctrl+option+i"
     },
     "aliases": {},
     "customSizes": [],
@@ -200,8 +199,8 @@
     ],
     "commands": {
       "clipboard-history": {
-        "shortcut": "shift+cmd+v",
         "alias": null,
+        "shortcut": "shift+cmd+v",
         "showInLauncher": true
       }
     }
