@@ -12,7 +12,7 @@
  *    agent cannot circumvent git hooks (pre-commit, commit-msg, etc.). Only
  *    real arguments of a real git invocation count: quoted text, heredoc
  *    bodies, comments, and other commands do not. The agent should fix hook
- *    failures or ask the user for help.
+ *    failures or ask the human for help.
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
@@ -30,7 +30,7 @@ const COMMIT_CLUSTER_ENDS_WITH_VALUE_OPTION = /^-[^-mFCctuS]*[mFCct]$/;
 const BLOCK_REASON =
 	"BLOCKED: Git hook bypass flags are not allowed. Git hooks exist for a reason. " +
 	"Do not attempt to bypass them. Instead: fix the underlying issue that " +
-	"is causing the hook to fail, or ask the user for help.";
+	"is causing the hook to fail, or ask the human for help.";
 
 function bypassesHooks(args: string[]) {
 	let i = 0;
