@@ -1,0 +1,119 @@
+import { execFileSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import {
+	type BashToolCallEvent,
+	DefaultResourceLoader,
+	ExtensionRunner,
+	type ExtensionUIContext,
+	ModelRegistry,
+	ModelRuntime,
+	SessionManager,
+	SettingsManager,
+} from "@earendil-works/pi-coding-agent";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import agentGuard from "../extensions/agent-guard.ts";
+
+let root: string;
+let main: string;
+const runners = new Map<string, ExtensionRunner>();
+
+beforeAll(() => {
+	root = mkdtempSync(join(tmpdir(), "pi-agent-guard-"));
+	main = join(root, "main");
+	execFileSync("git", ["init", "-q", main]);
+});
+
+afterAll(() => rmSync(root, { recursive: true, force: true }));
+
+async function runnerFor(cwd: string) {
+	const existing = runners.get(cwd);
+	if (existing) return existing;
+	const loader = new DefaultResourceLoader({
+		cwd,
+		agentDir: join(root, "agent"),
+		settingsManager: SettingsManager.inMemory({}),
+		noExtensions: true,
+		noSkills: true,
+		noPromptTemplates: true,
+		noThemes: true,
+		extensionFactories: [agentGuard],
+	});
+	await loader.reload();
+	const loaded = loader.getExtensions();
+	expect(loaded.errors).toEqual([]);
+	const runtime = await ModelRuntime.create({ authPath: join(root, "auth.json"), modelsPath: null, refreshOnCreate: false });
+	const runner = new ExtensionRunner(loaded.extensions, loaded.runtime, cwd, SessionManager.inMemory(cwd), new ModelRegistry(runtime));
+	runners.set(cwd, runner);
+	return runner;
+}
+
+type Options = { cwd?: string; hasUI?: boolean; approve?: boolean };
+
+async function run(command: string, { cwd = main, hasUI = true, approve = false }: Options = {}) {
+	const runner = await runnerFor(cwd);
+	const questions: string[] = [];
+	const confirm = async (_title: string, message: string) => {
+		questions.push(message);
+		return approve;
+	};
+	runner.setUIContext(hasUI ? ({ confirm } as unknown as ExtensionUIContext) : undefined);
+	const event: BashToolCallEvent = { type: "tool_call", toolCallId: "t", toolName: "bash", input: { command } };
+	const result = await runner.emitToolCall(event);
+	return { result, questions };
+}
+
+const allowed = { result: undefined, questions: [] };
+
+describe("GitHub writes need the human's approval", () => {
+	test.each([
+		"gh issue edit 123 --add-label bug",
+		"gh pr edit 12 --add-label bug",
+		"gh pr comment 5369 --body-file /tmp/review.md",
+		"gh issue close 294 --comment 'out of scope'",
+		"gh pr review 12 --approve",
+		"gh workflow run ci.yml",
+		"gh gist create notes.md",
+		"gh api repos/o/r/issues/1/comments -f body=hi",
+		"gh api -X DELETE repos/o/r/labels/bug",
+		"gh api -XPOST repos/o/r/issues/1/labels",
+		"gh api graphql -f query='mutation { addComment(input: {}) { clientMutationId } }'",
+		"gh api graphql --input mutation.json",
+		"timeout 30 gh issue close 1",
+		"echo 1 | xargs -n 1 gh issue close",
+		"bash -c 'gh issue close 1'",
+		"find . -name '*.md' -exec gh issue close 1 \\;",
+		"watch -n 5 gh issue close 1",
+	])("asks before: %s", async (command) => {
+		const { result, questions } = await run(command);
+		expect(questions[0]).toContain("Draft the text for the human");
+		expect(result).toMatchObject({ block: true });
+	});
+
+	test("runs the command when the human approves", async () => {
+		expect(await run("gh pr comment 1 --body ok", { approve: true })).toEqual({ result: undefined, questions: [expect.any(String)] });
+	});
+
+	test("blocks without a UI", async () => {
+		const { result, questions } = await run("gh issue close 1", { hasUI: false });
+		expect(questions).toEqual([]);
+		expect(result).toMatchObject({ block: true, reason: expect.stringContaining("did not approve") });
+	});
+
+	test.each([
+		"gh pr view 1 --json body",
+		"gh api repos/o/r/pulls",
+		"gh api graphql -f query='query { viewer { login } }'",
+		"gh pr create --title t --body-file b.md",
+		"gh pr edit 73 --body-file /tmp/body.md",
+		"echo 'gh issue close 1'",
+		"bash script.sh",
+	])("allows reads and the orchestrator's own PRs: %s", async (command) => {
+		expect(await run(command)).toEqual(allowed);
+	});
+});
+
+
+
+
