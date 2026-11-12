@@ -90,10 +90,10 @@ in
         # Preloaded skills
 
         Nix generates this file from pinned skill sources.
-        Follow Poteto Mode by default unless the user disables it.
+        Follow Poteto Mode by default unless the human disables it.
         Apply Herdr instructions only when `HERDR_ENV=1`.
-        Explicit user restrictions take precedence over these skill defaults.
-        The task defaults in AGENTS.md authorize Herdr worktree and helper use.
+        Explicit restrictions from the human take precedence over these skill defaults.
+        The Herdr section in AGENTS.md authorizes Herdr worktrees and worker agents.
         Preloading applies instructions. It does not set pstack's stored mode state.
 
         ${renderSkill "Poteto Mode" (pstack + "/skills/poteto-mode/SKILL.md")}

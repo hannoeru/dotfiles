@@ -62,6 +62,10 @@ test.each([
 	"echo $(git commit -n)",
 	"git commit -m x 2>&1 -n",
 	"cat <<EOF\ntext\nEOF\ngit commit -n",
+	"timeout 60 git commit -n",
+	"sudo -u me git commit -n",
+	"bash -c 'git commit -n'",
+	"eval 'git commit -n'",
 ])("blocks Git hook bypass: %s", async (input) => {
 	const run = createExtension();
 
