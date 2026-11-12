@@ -19,6 +19,8 @@ let root: string;
 let main: string;
 let worker: string;
 let plain: string;
+let npmProject: string;
+let npmPackage: string;
 const runners = new Map<string, ExtensionRunner>();
 
 beforeAll(() => {
@@ -31,6 +33,11 @@ beforeAll(() => {
 	const git = (...args: string[]) => execFileSync("git", ["-C", main, ...args], { stdio: "ignore" });
 	git("-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false", "commit", "-q", "--allow-empty", "-m", "init");
 	git("worktree", "add", "-q", "-b", "agent/task", worker);
+	npmProject = join(root, "npm-project");
+	npmPackage = join(npmProject, "packages", "app");
+	execFileSync("git", ["init", "-q", npmProject]);
+	writeFileSync(join(npmProject, "package-lock.json"), "{}");
+	mkdirSync(npmPackage, { recursive: true });
 });
 
 afterAll(() => rmSync(root, { recursive: true, force: true }));
@@ -180,4 +187,21 @@ describe("worktrees and workers", () => {
 	});
 });
 
+describe("package managers", () => {
+	test.each(["npm install", "npx tsx script.ts", "npm create vite@latest app", "npm init -y", "yarn", "yarn add left-pad"])(
+		"blocks npm and yarn without their lockfile: %s",
+		async (command) => {
+			const { result } = await run(command);
+			expect(result).toMatchObject({ block: true, reason: expect.stringContaining("Use pnpm") });
+		},
+	);
+
+	test.each([
+		["npm ci", () => npmProject],
+		["npm run build", () => npmPackage],
+		["yarn --version", () => main],
+	])("allows %s", async (command, cwd) => {
+		expect(await run(command, { cwd: cwd() })).toEqual(allowed);
+	});
+});
 

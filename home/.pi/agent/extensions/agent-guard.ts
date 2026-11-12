@@ -1,4 +1,6 @@
 import { execFileSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
 import { optionValues, positionals, programCalls } from "./shell/commands.ts";
@@ -99,11 +101,42 @@ const WORKER_LIMITS: Record<string, (args: string[]) => boolean> = {
 	},
 };
 
+type PackageManager = { name: string; lockfiles: string[]; guarded: (sub: string | undefined) => boolean };
+
+const NPM_LOCKFILES = ["package-lock.json", "npm-shrinkwrap.json"];
+const NPM_PROJECT_SUBCOMMANDS = new Set(["install", "i", "ci", "add", "run", "exec", "x", "test", "start", "update", "create", "init"]);
+const PACKAGE_VALUE_OPTIONS = new Set(["--filter", "-F", "-C", "--dir", "--prefix", "-w", "--workspace", "--registry"]);
+const INFO_FLAGS = new Set(["--version", "-v", "--help", "-h"]);
+const PACKAGE_MANAGERS: Record<string, PackageManager> = {
+	npm: { name: "npm", lockfiles: NPM_LOCKFILES, guarded: (sub) => sub !== undefined && NPM_PROJECT_SUBCOMMANDS.has(sub) },
+	npx: { name: "npm", lockfiles: NPM_LOCKFILES, guarded: () => true },
+	yarn: { name: "yarn", lockfiles: ["yarn.lock"], guarded: () => true },
+};
+
+function projectUses(cwd: string, lockfiles: string[]) {
+	for (let dir = cwd; ; dir = dirname(dir)) {
+		if (lockfiles.some((name) => existsSync(join(dir, name)))) return true;
+		if (existsSync(join(dir, ".git")) || dirname(dir) === dir) return false;
+	}
+}
+
+function packageRule(program: string): Rule {
+	const { name, lockfiles, guarded } = PACKAGE_MANAGERS[program];
+	return (args, cwd) => {
+		if (args.length > 0 && args.every((arg) => INFO_FLAGS.has(arg))) return undefined;
+		const [sub, ...packages] = positionals(args, PACKAGE_VALUE_OPTIONS);
+		if (guarded(sub) && !projectUses(cwd, lockfiles)) {
+			return block(`This project does not use ${name}. Use pnpm: \`pnpm create\` for new projects, \`pnpm dlx\` for one-off tools.`);
+		}
+		return undefined;
+	};
+}
 
 const RULES: Record<string, Rule> = {
 	gh,
 	herdr,
 	git,
+	...Object.fromEntries(Object.keys(PACKAGE_MANAGERS).map((program) => [program, packageRule(program)])),
 };
 
 const roles = new Map<string, Role>();
