@@ -5,6 +5,8 @@ import { join } from "node:path";
 import {
 	type BashToolCallEvent,
 	DefaultResourceLoader,
+	type ExtensionActions,
+	type ExtensionContextActions,
 	ExtensionRunner,
 	type ExtensionUIContext,
 	ModelRegistry,
@@ -17,8 +19,6 @@ import agentGuard from "../extensions/agent-guard.ts";
 
 let root: string;
 let main: string;
-let worker: string;
-let plain: string;
 let npmProject: string;
 let npmPackage: string;
 const runners = new Map<string, ExtensionRunner>();
@@ -27,12 +27,6 @@ beforeAll(() => {
 	root = mkdtempSync(join(tmpdir(), "pi-agent-guard-"));
 	main = join(root, "main");
 	execFileSync("git", ["init", "-q", main]);
-	worker = join(root, "worker");
-	plain = join(root, "plain");
-	mkdirSync(plain);
-	const git = (...args: string[]) => execFileSync("git", ["-C", main, ...args], { stdio: "ignore" });
-	git("-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false", "commit", "-q", "--allow-empty", "-m", "init");
-	git("worktree", "add", "-q", "-b", "agent/task", worker);
 	npmProject = join(root, "npm-project");
 	npmPackage = join(npmProject, "packages", "app");
 	execFileSync("git", ["init", "-q", npmProject]);
@@ -64,10 +58,11 @@ async function runnerFor(cwd: string) {
 	return runner;
 }
 
-type Options = { cwd?: string; hasUI?: boolean; approve?: boolean };
+type Options = { cwd?: string; hasUI?: boolean; approve?: boolean; systemPrompt?: string };
 
-async function run(command: string, { cwd = main, hasUI = true, approve = false }: Options = {}) {
+async function run(command: string, { cwd = main, hasUI = true, approve = false, systemPrompt = "" }: Options = {}) {
 	const runner = await runnerFor(cwd);
+	runner.bindCore({} as ExtensionActions, { getSystemPrompt: () => systemPrompt } as ExtensionContextActions);
 	const questions: string[] = [];
 	const confirm = async (_title: string, message: string) => {
 		questions.push(message);
@@ -88,7 +83,6 @@ describe("GitHub writes need the human's approval", () => {
 		"gh pr comment 5369 --body-file /tmp/review.md",
 		"gh issue close 294 --comment 'out of scope'",
 		"gh pr review 12 --approve",
-		"gh workflow run ci.yml",
 		"gh gist create notes.md",
 		"gh api repos/o/r/issues/1/comments -f body=hi",
 		"gh api -X DELETE repos/o/r/labels/bug",
@@ -124,18 +118,16 @@ describe("GitHub writes need the human's approval", () => {
 		"gh pr edit 73 --body-file /tmp/body.md",
 		"echo 'gh issue close 1'",
 		"bash script.sh",
+		"gh workflow run ci.yml",
 	])("allows reads and the orchestrator's own PRs: %s", async (command) => {
 		expect(await run(command)).toEqual(allowed);
 	});
 });
 
 describe("Herdr agents", () => {
-	test.each([
-		["herdr agent start r-x --kind codex --pane w1:p2", "Use `--kind codex` only when the human asked for it."],
-		["herdr agent start r-x --pane w1:p2", "Start Pi agents with `--kind pi`."],
-	])("asks before: %s", async (command, reason) => {
-		const { questions } = await run(command);
-		expect(questions[0]).toContain(reason);
+	test("asks before an agent kind other than Pi", async () => {
+		const { questions } = await run("herdr agent start r-x --kind codex --pane w1:p2");
+		expect(questions[0]).toContain("Use `--kind codex` only when the human asked for it.");
 	});
 
 	test("allows Pi agents", async () => {
@@ -149,9 +141,10 @@ describe("Herdr agents", () => {
 		expect(result).toMatchObject({ block: true, reason: expect.stringContaining("Leave the server running") });
 	});
 
-	test.each(["herdr agent send-keys w-x enter", "herdr pane send-text w1:p2 y"])("asks before answering a dialog: %s", async (command) => {
-		const { questions } = await run(command);
-		expect(questions[0]).toContain("The human answers its dialogs");
+	test.each(["herdr agent send-keys w-x enter", "herdr pane send-text w1:p2 y"])("blocks answers to a dialog: %s", async (command) => {
+		const { result, questions } = await run(command);
+		expect(questions).toEqual([]);
+		expect(result).toMatchObject({ block: true, reason: expect.stringContaining("The human answers its dialogs") });
 	});
 });
 
@@ -177,13 +170,14 @@ describe("worktrees and workers", () => {
 		"git rebase origin/main",
 		"git pull --rebase origin main",
 		"git branch -D agent/old",
-	])("asks a worker before: %s", async (command) => {
-		const { questions } = await run(command, { cwd: worker });
-		expect(questions[0]).toContain("Workers commit on their own branch only");
+	])("blocks a worker from: %s", async (command) => {
+		const { result, questions } = await run(command, { systemPrompt: "Base prompt.\nYou are a worker agent. Follow worker.md." });
+		expect(questions).toEqual([]);
+		expect(result).toMatchObject({ block: true, reason: expect.stringContaining("Workers commit on their own branch only") });
 	});
 
-	test.each([main, plain])("lets a session outside a linked worktree push: %s", async (cwd) => {
-		expect(await run("git push", { cwd })).toEqual(allowed);
+	test.each(["git push -u origin agent/task", "gh pr create --title t --body b"])("lets a session without the worker prompt run: %s", async (command) => {
+		expect(await run(command)).toEqual(allowed);
 	});
 });
 
@@ -206,13 +200,12 @@ describe("package managers", () => {
 });
 
 describe("dependencies", () => {
-	test("asks before a new dependency and names valibot for zod", async () => {
+	test("asks before zod and names valibot", async () => {
 		const { questions } = await run("pnpm --filter web add -D zod");
-		expect(questions[0]).toContain("Packages: zod.");
 		expect(questions[0]).toContain("Use valibot for schemas");
 	});
 
-	test("allows installs from the lockfile", async () => {
-		expect(await run("pnpm install --frozen-lockfile")).toEqual(allowed);
+	test.each(["pnpm add valibot", "pnpm install --frozen-lockfile"])("allows %s", async (command) => {
+		expect(await run(command)).toEqual(allowed);
 	});
 });

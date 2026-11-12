@@ -8,7 +8,7 @@ If `.agent/` is not in `.git/info/exclude` of the main checkout, add it. All wor
 
 ## 1. Plan
 
-Split the request into independent tasks that touch different files: one file, one owner. For each task, write a slug, the files that it owns, and acceptance criteria: what "done" means and which commands prove it. Show the plan to the human and wait for approval before you dispatch. Start with 2 or 3 workers, and run at most 5 at the same time.
+Split the request into independent tasks that touch different files: one file, one owner. For each task, write a slug, the files that it owns, the new dependencies that it adds, and acceptance criteria: what "done" means and which commands prove it. Show the plan to the human and wait for approval before you dispatch. Start with 2 or 3 workers, and run at most 5 at the same time.
 
 ## 2. Dispatch each task
 

@@ -1,4 +1,3 @@
-import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
@@ -8,7 +7,6 @@ import { GIT_VALUE_OPTIONS } from "./shell/git.ts";
 
 type Verdict = { kind: "block" | "confirm"; reason: string };
 type Rule = (args: string[], cwd: string) => Verdict | undefined;
-type Role = "orchestrator" | "worker";
 
 const block = (reason: string): Verdict => ({ kind: "block", reason });
 const confirm = (reason: string): Verdict => ({ kind: "confirm", reason });
@@ -16,6 +14,7 @@ const confirm = (reason: string): Verdict => ({ kind: "confirm", reason });
 const GITHUB_WRITE_REASON =
 	"This writes to GitHub where other people see it. Draft the text for the human and post only when the human asks.";
 const DIALOG_REASON = "Tell the human what the agent asks. The human answers its dialogs.";
+const WORKER_MARKER = "You are a worker agent.";
 const WORKER_REASON =
 	"Workers commit on their own branch only. Write a `Status: blocked` report for anything else: " +
 	"push, merge, rebase onto main, branch deletion, pull requests, or control of agents and worktrees.";
@@ -28,11 +27,8 @@ const GH_WRITES: Record<string, Set<string>> = {
 	release: new Set(["create", "edit", "delete", "upload", "delete-asset"]),
 	repo: new Set(["create", "delete", "edit", "archive", "unarchive", "rename"]),
 	gist: new Set(["create", "edit", "delete", "rename"]),
-	workflow: new Set(["run", "enable", "disable"]),
-	run: new Set(["rerun", "cancel", "delete"]),
 	secret: new Set(["set", "delete"]),
 	variable: new Set(["set", "delete"]),
-	cache: new Set(["delete"]),
 };
 const PR_EDIT_OWN_OPTIONS = new Set(["-t", "--title", "-b", "--body", "-F", "--body-file", "-B", "--base", "-R", "--repo"]);
 
@@ -60,11 +56,10 @@ const herdr: Rule = (args) => {
 	if (group === "server" && sub === "stop") return block("`herdr server stop` ends every pane, including the human's. Leave the server running.");
 	if (group === "agent" && sub === "start") {
 		const [kind] = optionValues(args, ["--kind"]);
-		if (kind === undefined) return confirm("Start Pi agents with `--kind pi`.");
-		if (kind !== "pi") return confirm(`Start Pi agents with \`--kind pi\`. Use \`--kind ${kind}\` only when the human asked for it.`);
+		if (kind !== undefined && kind !== "pi") return confirm(`Start Pi agents with \`--kind pi\`. Use \`--kind ${kind}\` only when the human asked for it.`);
 	}
 	if ((group === "agent" && sub === "send-keys") || (group === "pane" && (sub === "send-keys" || sub === "send-text"))) {
-		return confirm(DIALOG_REASON);
+		return block(DIALOG_REASON);
 	}
 	return undefined;
 };
@@ -120,11 +115,7 @@ const DEPENDENCY_ADDS: Record<string, Set<string>> = {
 	pnpm: new Set(["add", "install", "i"]),
 	bun: new Set(["add", "install", "i"]),
 };
-
-function dependencyReason(packages: string[]) {
-	const zod = packages.some((pkg) => /^zod(?:@|$)/.test(pkg)) ? " Use valibot for schemas, unless a library requires zod." : "";
-	return `Ask the human before you add a dependency. Packages: ${packages.join(", ")}.${zod}`;
-}
+const ZOD = /^zod(?:@|$)/;
 
 function projectUses(cwd: string, lockfiles: string[]) {
 	for (let dir = cwd; ; dir = dirname(dir)) {
@@ -141,7 +132,9 @@ function packageRule(program: string): Rule {
 		if (guarded(sub) && !projectUses(cwd, lockfiles)) {
 			return block(`This project does not use ${name}. Use pnpm: \`pnpm create\` for new projects, \`pnpm dlx\` for one-off tools.`);
 		}
-		if (sub !== undefined && DEPENDENCY_ADDS[program]?.has(sub) && packages.length > 0) return confirm(dependencyReason(packages));
+		if (sub !== undefined && DEPENDENCY_ADDS[program]?.has(sub) && packages.some((pkg) => ZOD.test(pkg))) {
+			return confirm("Use valibot for schemas. Add zod only when a library requires it.");
+		}
 		return undefined;
 	};
 }
@@ -153,40 +146,13 @@ const RULES: Record<string, Rule> = {
 	...Object.fromEntries(Object.keys(PACKAGE_MANAGERS).map((program) => [program, packageRule(program)])),
 };
 
-const roles = new Map<string, Role>();
-
-function detectRole(cwd: string): Role {
-	try {
-		const [gitDir, commonDir] = execFileSync("git", ["rev-parse", "--path-format=absolute", "--git-dir", "--git-common-dir"], {
-			cwd,
-			encoding: "utf8",
-			stdio: ["ignore", "pipe", "ignore"],
-		})
-			.trim()
-			.split("\n");
-		return gitDir === commonDir ? "orchestrator" : "worker";
-	} catch (error) {
-		return error instanceof Error && "status" in error && error.status === 128 ? "orchestrator" : "worker";
-	}
-}
-
-function sessionRole(cwd: string): Role {
-	let role = roles.get(cwd);
-	if (!role) {
-		role = detectRole(cwd);
-		roles.set(cwd, role);
-	}
-	return role;
-}
-
-function checkCommand(command: string, cwd: string): Verdict[] {
+function checkCommand(command: string, cwd: string, worker: boolean): Verdict[] {
 	const verdicts: Verdict[] = [];
 	const calls = programCalls(command);
-	const worker = calls.some(({ program }) => program in WORKER_LIMITS) && sessionRole(cwd) === "worker";
 	for (const { program, args } of calls) {
 		const verdict = RULES[program]?.(args, cwd);
 		if (verdict) verdicts.push(verdict);
-		if (worker && WORKER_LIMITS[program]?.(args)) verdicts.push(confirm(WORKER_REASON));
+		if (worker && WORKER_LIMITS[program]?.(args)) verdicts.push(block(WORKER_REASON));
 	}
 	return verdicts;
 }
@@ -194,7 +160,7 @@ function checkCommand(command: string, cwd: string): Verdict[] {
 export default function agentGuard(pi: ExtensionAPI): void {
 	pi.on("tool_call", async (event, ctx) => {
 		if (!isToolCallEventType("bash", event)) return;
-		const verdicts = checkCommand(event.input.command, ctx.cwd);
+		const verdicts = checkCommand(event.input.command, ctx.cwd, ctx.getSystemPrompt().includes(WORKER_MARKER));
 		const blocked = verdicts.find((verdict) => verdict.kind === "block");
 		if (blocked) return { block: true, reason: `BLOCKED: ${blocked.reason}` };
 		if (verdicts.length === 0) return;

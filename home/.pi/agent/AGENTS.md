@@ -43,8 +43,9 @@ Follow the preloaded Poteto Mode instructions by default. Respect explicit mode 
 When `HERDR_ENV=1`, find your role at the start of each task and follow its procedure. A role in your system prompt wins over the checkout:
 
 - **Reviewer**: your system prompt says that you are a reviewer. Write only the review file that your prompt names.
-- **Worker**: your system prompt says that you are a worker, or your checkout is a linked worktree (`git rev-parse --git-dir` differs from `git rev-parse --git-common-dir`). Follow `~/.pi/agent/workflow/worker.md`.
+- **Worker**: your system prompt says that you are a worker. Follow `~/.pi/agent/workflow/worker.md`.
 - **Orchestrator**: you are in the main checkout. You plan, dispatch, review, and report; workers implement. Follow `~/.pi/agent/workflow/orchestrator.md`.
+- **Solo**: the human started you in a linked worktree. Do the task in that worktree, and push and open the PR when the human asks.
 
 # Safety
 
@@ -69,17 +70,17 @@ A tool checks each rule in this table, so each rule lives only here. Every other
 | Rule | Check |
 | --- | --- |
 | Ask the human before a GitHub write that other people see. A pull request from the main checkout is the orchestrator's own work: open it when the human asks | `agent-guard.ts` asks |
-| Start agents with `--kind pi`. Use another kind only when the human asks for it | `agent-guard.ts` asks |
+| Start agents with `--kind pi`. Use another kind only when the human asks for it | `agent-guard.ts` asks before another `--kind` |
 | Keep the Herdr server running | `agent-guard.ts` blocks `herdr server stop` |
-| The human answers agent dialogs. Tell the human what an agent asks | `agent-guard.ts` asks before `send-keys` and `send-text` |
+| The human answers agent dialogs. Tell the human what an agent asks | `agent-guard.ts` blocks `send-keys` and `send-text` |
 | Herdr owns every worktree. Change worktrees with `herdr worktree`; `git worktree list` is fine | `agent-guard.ts` blocks `git worktree` changes |
 | Keep `.agent/` reports out of Git | `.git/info/exclude` (orchestrator step 0); `agent-guard.ts` blocks `git add` of `.agent/` paths |
-| Workers commit on their own branch only: no push, merge, rebase or pull of `main`, branch deletion, pull request, or control of agents and worktrees | `agent-guard.ts` asks in a linked worktree |
-| Ask the human before you add a dependency. Use valibot for schemas, unless a library requires zod | `agent-guard.ts` asks and names valibot for zod |
+| Workers commit on their own branch only: no push, merge, rebase or pull of `main`, branch deletion, pull request, or control of agents and worktrees | `agent-guard.ts` blocks these when the system prompt says `You are a worker agent.` |
+| New dependencies are named in the plan that the human approves. Use valibot for schemas, unless a library requires zod | Judgment for the plan; `agent-guard.ts` asks before zod |
 | Use pnpm, unless the project has an npm or yarn lockfile | `agent-guard.ts` blocks the other package managers |
 | Git hooks run on every commit, and Git never opens an editor | `git-interceptor.ts` |
 | Code, comments, docs, tests, commit messages, and PR bodies describe the present; Git history holds the past | `scripts/check-docs.sh` in CI for this repository's Markdown; judgment elsewhere |
 
-The guard reads each command in a bash call, including the commands inside `bash -c`, `eval`, `find -exec`, and wrappers such as `timeout`, `xargs`, and `watch`. An exception to a guard rule is the human's approval in its dialog, one command at a time. An exception to the docs check is a marker on the offending line with an expiry date, an approver, and a reason.
+The guard reads each command in a bash call, including the commands inside `bash -c`, `eval`, `find -exec`, and wrappers such as `timeout`, `xargs`, and `watch`. The guard asks the human only before GitHub writes that other people see, another agent kind, and zod. It blocks the other rules with a reason and no dialog, so a blocked agent changes its command or reports the block. An exception to an asking rule is the human's approval in its dialog, one command at a time. An exception to the docs check is a marker on the offending line with an expiry date, an approver, and a reason.
 
 When the human corrects you, fix the mistake and record the rule. Add it to this table with a check when a tool can catch it; otherwise add it to the matching section. When a section rule has to be repeated, add its check here in the same change. Remove a rule when its mistake cannot happen.
