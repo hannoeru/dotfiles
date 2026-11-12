@@ -1,4 +1,4 @@
-const RESERVED_WORDS = new Set(["!", "{", "if", "then", "elif", "else", "while", "until", "do"]);
+const RESERVED_WORDS = new Set(["!", "{", "}", "if", "then", "elif", "else", "fi", "while", "until", "do", "done", "esac"]);
 const ASSIGNMENT = /^[A-Za-z_]\w*=/;
 const WRAPPERS: Record<string, { valueOptions: string[]; operands?: number }> = {
 	time: { valueOptions: [] },
@@ -60,6 +60,7 @@ function parseSimpleCommands(script: string): string[][] {
 			endCommand();
 			for (const heredoc of heredocs.splice(0)) i = skipHeredoc(script, i + 1, heredoc);
 		} else if (";&|()`".includes(char)) {
+			if (char === "(" && word === "$") word = undefined;
 			endCommand();
 		} else if (script.startsWith("<<<", i)) {
 			endWord();
@@ -147,20 +148,4 @@ export function positionals(args: string[], valueOptions: Set<string>) {
 		else if (!args[i].startsWith("-")) words.push(args[i]);
 	}
 	return words;
-}
-
-export function optionValues(args: string[], names: string[]) {
-	const values: string[] = [];
-	for (let i = 0; i < args.length && args[i] !== "--"; i++) {
-		const arg = args[i];
-		if (names.includes(arg)) {
-			if (i + 1 < args.length) values.push(args[++i]);
-			continue;
-		}
-		const long = names.find((name) => name.startsWith("--") && arg.startsWith(`${name}=`));
-		const short = names.find((name) => /^-\w$/.test(name) && arg.startsWith(name) && arg.length > 2 && !arg.startsWith("--"));
-		if (long) values.push(arg.slice(long.length + 1));
-		else if (short) values.push(arg.slice(2));
-	}
-	return values;
 }
