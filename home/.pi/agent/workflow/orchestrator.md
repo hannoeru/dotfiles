@@ -8,7 +8,7 @@ If `.agent/` is not in `.git/info/exclude` of the main checkout, add it. All wor
 
 ## 1. Plan
 
-Split the request into independent tasks that touch different files: one file, one owner. For each task, write a slug, the files that it owns, the new dependencies that it adds, and acceptance criteria: what "done" means and which commands prove it. Show the plan to the human and wait for approval before you dispatch. Start with 2 or 3 workers, and run at most 5 at the same time.
+Split the request into independent tasks that touch different files: one file, one owner. For each task, write a slug, the files that it owns, and acceptance criteria: what "done" means and which commands prove it. Dispatch the plan at once; the final report shows it. Start with 2 or 3 workers, and run at most 5 at the same time.
 
 ## 2. Dispatch each task
 
@@ -27,15 +27,15 @@ herdr agent prompt w-<slug> "<task>. You own: <files>. Done when: <criteria>."
 
 - To select the worker's model, add `--model <provider/id>` or `--thinking <level>` after `--`.
 - If `agent start` fails because the shell is not at its prompt yet, retry once.
-- If Pi stops at startup to ask whether to trust the folder, tell the human, and leave the question for the human.
+- If Pi stops at startup to ask whether to trust the folder, leave the question unanswered, and report the task as blocked.
 
 ## 3. Wait
 
-Wait only with `herdr agent wait w-<slug> --timeout 1800000`, one call for each worker, never with a sleep or a poll loop. It returns on idle, done, or blocked. If a wait times out, report the progress to the human and stop. A settled state does not mean that the task is finished.
+Wait only with `herdr agent wait w-<slug> --timeout 1800000`, one call for each worker, never with a sleep or a poll loop. It returns on idle, done, or blocked. If a wait times out, mark that task as blocked and continue with the others. A settled state does not mean that the task is finished.
 
 ## 4. Collect the report
 
-Run `herdr agent read w-<slug> --source visible`, find the worker's `REPORT: <path>` line, and read that file. The task is finished only when the line is there, the file exists, and it says `Status: done`. If there is no `REPORT:` line, read more (`--source recent-unwrapped --lines 120`) to find the cause. Then send a follow-up or tell the human.
+Run `herdr agent read w-<slug> --source visible`, find the worker's `REPORT: <path>` line, and read that file. The task is finished only when the line is there, the file exists, and it says `Status: done`. If there is no `REPORT:` line, read more (`--source recent-unwrapped --lines 120`) to find the cause. Then send a follow-up, or mark the task as blocked.
 
 ## 5. Review
 
@@ -52,12 +52,12 @@ herdr agent prompt r-<slug> "Review git diff main...HEAD against: <criteria>. Wr
 
 ## 6. Follow up
 
-Send fixes with `herdr agent prompt w-<slug> "<what to change>"`, then go back to step 3. Do at most 3 fix rounds for each task. After that, stop and ask the human.
+Send fixes with `herdr agent prompt w-<slug> "<what to change>"`, then go back to step 3. Do at most 3 fix rounds for each task. After that, mark the task as blocked and continue with the others.
 
-## 7. Report to the human
+## 7. Open PRs and report
 
-Write one row for each task: branch, status, summary, review verdict, and decisions needed. The human merges. When the human asks for a PR, push the reviewed branch and open the PR from the main checkout. Clean up only when the human asks: run `herdr worktree remove --workspace <id>` (get the ID from `herdr workspace list`). This command keeps the branch.
+When a worker asks for a decision, make it yourself, send the follow-up, and record the decision. For each task whose review passes, push its branch and open its PR from the main checkout. Then write one row for each task: branch, PR, status, summary, review verdict, and the decisions that you made. The human merges. Clean up only when the human asks: run `herdr worktree remove --workspace <id>` (get the ID from `herdr workspace list`). This command keeps the branch.
 
 ## Rules
 
-- Push, merge, and delete branches only when the human asks.
+- Merge and delete branches only when the task asks for it.

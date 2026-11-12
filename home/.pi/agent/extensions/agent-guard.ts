@@ -2,64 +2,25 @@ import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
-import { optionValues, positionals, programCalls } from "./shell/commands.ts";
+import { positionals, programCalls } from "./shell/commands.ts";
 import { GIT_VALUE_OPTIONS } from "./shell/git.ts";
 
-type Verdict = { kind: "block" | "confirm"; reason: string };
-type Rule = (args: string[], cwd: string) => Verdict | undefined;
+type Rule = (args: string[], cwd: string) => string | undefined;
 
-const block = (reason: string): Verdict => ({ kind: "block", reason });
-const confirm = (reason: string): Verdict => ({ kind: "confirm", reason });
-
-const GITHUB_WRITE_REASON =
-	"This writes to GitHub where other people see it. Draft the text for the human and post only when the human asks.";
-const DIALOG_REASON = "Tell the human what the agent asks. The human answers its dialogs.";
+const DIALOG_REASON = "Leave agent dialogs unanswered. Report the task as blocked with the dialog text.";
 const WORKER_MARKER = "You are a worker agent.";
 const WORKER_REASON =
 	"Workers commit on their own branch only. Write a `Status: blocked` report for anything else: " +
 	"push, merge, rebase onto main, branch deletion, pull requests, or control of agents and worktrees.";
 
-const GH_VALUE_OPTIONS = new Set(["-R", "--repo", "-X", "--method", "-f", "-F", "--field", "--raw-field", "--input", "-H", "--header", "-b", "--body", "--body-file", "-t", "--title", "-q", "--jq", "-B", "--base"]);
-const GH_WRITES: Record<string, Set<string>> = {
-	issue: new Set(["create", "close", "reopen", "comment", "edit", "delete", "lock", "unlock", "pin", "unpin", "transfer", "develop"]),
-	pr: new Set(["comment", "review", "close", "reopen", "merge", "lock", "unlock"]),
-	label: new Set(["create", "edit", "delete", "clone"]),
-	release: new Set(["create", "edit", "delete", "upload", "delete-asset"]),
-	repo: new Set(["create", "delete", "edit", "archive", "unarchive", "rename"]),
-	gist: new Set(["create", "edit", "delete", "rename"]),
-	secret: new Set(["set", "delete"]),
-	variable: new Set(["set", "delete"]),
-};
-const PR_EDIT_OWN_OPTIONS = new Set(["-t", "--title", "-b", "--body", "-F", "--body-file", "-B", "--base", "-R", "--repo"]);
-
-function ghApiWrites(args: string[]) {
-	const [method] = optionValues(args, ["-X", "--method"]);
-	if (method) return method.toUpperCase() !== "GET";
-	const fields = optionValues(args, ["-f", "-F", "--field", "--raw-field"]);
-	const input = optionValues(args, ["--input"]).length > 0;
-	if (positionals(args, GH_VALUE_OPTIONS)[1] !== "graphql") return input || fields.length > 0;
-	return input || fields.some((field) => /^query=(?:@|\s*mutation\b)/.test(field));
-}
-
-const gh: Rule = (args) => {
-	const [group, sub] = positionals(args, GH_VALUE_OPTIONS);
-	const editsMetadata =
-		group === "pr" && sub === "edit" && args.some((arg) => arg.startsWith("-") && !PR_EDIT_OWN_OPTIONS.has(arg.split("=")[0]));
-	if (GH_WRITES[group]?.has(sub) || editsMetadata || (group === "api" && ghApiWrites(args))) return confirm(GITHUB_WRITE_REASON);
-	return undefined;
-};
-
+const GH_VALUE_OPTIONS = new Set(["-R", "--repo", "-t", "--title", "-b", "--body", "-F", "--body-file", "-B", "--base", "-H", "--head"]);
 const HERDR_VALUE_OPTIONS = new Set(["--machine", "--session", "--remote", "--kind", "--pane", "--timeout", "--workspace", "--cwd", "--branch", "--base", "--path", "--label", "--source", "--lines", "--format", "--until", "--direction", "--ratio", "--env"]);
 
 const herdr: Rule = (args) => {
 	const [group, sub] = positionals(args, HERDR_VALUE_OPTIONS);
-	if (group === "server" && sub === "stop") return block("`herdr server stop` ends every pane, including the human's. Leave the server running.");
-	if (group === "agent" && sub === "start") {
-		const [kind] = optionValues(args, ["--kind"]);
-		if (kind !== undefined && kind !== "pi") return confirm(`Start Pi agents with \`--kind pi\`. Use \`--kind ${kind}\` only when the human asked for it.`);
-	}
+	if (group === "server" && sub === "stop") return "`herdr server stop` ends every pane, including the human's. Leave the server running.";
 	if ((group === "agent" && sub === "send-keys") || (group === "pane" && (sub === "send-keys" || sub === "send-text"))) {
-		return block(DIALOG_REASON);
+		return DIALOG_REASON;
 	}
 	return undefined;
 };
@@ -71,10 +32,10 @@ const MAIN_BRANCH = /^(?:origin\/)?(?:main|master)$/;
 const git: Rule = (args) => {
 	const [sub, ...rest] = positionals(args, GIT_VALUE_OPTIONS);
 	if (sub === "worktree" && GIT_WORKTREE_WRITES.has(rest[0])) {
-		return block("Herdr owns every worktree. Use `herdr worktree create` or `herdr worktree remove`.");
+		return "Herdr owns every worktree. Use `herdr worktree create` or `herdr worktree remove`.";
 	}
 	if (sub === "add" && rest.some((path) => AGENT_REPORTS.test(path))) {
-		return block("Reports under `.agent/` stay out of Git. Commit only your source changes.");
+		return "Reports under `.agent/` stay out of Git. Commit only your source changes.";
 	}
 	return undefined;
 };
@@ -109,13 +70,6 @@ const PACKAGE_MANAGERS: Record<string, PackageManager> = {
 	pnpm: { name: "pnpm", lockfiles: [], guarded: () => false },
 	bun: { name: "bun", lockfiles: [], guarded: () => false },
 };
-const DEPENDENCY_ADDS: Record<string, Set<string>> = {
-	npm: new Set(["install", "i", "add"]),
-	yarn: new Set(["add"]),
-	pnpm: new Set(["add", "install", "i"]),
-	bun: new Set(["add", "install", "i"]),
-};
-const ZOD = /^zod(?:@|$)/;
 
 function projectUses(cwd: string, lockfiles: string[]) {
 	for (let dir = cwd; ; dir = dirname(dir)) {
@@ -128,45 +82,35 @@ function packageRule(program: string): Rule {
 	const { name, lockfiles, guarded } = PACKAGE_MANAGERS[program];
 	return (args, cwd) => {
 		if (args.length > 0 && args.every((arg) => INFO_FLAGS.has(arg))) return undefined;
-		const [sub, ...packages] = positionals(args, PACKAGE_VALUE_OPTIONS);
+		const [sub] = positionals(args, PACKAGE_VALUE_OPTIONS);
 		if (guarded(sub) && !projectUses(cwd, lockfiles)) {
-			return block(`This project does not use ${name}. Use pnpm: \`pnpm create\` for new projects, \`pnpm dlx\` for one-off tools.`);
-		}
-		if (sub !== undefined && DEPENDENCY_ADDS[program]?.has(sub) && packages.some((pkg) => ZOD.test(pkg))) {
-			return confirm("Use valibot for schemas. Add zod only when a library requires it.");
+			return `This project does not use ${name}. Use pnpm: \`pnpm create\` for new projects, \`pnpm dlx\` for one-off tools.`;
 		}
 		return undefined;
 	};
 }
 
 const RULES: Record<string, Rule> = {
-	gh,
 	herdr,
 	git,
 	...Object.fromEntries(Object.keys(PACKAGE_MANAGERS).map((program) => [program, packageRule(program)])),
 };
 
-function checkCommand(command: string, cwd: string, worker: boolean): Verdict[] {
-	const verdicts: Verdict[] = [];
+function blockReasons(command: string, cwd: string, worker: boolean): string[] {
+	const reasons: string[] = [];
 	const calls = programCalls(command);
 	for (const { program, args } of calls) {
-		const verdict = RULES[program]?.(args, cwd);
-		if (verdict) verdicts.push(verdict);
-		if (worker && WORKER_LIMITS[program]?.(args)) verdicts.push(block(WORKER_REASON));
+		const reason = RULES[program]?.(args, cwd);
+		if (reason) reasons.push(reason);
+		if (worker && WORKER_LIMITS[program]?.(args)) reasons.push(WORKER_REASON);
 	}
-	return verdicts;
+	return reasons;
 }
 
 export default function agentGuard(pi: ExtensionAPI): void {
-	pi.on("tool_call", async (event, ctx) => {
+	pi.on("tool_call", (event, ctx) => {
 		if (!isToolCallEventType("bash", event)) return;
-		const verdicts = checkCommand(event.input.command, ctx.cwd, ctx.getSystemPrompt().includes(WORKER_MARKER));
-		const blocked = verdicts.find((verdict) => verdict.kind === "block");
-		if (blocked) return { block: true, reason: `BLOCKED: ${blocked.reason}` };
-		if (verdicts.length === 0) return;
-
-		const reasons = [...new Set(verdicts.map((verdict) => verdict.reason))].join("\n");
-		const approved = ctx.hasUI && (await ctx.ui.confirm("Allow this command?", `${reasons}\n\n${event.input.command}`));
-		if (!approved) return { block: true, reason: `BLOCKED: the human did not approve this command. ${reasons}` };
+		const [reason] = blockReasons(event.input.command, ctx.cwd, ctx.getSystemPrompt().includes(WORKER_MARKER));
+		if (reason) return { block: true, reason: `BLOCKED: ${reason}` };
 	});
 }

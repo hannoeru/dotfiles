@@ -53,7 +53,7 @@ pnpm typecheck
 
 ## Extensions
 
-- `agent/extensions/agent-guard.ts` checks the rules in the "Checked rules" table of `agent/AGENTS.md`. Its `RULES` and `WORKER_LIMITS` tables list each checked command. It asks the human only before GitHub writes that other people see, another agent kind, and zod, and blocks the rest without a dialog. A session is a worker when its system prompt says `You are a worker agent.`, as the orchestrator's dispatch command sets. It reads the commands inside `bash -c`, `eval`, `find -exec`, and wrappers such as `timeout`, `xargs`, and `watch`. It does not read commands inside script files.
+- `agent/extensions/agent-guard.ts` checks the rules in the "Checked rules" table of `agent/AGENTS.md`. Its `RULES` and `WORKER_LIMITS` tables list each checked command. It never asks the human: it blocks a command with a reason. A session is a worker when its system prompt says `You are a worker agent.`, as the orchestrator's dispatch command sets. It reads the commands inside `bash -c`, `eval`, `find -exec`, and wrappers such as `timeout`, `xargs`, and `watch`. It does not read commands inside script files.
 - `agent/extensions/shell/commands.ts` parses shell commands for both guards, and `agent/extensions/shell/git.ts` holds the Git options that both guards read. The `shell` directory has no `index.ts`, so Pi does not load it as an extension.
 - `agent/extensions/git-interceptor.ts` prevents Git commands from opening an interactive editor and blocks Git hook bypass flags.
 - `agent/extensions/handoff.ts` creates a focused prompt for a new Pi session.

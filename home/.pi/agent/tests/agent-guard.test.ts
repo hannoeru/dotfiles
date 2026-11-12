@@ -58,17 +58,17 @@ async function runnerFor(cwd: string) {
 	return runner;
 }
 
-type Options = { cwd?: string; hasUI?: boolean; approve?: boolean; systemPrompt?: string };
+type Options = { cwd?: string; systemPrompt?: string };
 
-async function run(command: string, { cwd = main, hasUI = true, approve = false, systemPrompt = "" }: Options = {}) {
+async function run(command: string, { cwd = main, systemPrompt = "" }: Options = {}) {
 	const runner = await runnerFor(cwd);
 	runner.bindCore({} as ExtensionActions, { getSystemPrompt: () => systemPrompt } as ExtensionContextActions);
 	const questions: string[] = [];
 	const confirm = async (_title: string, message: string) => {
 		questions.push(message);
-		return approve;
+		return false;
 	};
-	runner.setUIContext(hasUI ? ({ confirm } as unknown as ExtensionUIContext) : undefined);
+	runner.setUIContext({ confirm } as unknown as ExtensionUIContext);
 	const event: BashToolCallEvent = { type: "tool_call", toolCallId: "t", toolName: "bash", input: { command } };
 	const result = await runner.emitToolCall(event);
 	return { result, questions };
@@ -76,75 +76,34 @@ async function run(command: string, { cwd = main, hasUI = true, approve = false,
 
 const allowed = { result: undefined, questions: [] };
 
-describe("GitHub writes need the human's approval", () => {
+describe("no command asks the human", () => {
 	test.each([
-		"gh issue edit 123 --add-label bug",
-		"gh pr edit 12 --add-label bug",
-		"gh pr comment 5369 --body-file /tmp/review.md",
 		"gh issue close 294 --comment 'out of scope'",
-		"gh pr review 12 --approve",
-		"gh gist create notes.md",
-		"gh api repos/o/r/issues/1/comments -f body=hi",
-		"gh api -X DELETE repos/o/r/labels/bug",
+		"gh pr comment 5369 --body-file /tmp/review.md",
+		"gh pr merge 12 --squash",
 		"gh api -XPOST repos/o/r/issues/1/labels",
-		"gh api graphql -f query='mutation { addComment(input: {}) { clientMutationId } }'",
-		"gh api graphql --input mutation.json",
-		"timeout 30 gh issue close 1",
-		"echo 1 | xargs -n 1 gh issue close",
-		"bash -c 'gh issue close 1'",
-		"find . -name '*.md' -exec gh issue close 1 \\;",
-		"watch -n 5 gh issue close 1",
-	])("asks before: %s", async (command) => {
-		const { result, questions } = await run(command);
-		expect(questions[0]).toContain("Draft the text for the human");
-		expect(result).toMatchObject({ block: true });
-	});
-
-	test("runs the command when the human approves", async () => {
-		expect(await run("gh pr comment 1 --body ok", { approve: true })).toEqual({ result: undefined, questions: [expect.any(String)] });
-	});
-
-	test("blocks without a UI", async () => {
-		const { result, questions } = await run("gh issue close 1", { hasUI: false });
-		expect(questions).toEqual([]);
-		expect(result).toMatchObject({ block: true, reason: expect.stringContaining("did not approve") });
-	});
-
-	test.each([
-		"gh pr view 1 --json body",
-		"gh api repos/o/r/pulls",
-		"gh api graphql -f query='query { viewer { login } }'",
 		"gh pr create --title t --body-file b.md",
-		"gh pr edit 73 --body-file /tmp/body.md",
-		"echo 'gh issue close 1'",
+		"herdr agent start r-x --kind codex --pane w1:p2",
+		"herdr agent start w-x --kind pi --pane w1:p2 -- --append-system-prompt 'You are a worker agent.'",
+		"pnpm --filter web add -D zod",
+		"pnpm install --frozen-lockfile",
+		"git push",
+		"echo 'herdr server stop'",
 		"bash script.sh",
-		"gh workflow run ci.yml",
-	])("allows reads and the orchestrator's own PRs: %s", async (command) => {
+	])("runs: %s", async (command) => {
 		expect(await run(command)).toEqual(allowed);
 	});
 });
 
-describe("Herdr agents", () => {
-	test("asks before an agent kind other than Pi", async () => {
-		const { questions } = await run("herdr agent start r-x --kind codex --pane w1:p2");
-		expect(questions[0]).toContain("Use `--kind codex` only when the human asked for it.");
-	});
-
-	test("allows Pi agents", async () => {
-		const command = "herdr agent start w-x --kind pi --pane w1:p2 -- --append-system-prompt 'You are a worker agent.'";
-		expect(await run(command)).toEqual(allowed);
-	});
-
-	test("blocks herdr server stop", async () => {
-		const { result, questions } = await run("herdr server stop");
-		expect(questions).toEqual([]);
-		expect(result).toMatchObject({ block: true, reason: expect.stringContaining("Leave the server running") });
-	});
-
-	test.each(["herdr agent send-keys w-x enter", "herdr pane send-text w1:p2 y"])("blocks answers to a dialog: %s", async (command) => {
+describe("Herdr", () => {
+	test.each([
+		["herdr server stop", "Leave the server running"],
+		["herdr agent send-keys w-x enter", "Leave agent dialogs unanswered"],
+		["herdr pane send-text w1:p2 y", "Leave agent dialogs unanswered"],
+	])("blocks %s without a dialog", async (command, reason) => {
 		const { result, questions } = await run(command);
 		expect(questions).toEqual([]);
-		expect(result).toMatchObject({ block: true, reason: expect.stringContaining("The human answers its dialogs") });
+		expect(result).toMatchObject({ block: true, reason: expect.stringContaining(reason) });
 	});
 });
 
@@ -170,6 +129,11 @@ describe("worktrees and workers", () => {
 		"git rebase origin/main",
 		"git pull --rebase origin main",
 		"git branch -D agent/old",
+		"timeout 60 git push",
+		"echo 1 | xargs -n 1 gh pr create --fill",
+		"bash -c 'git push'",
+		"find . -name x -exec git push \\;",
+		"watch -n 5 git push",
 	])("blocks a worker from: %s", async (command) => {
 		const { result, questions } = await run(command, { systemPrompt: "Base prompt.\nYou are a worker agent. Follow worker.md." });
 		expect(questions).toEqual([]);
@@ -196,16 +160,5 @@ describe("package managers", () => {
 		["yarn --version", () => main],
 	])("allows %s", async (command, cwd) => {
 		expect(await run(command, { cwd: cwd() })).toEqual(allowed);
-	});
-});
-
-describe("dependencies", () => {
-	test("asks before zod and names valibot", async () => {
-		const { questions } = await run("pnpm --filter web add -D zod");
-		expect(questions[0]).toContain("Use valibot for schemas");
-	});
-
-	test.each(["pnpm add valibot", "pnpm install --frozen-lockfile"])("allows %s", async (command) => {
-		expect(await run(command)).toEqual(allowed);
 	});
 });
