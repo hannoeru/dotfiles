@@ -17,12 +17,20 @@ import agentGuard from "../extensions/agent-guard.ts";
 
 let root: string;
 let main: string;
+let worker: string;
+let plain: string;
 const runners = new Map<string, ExtensionRunner>();
 
 beforeAll(() => {
 	root = mkdtempSync(join(tmpdir(), "pi-agent-guard-"));
 	main = join(root, "main");
 	execFileSync("git", ["init", "-q", main]);
+	worker = join(root, "worker");
+	plain = join(root, "plain");
+	mkdirSync(plain);
+	const git = (...args: string[]) => execFileSync("git", ["-C", main, ...args], { stdio: "ignore" });
+	git("-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false", "commit", "-q", "--allow-empty", "-m", "init");
+	git("worktree", "add", "-q", "-b", "agent/task", worker);
 });
 
 afterAll(() => rmSync(root, { recursive: true, force: true }));
@@ -140,5 +148,36 @@ describe("Herdr agents", () => {
 	});
 });
 
+describe("worktrees and workers", () => {
+	test.each([
+		["git worktree add ../x -b x", "herdr worktree create"],
+		["git -C /repo worktree remove ../x", "herdr worktree create"],
+		["git add -f .agent/report.md", "stay out of Git"],
+	])("blocks %s", async (command, reason) => {
+		const { result } = await run(command);
+		expect(result).toMatchObject({ block: true, reason: expect.stringContaining(reason) });
+	});
+
+	test("allows git worktree list", async () => {
+		expect(await run("git worktree list")).toEqual(allowed);
+	});
+
+	test.each([
+		"git push -u origin agent/task",
+		"gh pr create --title t --body b",
+		"herdr agent prompt w-other 'do it'",
+		"herdr worktree create --branch agent/x",
+		"git rebase origin/main",
+		"git pull --rebase origin main",
+		"git branch -D agent/old",
+	])("asks a worker before: %s", async (command) => {
+		const { questions } = await run(command, { cwd: worker });
+		expect(questions[0]).toContain("Workers commit on their own branch only");
+	});
+
+	test.each([main, plain])("lets a session outside a linked worktree push: %s", async (cwd) => {
+		expect(await run("git push", { cwd })).toEqual(allowed);
+	});
+});
 
 

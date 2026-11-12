@@ -1,9 +1,12 @@
+import { execFileSync } from "node:child_process";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
 import { optionValues, positionals, programCalls } from "./shell/commands.ts";
+import { GIT_VALUE_OPTIONS } from "./shell/git.ts";
 
 type Verdict = { kind: "block" | "confirm"; reason: string };
 type Rule = (args: string[], cwd: string) => Verdict | undefined;
+type Role = "orchestrator" | "worker";
 
 const block = (reason: string): Verdict => ({ kind: "block", reason });
 const confirm = (reason: string): Verdict => ({ kind: "confirm", reason });
@@ -11,6 +14,9 @@ const confirm = (reason: string): Verdict => ({ kind: "confirm", reason });
 const GITHUB_WRITE_REASON =
 	"This writes to GitHub where other people see it. Draft the text for the human and post only when the human asks.";
 const DIALOG_REASON = "Tell the human what the agent asks. The human answers its dialogs.";
+const WORKER_REASON =
+	"Workers commit on their own branch only. Write a `Status: blocked` report for anything else: " +
+	"push, merge, rebase onto main, branch deletion, pull requests, or control of agents and worktrees.";
 
 const GH_VALUE_OPTIONS = new Set(["-R", "--repo", "-X", "--method", "-f", "-F", "--field", "--raw-field", "--input", "-H", "--header", "-b", "--body", "--body-file", "-t", "--title", "-q", "--jq", "-B", "--base"]);
 const GH_WRITES: Record<string, Set<string>> = {
@@ -61,20 +67,79 @@ const herdr: Rule = (args) => {
 	return undefined;
 };
 
+const GIT_WORKTREE_WRITES = new Set(["add", "remove", "move", "prune", "repair", "lock", "unlock"]);
+const AGENT_REPORTS = /(?:^|\/)\.agent(?:\/|$)/;
+const MAIN_BRANCH = /^(?:origin\/)?(?:main|master)$/;
+
+const git: Rule = (args) => {
+	const [sub, ...rest] = positionals(args, GIT_VALUE_OPTIONS);
+	if (sub === "worktree" && GIT_WORKTREE_WRITES.has(rest[0])) {
+		return block("Herdr owns every worktree. Use `herdr worktree create` or `herdr worktree remove`.");
+	}
+	if (sub === "add" && rest.some((path) => AGENT_REPORTS.test(path))) {
+		return block("Reports under `.agent/` stay out of Git. Commit only your source changes.");
+	}
+	return undefined;
+};
+
+const WORKER_LIMITS: Record<string, (args: string[]) => boolean> = {
+	git: (args) => {
+		const [sub, ...rest] = positionals(args, GIT_VALUE_OPTIONS);
+		const deletesBranch = sub === "branch" && args.some((arg) => ["-d", "-D", "--delete"].includes(arg));
+		const takesMain = (sub === "rebase" || sub === "pull") && rest.some((ref) => MAIN_BRANCH.test(ref));
+		return sub === "push" || sub === "merge" || deletesBranch || takesMain;
+	},
+	gh: (args) => {
+		const [group, sub] = positionals(args, GH_VALUE_OPTIONS);
+		return group === "pr" && ["create", "edit", "ready", "merge"].includes(sub);
+	},
+	herdr: (args) => {
+		const [group, sub] = positionals(args, HERDR_VALUE_OPTIONS);
+		return group === "worktree" || group === "workspace" || (group === "agent" && ["start", "prompt", "send-keys"].includes(sub));
+	},
+};
 
 
 const RULES: Record<string, Rule> = {
 	gh,
 	herdr,
+	git,
 };
 
+const roles = new Map<string, Role>();
+
+function detectRole(cwd: string): Role {
+	try {
+		const [gitDir, commonDir] = execFileSync("git", ["rev-parse", "--path-format=absolute", "--git-dir", "--git-common-dir"], {
+			cwd,
+			encoding: "utf8",
+			stdio: ["ignore", "pipe", "ignore"],
+		})
+			.trim()
+			.split("\n");
+		return gitDir === commonDir ? "orchestrator" : "worker";
+	} catch (error) {
+		return error instanceof Error && "status" in error && error.status === 128 ? "orchestrator" : "worker";
+	}
+}
+
+function sessionRole(cwd: string): Role {
+	let role = roles.get(cwd);
+	if (!role) {
+		role = detectRole(cwd);
+		roles.set(cwd, role);
+	}
+	return role;
+}
 
 function checkCommand(command: string, cwd: string): Verdict[] {
 	const verdicts: Verdict[] = [];
 	const calls = programCalls(command);
+	const worker = calls.some(({ program }) => program in WORKER_LIMITS) && sessionRole(cwd) === "worker";
 	for (const { program, args } of calls) {
 		const verdict = RULES[program]?.(args, cwd);
 		if (verdict) verdicts.push(verdict);
+		if (worker && WORKER_LIMITS[program]?.(args)) verdicts.push(confirm(WORKER_REASON));
 	}
 	return verdicts;
 }
