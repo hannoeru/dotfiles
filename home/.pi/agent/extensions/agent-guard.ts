@@ -111,7 +111,20 @@ const PACKAGE_MANAGERS: Record<string, PackageManager> = {
 	npm: { name: "npm", lockfiles: NPM_LOCKFILES, guarded: (sub) => sub !== undefined && NPM_PROJECT_SUBCOMMANDS.has(sub) },
 	npx: { name: "npm", lockfiles: NPM_LOCKFILES, guarded: () => true },
 	yarn: { name: "yarn", lockfiles: ["yarn.lock"], guarded: () => true },
+	pnpm: { name: "pnpm", lockfiles: [], guarded: () => false },
+	bun: { name: "bun", lockfiles: [], guarded: () => false },
 };
+const DEPENDENCY_ADDS: Record<string, Set<string>> = {
+	npm: new Set(["install", "i", "add"]),
+	yarn: new Set(["add"]),
+	pnpm: new Set(["add", "install", "i"]),
+	bun: new Set(["add", "install", "i"]),
+};
+
+function dependencyReason(packages: string[]) {
+	const zod = packages.some((pkg) => /^zod(?:@|$)/.test(pkg)) ? " Use valibot for schemas, unless a library requires zod." : "";
+	return `Ask the human before you add a dependency. Packages: ${packages.join(", ")}.${zod}`;
+}
 
 function projectUses(cwd: string, lockfiles: string[]) {
 	for (let dir = cwd; ; dir = dirname(dir)) {
@@ -128,6 +141,7 @@ function packageRule(program: string): Rule {
 		if (guarded(sub) && !projectUses(cwd, lockfiles)) {
 			return block(`This project does not use ${name}. Use pnpm: \`pnpm create\` for new projects, \`pnpm dlx\` for one-off tools.`);
 		}
+		if (sub !== undefined && DEPENDENCY_ADDS[program]?.has(sub) && packages.length > 0) return confirm(dependencyReason(packages));
 		return undefined;
 	};
 }

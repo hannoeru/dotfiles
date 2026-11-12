@@ -205,3 +205,14 @@ describe("package managers", () => {
 	});
 });
 
+describe("dependencies", () => {
+	test("asks before a new dependency and names valibot for zod", async () => {
+		const { questions } = await run("pnpm --filter web add -D zod");
+		expect(questions[0]).toContain("Packages: zod.");
+		expect(questions[0]).toContain("Use valibot for schemas");
+	});
+
+	test("allows installs from the lockfile", async () => {
+		expect(await run("pnpm install --frozen-lockfile")).toEqual(allowed);
+	});
+});
