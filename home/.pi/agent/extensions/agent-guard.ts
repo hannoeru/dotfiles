@@ -5,10 +5,12 @@ import { optionValues, positionals, programCalls } from "./shell/commands.ts";
 type Verdict = { kind: "block" | "confirm"; reason: string };
 type Rule = (args: string[], cwd: string) => Verdict | undefined;
 
+const block = (reason: string): Verdict => ({ kind: "block", reason });
 const confirm = (reason: string): Verdict => ({ kind: "confirm", reason });
 
 const GITHUB_WRITE_REASON =
 	"This writes to GitHub where other people see it. Draft the text for the human and post only when the human asks.";
+const DIALOG_REASON = "Tell the human what the agent asks. The human answers its dialogs.";
 
 const GH_VALUE_OPTIONS = new Set(["-R", "--repo", "-X", "--method", "-f", "-F", "--field", "--raw-field", "--input", "-H", "--header", "-b", "--body", "--body-file", "-t", "--title", "-q", "--jq", "-B", "--base"]);
 const GH_WRITES: Record<string, Set<string>> = {
@@ -43,12 +45,27 @@ const gh: Rule = (args) => {
 	return undefined;
 };
 
+const HERDR_VALUE_OPTIONS = new Set(["--machine", "--session", "--remote", "--kind", "--pane", "--timeout", "--workspace", "--cwd", "--branch", "--base", "--path", "--label", "--source", "--lines", "--format", "--until", "--direction", "--ratio", "--env"]);
 
+const herdr: Rule = (args) => {
+	const [group, sub] = positionals(args, HERDR_VALUE_OPTIONS);
+	if (group === "server" && sub === "stop") return block("`herdr server stop` ends every pane, including the human's. Leave the server running.");
+	if (group === "agent" && sub === "start") {
+		const [kind] = optionValues(args, ["--kind"]);
+		if (kind === undefined) return confirm("Start Pi agents with `--kind pi`.");
+		if (kind !== "pi") return confirm(`Start Pi agents with \`--kind pi\`. Use \`--kind ${kind}\` only when the human asked for it.`);
+	}
+	if ((group === "agent" && sub === "send-keys") || (group === "pane" && (sub === "send-keys" || sub === "send-text"))) {
+		return confirm(DIALOG_REASON);
+	}
+	return undefined;
+};
 
 
 
 const RULES: Record<string, Rule> = {
 	gh,
+	herdr,
 };
 
 
@@ -66,6 +83,8 @@ export default function agentGuard(pi: ExtensionAPI): void {
 	pi.on("tool_call", async (event, ctx) => {
 		if (!isToolCallEventType("bash", event)) return;
 		const verdicts = checkCommand(event.input.command, ctx.cwd);
+		const blocked = verdicts.find((verdict) => verdict.kind === "block");
+		if (blocked) return { block: true, reason: `BLOCKED: ${blocked.reason}` };
 		if (verdicts.length === 0) return;
 
 		const reasons = [...new Set(verdicts.map((verdict) => verdict.reason))].join("\n");

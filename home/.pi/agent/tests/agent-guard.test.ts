@@ -114,6 +114,31 @@ describe("GitHub writes need the human's approval", () => {
 	});
 });
 
+describe("Herdr agents", () => {
+	test.each([
+		["herdr agent start r-x --kind codex --pane w1:p2", "Use `--kind codex` only when the human asked for it."],
+		["herdr agent start r-x --pane w1:p2", "Start Pi agents with `--kind pi`."],
+	])("asks before: %s", async (command, reason) => {
+		const { questions } = await run(command);
+		expect(questions[0]).toContain(reason);
+	});
+
+	test("allows Pi agents", async () => {
+		const command = "herdr agent start w-x --kind pi --pane w1:p2 -- --append-system-prompt 'You are a worker agent.'";
+		expect(await run(command)).toEqual(allowed);
+	});
+
+	test("blocks herdr server stop", async () => {
+		const { result, questions } = await run("herdr server stop");
+		expect(questions).toEqual([]);
+		expect(result).toMatchObject({ block: true, reason: expect.stringContaining("Leave the server running") });
+	});
+
+	test.each(["herdr agent send-keys w-x enter", "herdr pane send-text w1:p2 y"])("asks before answering a dialog: %s", async (command) => {
+		const { questions } = await run(command);
+		expect(questions[0]).toContain("The human answers its dialogs");
+	});
+});
 
 
 
