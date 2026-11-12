@@ -88,6 +88,7 @@ Stop OrbStack before you start Colima to avoid competing Docker contexts.
 nix fmt                    # format and lint Nix files (nixfmt, deadnix, statix)
 nix run .#darwin-rebuild   # pinned darwin-rebuild
 scripts/check.sh           # eval-only check of all flake outputs
+scripts/check-docs.sh      # fail on Markdown that narrates history
 ```
 
 A scheduled workflow opens a pull request every Monday to update `flake.lock`.
