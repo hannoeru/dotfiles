@@ -28,6 +28,7 @@ Repository skills linked from `home/skills`:
 | `Workflow/deslop` | `home/skills/deslop` |
 | `Workflow/review-pr` | `home/skills/review-pr` |
 | `Workflow/wrap-up` | `home/skills/wrap-up` |
+| `Terminal/cowork` | `home/skills/cowork` |
 | `Vue & Nuxt/nuxt-cloudflare` | `home/skills/nuxt-cloudflare` |
 
 Home Manager does not install `~/.pi/agent/prompts`.

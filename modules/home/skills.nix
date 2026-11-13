@@ -73,6 +73,7 @@ let
     "Workflow/deslop" = ../../home/skills/deslop;
     "Workflow/review-pr" = ../../home/skills/review-pr;
     "Workflow/wrap-up" = ../../home/skills/wrap-up;
+    "Terminal/cowork" = ../../home/skills/cowork;
     "Vue & Nuxt/nuxt-cloudflare" = ../../home/skills/nuxt-cloudflare;
   };
 in
@@ -93,7 +94,7 @@ in
         Follow Poteto Mode by default unless the human disables it.
         Apply Herdr instructions only when `HERDR_ENV=1`.
         Explicit restrictions from the human take precedence over these skill defaults.
-        The Herdr section in AGENTS.md authorizes Herdr worktrees and worker agents.
+        The `cowork` skill describes how to run other agents in Herdr.
         Preloading applies instructions. It does not set pstack's stored mode state.
 
         ${renderSkill "Poteto Mode" (pstack + "/skills/poteto-mode/SKILL.md")}

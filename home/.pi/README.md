@@ -10,7 +10,6 @@ the shared skills catalogue. This directory does not install `agent/prompts`.
 ## Default instructions
 
 `agent/AGENTS.md` holds the engineering, GitHub, Herdr, safety, and Notion Memory rules, and the table of rules that a tool checks.
-`agent/workflow/orchestrator.md` and `agent/workflow/worker.md` hold the orchestrator and worker procedures. `AGENTS.md` points to them, and also defines the Main, Solo, and Reviewer roles, which need no procedure file.
 
 The Notion Memory rules apply only when Pi has Notion's MCP tools.
 To connect Notion, add its server and sign in:
@@ -53,8 +52,7 @@ pnpm typecheck
 
 ## Extensions
 
-- `agent/extensions/agent-guard.ts` checks the rules in the "Checked rules" table of `agent/AGENTS.md`. Its `RULES` and `WORKER_LIMITS` tables list each checked command. It never asks the human: it blocks a command with a reason. A session is a worker when its appended system prompt (`--append-system-prompt`) holds the worker marker that the orchestrator's dispatch command sets. Context files such as `AGENTS.md` do not count. It reads the commands inside `bash -c`, `eval`, `find -exec`, and wrappers such as `timeout`, `xargs`, and `watch`. It does not read commands inside script files.
-- `agent/extensions/shell/commands.ts` parses shell commands for both guards, and `agent/extensions/shell/git.ts` holds the Git options that both guards read. The `shell` directory has no `index.ts`, so Pi does not load it as an extension.
+- `agent/extensions/shell/commands.ts` parses shell commands for `git-interceptor.ts`, and `agent/extensions/shell/git.ts` holds the Git options that it reads. The `shell` directory has no `index.ts`, so Pi does not load it as an extension.
 - `agent/extensions/git-interceptor.ts` prevents Git commands from opening an interactive editor and blocks Git hook bypass flags.
 - `agent/extensions/handoff.ts` creates a focused prompt for a new Pi session.
 - `agent/extensions/go.ts` adds `/go` to resume the agent loop without sending any new prompt text to the model.
