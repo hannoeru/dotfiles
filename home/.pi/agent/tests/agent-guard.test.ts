@@ -4,8 +4,6 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
 	DefaultResourceLoader,
-	type ExtensionActions,
-	type ExtensionContextActions,
 	ExtensionRunner,
 	ModelRegistry,
 	ModelRuntime,
@@ -16,7 +14,8 @@ import {
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import agentGuard from "../extensions/agent-guard.ts";
 
-const WORKER_PROMPT = "Base prompt.\nYou are a worker agent. Follow worker.md.";
+const WORKER_APPEND = "You are a worker agent. Follow ~/.pi/agent/workflow/worker.md.";
+const CONTEXT_QUOTING_MARKER = `Workers are sessions whose appended prompt says \`${WORKER_APPEND}\``;
 
 let root: string;
 const dirs = { repo: "", npmRoot: "", npmPackage: "", yarnRoot: "", noRepo: "" };
@@ -63,11 +62,14 @@ async function runnerFor(cwd: string) {
 	return runner;
 }
 
-type Options = { cwd?: string; systemPrompt?: string };
+type Options = { cwd?: string; appendSystemPrompt?: string };
 
-async function emit(event: ToolCallEvent, { cwd = dirs.repo, systemPrompt = "" }: Options = {}) {
+async function emit(event: ToolCallEvent, { cwd = dirs.repo, appendSystemPrompt = "" }: Options = {}) {
 	const runner = await runnerFor(cwd);
-	runner.bindCore({} as ExtensionActions, { getSystemPrompt: () => systemPrompt } as ExtensionContextActions);
+	await runner.emitBeforeAgentStart(
+		{ messageType: "user", prompt: "task" },
+		{ cwd, appendSystemPrompt, contextFiles: [{ path: "AGENTS.md", content: CONTEXT_QUOTING_MARKER }], sections: {} },
+	);
 	return runner.emitToolCall(event);
 }
 
@@ -125,7 +127,7 @@ describe(".agent reports", () => {
 });
 
 describe("worker limits", () => {
-	const worker = { systemPrompt: WORKER_PROMPT };
+	const worker = { appendSystemPrompt: `Project notes.\n\n${WORKER_APPEND}` };
 
 	test.each([
 		"git push",
@@ -159,8 +161,9 @@ describe("worker limits", () => {
 		"herdr pane split --current --direction down --no-focus",
 	])("allows %j for a worker", (command) => expectAllowed(command, worker));
 
-	test.each(["git push", "gh pr create --fill", "herdr agent prompt w-x go"])("allows %j without the worker prompt", (command) =>
-		expectAllowed(command, { systemPrompt: "Base prompt. You are a reviewer." }),
+	test.each(["git push", "gh pr create --fill", "herdr agent prompt w-x go"])(
+		"allows %j when only a context file quotes the worker marker",
+		(command) => expectAllowed(command, { appendSystemPrompt: "You are a reviewer." }),
 	);
 
 	test.each([
