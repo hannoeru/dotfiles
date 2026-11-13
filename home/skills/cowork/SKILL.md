@@ -1,6 +1,6 @@
 ---
 name: cowork
-description: Run a team of agents in Herdr as the Commander. Use the herdr CLI to start, delegate to, track, and clean up member agents in persistent panes, and keep the repository's TEAM.md registry and roster current. Use when the human asks to coordinate several agents, delegate development, test, or build tasks, form or take over an agent team, or maintain TEAM.md.
+description: Run a team of agents in Herdr as the Commander. Use the herdr CLI to start, delegate to, track, and clean up member agents in persistent panes, and keep the repository's TEAM.md registry and roster current in global state. Use when the human asks to coordinate several agents, delegate development, test, or build tasks, form or take over an agent team, or maintain TEAM.md.
 allowed-tools:
   - Bash(herdr *)
 ---
@@ -24,7 +24,15 @@ When a command detail is not clear, look it up there. Do not guess from memory.
 
 ## TEAM.md: registry and roster
 
-Each repository's TEAM.md is the team control document. The Commander alone maintains it. It has two parts:
+Each repository has one TEAM.md, outside the repository, at `~/.pi/agent/cowork/<repo>/TEAM.md`. `<repo>` is the directory name of the main checkout, so every worktree of the repository shares one file:
+
+```sh
+repo="$(basename "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")")"
+team="$HOME/.pi/agent/cowork/$repo/TEAM.md"
+mkdir -p "$(dirname "$team")"
+```
+
+TEAM.md never goes into Git. The Commander alone maintains it. Read it at the start of each team task, and create it when it does not exist. It has two parts:
 
 1. **Agent registry** (stable roles): role name, how to start it, responsibility, working directory, and acceptance criteria. Update it when a role is added, renamed, or removed.
 2. **Current roster** (snapshot of live panes): for each member, agent name, pane ID, cwd, agent kind, current task, status, tab, and the time of the last check.
