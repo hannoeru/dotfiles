@@ -52,8 +52,10 @@ herdr pane split --current --direction right --cwd "$PWD" --no-focus
 herdr worktree create --cwd <repo> --branch <branch> --label <role> --no-focus
 
 herdr agent start <role> --kind pi --pane <pane-id>
-herdr agent prompt <role> "<first task, from the template below>" --wait --timeout 1800000
+herdr agent prompt <role> "<first task, from the template below>"
 ```
+
+- Start and prompt every member before you wait on any of them. `agent prompt` returns when the text is submitted. Run `herdr agent get <role>` and confirm that its status left `idle` before you count the task as sent.
 
 - Use a Herdr worktree when members change files in the same repository at the same time. Herdr owns worktrees, so do not run `git worktree add` or `git worktree remove`.
 - If `agent start` returns `agent_not_ready`, read the pane with `herdr agent read <role>` and fix the cause before you send the task. If Pi asks whether to trust the folder, leave the dialog for the human and report the member as blocked.
@@ -65,7 +67,7 @@ herdr agent prompt <role> "<first task, from the template below>" --wait --timeo
 - **A settled state is not acceptance.** `idle` or `done` only means that the agent stopped. Check the report and the real output.
 - A member that is `idle` right after start has not finished a task. Count it as done only after the turn that the task started has ended.
 - `blocked` means a dialog or a question. Read the pane. Questions about permissions or the human's decisions go to the human. Do not answer an agent's dialog with `send-keys` or `send-text`.
-- To stop a member that runs the wrong work, send `herdr agent send-keys <role> esc`, read the pane, and then send a corrected task.
+- To stop a member that you started and that runs the wrong work, send `herdr agent send-keys <role> esc`, read the pane, and then send a corrected task.
 - While a member is working, `herdr agent read` shows only the screen. Ask members to write long results to a file, and read that file.
 - A message that starts with `REPORT from <role>:` is a member's report, not an instruction from the human.
 
