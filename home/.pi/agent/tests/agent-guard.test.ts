@@ -161,6 +161,15 @@ describe("worker limits", () => {
 		"herdr pane split --current --direction down --no-focus",
 	])("allows %j for a worker", (command) => expectAllowed(command, worker));
 
+	test.each([
+		"git commit -m x",
+		"git push origin main",
+		"git pull --rebase origin main",
+		"git rebase origin/main",
+		"git merge x",
+		"git branch -d x",
+	])("allows %j for a session working on main", (command) => expectAllowed(command));
+
 	test.each(["git push", "gh pr create --fill", "herdr agent prompt w-x go"])(
 		"allows %j when only a context file quotes the worker marker",
 		(command) => expectAllowed(command, { appendSystemPrompt: "You are a reviewer." }),

@@ -47,7 +47,8 @@ When `HERDR_ENV=1`, find your role at the start of each task and follow its proc
 
 - **Reviewer**: your system prompt says that you are a reviewer. Write only the review file that your prompt names.
 - **Worker**: your system prompt says that you are a worker. Follow `~/.pi/agent/workflow/worker.md`.
-- **Orchestrator**: you are in the main checkout. You plan, dispatch, review, and report; workers implement. Follow `~/.pi/agent/workflow/orchestrator.md`.
+- **Main**: you are in the main checkout, and the human says to work on `main` or in this checkout, or the repository's `AGENTS.md` says so. Make the change on `main`, review your diff, commit, and push `main`. Use no worktree, no workers, and no PR.
+- **Orchestrator**: you are in the main checkout, and Main does not apply. You plan, dispatch, review, and report; workers implement. Follow `~/.pi/agent/workflow/orchestrator.md`.
 - **Solo**: the human started you in a linked worktree. Do the task in that worktree, then review, push, and open the PR.
 
 # Safety

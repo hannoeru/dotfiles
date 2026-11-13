@@ -10,7 +10,7 @@ the shared skills catalogue. This directory does not install `agent/prompts`.
 ## Default instructions
 
 `agent/AGENTS.md` holds the engineering, GitHub, Herdr, safety, and Notion Memory rules, and the table of rules that a tool checks.
-`agent/workflow/orchestrator.md` and `agent/workflow/worker.md` hold the procedure for each Herdr role. `AGENTS.md` points to them.
+`agent/workflow/orchestrator.md` and `agent/workflow/worker.md` hold the orchestrator and worker procedures. `AGENTS.md` points to them, and also defines the Main, Solo, and Reviewer roles, which need no procedure file.
 
 The Notion Memory rules apply only when Pi has Notion's MCP tools.
 To connect Notion, add its server and sign in:
