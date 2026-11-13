@@ -108,9 +108,14 @@ function blockReasons(command: string, cwd: string, worker: boolean): string[] {
 }
 
 export default function agentGuard(pi: ExtensionAPI): void {
+	let worker = false;
+	pi.on("before_agent_start", ({ systemPromptOptions }) => {
+		worker = systemPromptOptions.appendSystemPrompt.includes(WORKER_MARKER);
+	});
+
 	pi.on("tool_call", (event, ctx) => {
 		if (!isToolCallEventType("bash", event)) return;
-		const [reason] = blockReasons(event.input.command, ctx.cwd, ctx.getSystemPrompt().includes(WORKER_MARKER));
+		const [reason] = blockReasons(event.input.command, ctx.cwd, worker);
 		if (reason) return { block: true, reason: `BLOCKED: ${reason}` };
 	});
 }

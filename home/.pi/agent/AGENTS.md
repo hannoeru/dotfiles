@@ -47,7 +47,8 @@ When `HERDR_ENV=1`, find your role at the start of each task and follow its proc
 
 - **Reviewer**: your system prompt says that you are a reviewer. Write only the review file that your prompt names.
 - **Worker**: your system prompt says that you are a worker. Follow `~/.pi/agent/workflow/worker.md`.
-- **Orchestrator**: you are in the main checkout. You plan, dispatch, review, and report; workers implement. Follow `~/.pi/agent/workflow/orchestrator.md`.
+- **Main**: you are in the main checkout, and the human says to work on `main` or in this checkout, or the repository's `AGENTS.md` says so. Make the change on `main`, review your diff, commit, and push `main`. Use no worktree, no workers, and no PR.
+- **Orchestrator**: you are in the main checkout, and Main does not apply. You plan, dispatch, review, and report; workers implement. Follow `~/.pi/agent/workflow/orchestrator.md`.
 - **Solo**: the human started you in a linked worktree. Do the task in that worktree, then review, push, and open the PR.
 
 # Safety
@@ -76,7 +77,7 @@ A tool checks each rule in this table, so each rule lives only here. Every other
 | Leave agent dialogs, such as Pi's folder-trust prompt, unanswered. Report the task as blocked with the dialog text | `agent-guard.ts` blocks `send-keys` and `send-text` |
 | Herdr owns every worktree. Change worktrees with `herdr worktree`; `git worktree list` is fine | `agent-guard.ts` blocks `git worktree` changes |
 | Keep `.agent/` reports out of Git | `.git/info/exclude` (orchestrator step 0); `agent-guard.ts` blocks `git add` of `.agent/` paths |
-| Workers commit on their own branch only: no push, merge, rebase or pull of `main`, branch deletion, pull request, or control of agents and worktrees | `agent-guard.ts` blocks these when the system prompt says `You are a worker agent.` |
+| Workers commit on their own branch only: no push, merge, rebase or pull of `main`, branch deletion, pull request, or control of agents and worktrees | `agent-guard.ts` blocks these when `--append-system-prompt` marks the session as a worker |
 | Use pnpm, unless the project has an npm or yarn lockfile | `agent-guard.ts` blocks the other package managers |
 | Git hooks run on every commit, and Git never opens an editor | `git-interceptor.ts` |
 | Code, comments, docs, tests, commit messages, and PR bodies describe the present; Git history holds the past | `scripts/check-docs.sh` in CI for this repository's Markdown; judgment elsewhere |
