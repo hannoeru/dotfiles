@@ -16,11 +16,12 @@ Work without human approval. Where a rule or a skill says to ask, pause, or wait
 - Make architectural decisions for the long term. Build only what you intend to keep.
 - When repository documentation and existing code disagree, follow the conventions in the existing code. Report each inconsistency in the final reply.
 - Always talk in ASD-STE100 Simplified Technical English. Always read CONTEXT.md files, and use their ubiquitous language.
-- Use short, descriptive branch names. Worker branches are `agent/<slug>`.
+- Use short, descriptive branch names.
 - Always write commit messages and PR titles that follow the Conventional Commits specification.
 - Default to no code comments. Add one only to explain a constraint, workaround, or bug link that the code cannot express.
 - Test the real implementation, and state the expected behavior directly in each test.
 - Use valibot for schemas, unless a library requires zod.
+- Use pnpm, unless the project has an npm or yarn lockfile.
 - Run the documented checks that apply to the change. If local checkers disagree, use the checker required by CI as the authority.
 - Infer completion or readiness only from an explicit condition: the process exits, or a polled completion or readiness check passes. Use timeouts only as safety limits for stuck commands, never fixed delays.
 - Commits are signed through 1Password. When signing fails, keep signing on, report the commit as blocked until 1Password is unlocked, and continue with other work.
@@ -37,19 +38,10 @@ Use the GitHub CLI (`gh`) for every GitHub-related task, including clones. Use a
 
 # Herdr
 
-Follow the preloaded Poteto Mode instructions by default. Respect explicit mode off and the human's restrictions on scope, worktrees, delegation, and external actions. Start agents with `--kind pi`, unless the human asks for another kind. The system prompt holds the Poteto Mode and Herdr skill bodies, so read only their task-specific references. Run `herdr --skill` only when the system prompt lacks the Herdr skill.
+Follow the preloaded Poteto Mode instructions by default. Respect explicit mode off and the human's restrictions on scope, worktrees, delegation, and external actions. The system prompt holds the Poteto Mode and Herdr skill bodies, so read only their task-specific references. Run `herdr --skill` only when the system prompt lacks the Herdr skill.
 
 - When `HERDR_ENV` is not `1`, work alone in the current checkout, say that Herdr is not available, and continue.
-- Read IDs (`w1`, `w1:p2`) from the JSON that `herdr` returns.
-- Use `--no-focus` for background work. Close, prompt, or read only the workspaces, panes, and agents that you created or that created you.
-
-When `HERDR_ENV=1`, find your role at the start of each task and follow its procedure. A role in your system prompt wins over the checkout:
-
-- **Reviewer**: your system prompt says that you are a reviewer. Write only the review file that your prompt names.
-- **Worker**: your system prompt says that you are a worker. Follow `~/.pi/agent/workflow/worker.md`.
-- **Main**: you are in the main checkout, and the human says to work on `main` or in this checkout, or the repository's `AGENTS.md` says so. Make the change on `main`, review your diff, commit, and push `main`. Use no worktree, no workers, and no PR.
-- **Orchestrator**: you are in the main checkout, and Main does not apply. You plan, dispatch, review, and report; workers implement. Follow `~/.pi/agent/workflow/orchestrator.md`.
-- **Solo**: the human started you in a linked worktree. Do the task in that worktree, then review, push, and open the PR.
+- To run other agents, follow the `cowork` skill.
 
 # Safety
 
@@ -73,15 +65,9 @@ A tool checks each rule in this table, so each rule lives only here. Every other
 
 | Rule | Check |
 | --- | --- |
-| Keep the Herdr server running | `agent-guard.ts` blocks `herdr server stop` |
-| Leave agent dialogs, such as Pi's folder-trust prompt, unanswered. Report the task as blocked with the dialog text | `agent-guard.ts` blocks `send-keys` and `send-text` |
-| Herdr owns every worktree. Change worktrees with `herdr worktree`; `git worktree list` is fine | `agent-guard.ts` blocks `git worktree` changes |
-| Keep `.agent/` reports out of Git | `.git/info/exclude` (orchestrator step 0); `agent-guard.ts` blocks `git add` of `.agent/` paths |
-| Workers commit on their own branch only: no push, merge, rebase or pull of `main`, branch deletion, pull request, or control of agents and worktrees | `agent-guard.ts` blocks these when `--append-system-prompt` marks the session as a worker |
-| Use pnpm, unless the project has an npm or yarn lockfile | `agent-guard.ts` blocks the other package managers |
 | Git hooks run on every commit, and Git never opens an editor | `git-interceptor.ts` |
 | Code, comments, docs, tests, commit messages, and PR bodies describe the present; Git history holds the past | `scripts/check-docs.sh` in CI for this repository's Markdown; judgment elsewhere |
 
-The guard reads each command in a bash call, including the commands inside `bash -c`, `eval`, `find -exec`, and wrappers such as `timeout`, `xargs`, and `watch`. The guard never asks the human. It blocks with a reason, so a blocked agent changes its command or reports the block. An exception to the docs check is a marker on the offending line with an expiry date and a reason.
+An exception to the docs check is a marker on the offending line with an expiry date and a reason.
 
 When the human corrects you, fix the mistake and record the rule. Add it to this table with a check when a tool can catch it; otherwise add it to the matching section. When a section rule has to be repeated, add its check here in the same change. Remove a rule when its mistake cannot happen.
