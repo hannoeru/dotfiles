@@ -94,7 +94,7 @@ in
         Follow Poteto Mode by default unless the human disables it.
         Apply Herdr instructions only when `HERDR_ENV=1`.
         Explicit restrictions from the human take precedence over these skill defaults.
-        The `cowork` skill describes how to run other agents in Herdr.
+        The `cowork` skill describes how to run other agents in Herdr. When the human asks for a team, the skill may create member panes, Herdr worktrees, and tab names.
         Preloading applies instructions. It does not set pstack's stored mode state.
 
         ${renderSkill "Poteto Mode" (pstack + "/skills/poteto-mode/SKILL.md")}

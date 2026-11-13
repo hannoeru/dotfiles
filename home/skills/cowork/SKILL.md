@@ -24,13 +24,16 @@ When a command detail is not clear, look it up there. Do not guess from memory.
 
 ## TEAM.md: registry and roster
 
-Each repository has one TEAM.md, outside the repository, at `~/.pi/agent/cowork/<repo>/TEAM.md`. `<repo>` is the directory name of the main checkout, so every worktree of the repository shares one file:
+Each repository has one TEAM.md, outside the repository, at `~/.pi/agent/cowork/<repo>/TEAM.md`. `<repo>` is the absolute path of the repository's shared Git directory, with `/` replaced by `-` and a final `/.git` removed. For `~/dotfiles` it is `Users-hanlee-dotfiles`. Every worktree of a repository gets the same `<repo>`, and two repositories never do, including submodules, bare repositories, and repositories with a separate Git directory:
 
 ```sh
-repo="$(basename "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")")"
+common="$(git rev-parse --path-format=absolute --git-common-dir)" || { echo "not in a Git repository" >&2; exit 1; }
+repo="$(printf '%s' "${common%/.git}" | sed 's#^/##; s#/#-#g')"
 team="$HOME/.pi/agent/cowork/$repo/TEAM.md"
 mkdir -p "$(dirname "$team")"
 ```
+
+Outside a Git repository, the block stops. Run the team without TEAM.md, and put the roster in your final report.
 
 TEAM.md never goes into Git. The Commander alone maintains it. Read it at the start of each team task, and create it when it does not exist. It has two parts:
 
@@ -51,27 +54,28 @@ Roster rules:
 
 Run `herdr agent list` and `herdr pane list` first. An agent with a matching name can belong to the human: do not take it over by its name alone.
 
+When the human asks for a team, that request covers the member panes, the Herdr worktrees, and the tab names that this skill creates.
+
 Start each member in its own pane, with a unique name, the working directory, the exact scope, and the acceptance criteria. Start interactive agents only, never a one-shot print mode such as `pi -p`. Use `--kind pi`, unless the human asks for another kind.
 
 ```sh
 # Same checkout: a sibling pane. Read .result.pane.pane_id.
 herdr pane split --current --direction right --cwd "$PWD" --no-focus
 # Separate checkout: a Herdr worktree. Read .result.root_pane.pane_id.
-herdr worktree create --cwd <repo> --branch <branch> --label <role> --no-focus
+herdr worktree create --cwd <main-checkout> --branch <branch> --label <role> --no-focus
 
 herdr agent start <role> --kind pi --pane <pane-id>
 herdr agent prompt <role> "<first task, from the template below>"
 ```
 
-- Start and prompt every member before you wait on any of them. `agent prompt` returns when the text is submitted. Run `herdr agent get <role>` and confirm that its status left `idle` before you count the task as sent.
-
+- Start and prompt every member before you wait on any of them. `agent prompt` returns when the text is submitted, and Herdr can still report `idle` while the member works. Run `herdr agent read <role> --source visible` and confirm that the task text is on the screen before you count it as sent.
 - Use a Herdr worktree when members change files in the same repository at the same time. Herdr owns worktrees, so do not run `git worktree add` or `git worktree remove`.
 - If `agent start` returns `agent_not_ready`, read the pane with `herdr agent read <role>` and fix the cause before you send the task. If Pi asks whether to trust the folder, leave the dialog for the human and report the member as blocked.
 - A timeout or a stall does not prove that the prompt was not delivered. Read the pane before you send it again.
 
 ### 2. Track and collect
 
-- **Wait with `herdr agent wait <role> --timeout <ms>`.** Do not sleep or poll in a loop. Do useful checks while members work.
+- **Wait with `herdr agent wait <role> --until done --until blocked --timeout <ms>`.** A plain `agent wait` can return at once on the `idle` state of a member that has just started. Do not sleep or poll in a loop. Do useful checks while members work.
 - **A settled state is not acceptance.** `idle` or `done` only means that the agent stopped. Check the report and the real output.
 - A member that is `idle` right after start has not finished a task. Count it as done only after the turn that the task started has ended.
 - `blocked` means a dialog or a question. Read the pane. Questions about permissions or the human's decisions go to the human. Do not answer an agent's dialog with `send-keys` or `send-text`.
