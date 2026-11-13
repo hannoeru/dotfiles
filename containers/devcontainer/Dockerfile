@@ -60,7 +60,15 @@ WORKDIR /home/$USERNAME
 # exposes one home configuration per architecture.
 ARG TARGETARCH
 COPY --chown="$USER_UID:$USER_GID" . /tmp/dotfiles
-RUN if [ "$TARGETARCH" = "arm64" ]; then home_config="ephemeral-aarch64"; else home_config="ephemeral"; fi \
+# Unauthenticated GitHub archive downloads of the flake inputs hit HTTP 429 on
+# shared CI runners. The token is a BuildKit secret, so no layer keeps it; local
+# builds without the secret fetch anonymously.
+RUN --mount=type=secret,id=github_token,required=false,mode=0444 \
+    if [ -s /run/secrets/github_token ]; then \
+        token="$(cat /run/secrets/github_token)" \
+        && export NIX_CONFIG="access-tokens = github.com=$token"; \
+    fi \
+    && if [ "$TARGETARCH" = "arm64" ]; then home_config="ephemeral-aarch64"; else home_config="ephemeral"; fi \
     && nix run /tmp/dotfiles#home-manager -- switch -b backup --flake "/tmp/dotfiles#$home_config" \
     # Build-time paths that no gcroot reaches must go in this same RUN; a
     # later RUN could not shrink this layer. Optimise hardlinks the rest.
