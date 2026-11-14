@@ -69,6 +69,7 @@ jobs:
           context: .
           file: containers/devcontainer/Dockerfile
           platforms: linux/${{ matrix.arch }}
+          secrets: github_token=${{ secrets.GITHUB_TOKEN }}
           # Push by digest only; the merge job creates the final tags. Digest
           # pushes are immutable, so overlapping runs cannot race on tags.
           outputs: type=image,name=${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
