@@ -48,6 +48,22 @@
         "type": "github"
       }
     },
+    "cloudflareSkills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794310893,
+        "narHash": "sha256-m/2XzXQ6/gGzeWrdFsnUy7OjHAvKb+a0Q4NjZ868Bdc=",
+        "owner": "cloudflare",
+        "repo": "skills",
+        "rev": "cbf893b954222276bf1af57e5f23379231e0efb9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cloudflare",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "cursorPlugins": {
       "flake": false,
       "locked": {
@@ -234,6 +250,7 @@
         "agentBrowser": "agentBrowser",
         "antfu": "antfu",
         "anthropics": "anthropics",
+        "cloudflareSkills": "cloudflareSkills",
         "cursorPlugins": "cursorPlugins",
         "herdr": "herdr",
         "home-manager": "home-manager",
