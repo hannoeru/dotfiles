@@ -11,9 +11,17 @@ remote skill, add an input, list it in `skillInputs` in `flake.nix` and in
 `skills.nix`, and point a category path at its subdirectory. To add a
 repository skill, point a category path at a directory in `home/skills`.
 
-`Writing/bro` is the upstream skill from the pinned `cursor/plugins` checkout
-at `pstack/skills/bro`, the same pin as `Writing/unslop`. The `home.file` link
-is `~/.agents/skills/Writing/bro`. This repository does not keep a copy.
+The `backnotprop` pin is `backnotprop/pstack`, a mirror of the pstack plugin
+in `cursor/plugins` for agents other than Cursor. Each directory in its
+`skills/` becomes `pstack/<name>`, so a new upstream skill appears on the next
+lock update. Pi and the other agents read `pstack/` from `~/.agents/skills`.
+`pstack/tdd` and `pstack/teach` are the catalogue's `tdd` and `teach` skills.
+`poteto-help` links to the mirror's `README.md` and `docs/`. These links do
+not resolve.
+
+The preloaded Poteto Mode in `~/.pi/agent/APPEND_SYSTEM.md` comes from
+`skills/poteto-mode/SKILL.md` in the same `backnotprop` pin, so it matches
+`pstack/poteto-mode`.
 
 `Terminal/herdr` is the upstream skill from the pinned `herdrdev/herdr`
 checkout at `skills/herdr`. The `home.file` link is
@@ -42,11 +50,7 @@ Pi loads `~/.agents/skills` and `~/.pi/agent/skills`. This module uses the
 first path. Pi walks category directories, so a second link is unnecessary.
 
 The copies are read-only Nix store paths. `flake.lock` holds the revision of
-each GitHub input, and `nix flake update` updates them. The URL of the `pstack`
-input holds its version; change the URL to update it. Pi installs the pstack
-package itself from `~/.pi/agent/settings.json`, which pins the same version as
-`npm:@zenspc/pi-pstack@<version>`. Change both versions together, so that the
-preloaded Poteto Mode text matches the installed extension. Agents that read
+each GitHub input, and `nix flake update` updates them. Agents that read
 `~/.agents/skills` discover the `SKILL.md` files on their next load.
 
 `verify-dotfiles` is not in this catalogue. It verifies this repository only

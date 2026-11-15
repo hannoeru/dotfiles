@@ -12,7 +12,6 @@ let
     shadcnImprove
     jscpd
     simpleEnglish
-    cursorPlugins
     iHaveAdhd
     antfu
     cloudflare
@@ -21,7 +20,7 @@ let
     anthropics
     agentBrowser
     herdr
-    pstack
+    backnotprop
     ;
 
   renderSkill = name: path: ''
@@ -34,25 +33,27 @@ let
     ${lib.concatStringsSep "\n---\n" (lib.tail (lib.splitString "\n---\n" (builtins.readFile path)))}
   '';
 
+  pstackDir = backnotprop + "/skills";
+  pstackDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir pstackDir);
+  pstackSkills = lib.mapAttrs' (
+    name: _: lib.nameValuePair "pstack/${name}" (pstackDir + "/${name}")
+  ) pstackDirs;
+
   # category/name -> skill directory
-  skills = {
+  skills = pstackSkills // {
     "Workflow/grill-me" = mattpocock + "/skills/productivity/grill-me";
     "Workflow/grilling" = mattpocock + "/skills/productivity/grilling";
     "Workflow/handoff" = mattpocock + "/skills/productivity/handoff";
     "Workflow/to-questionnaire" = mattpocock + "/skills/productivity/to-questionnaire";
     "Workflow/writing-for-agents" = mattpocock + "/skills/productivity/writing-for-agents";
-    "Workflow/teach" = mattpocock + "/skills/productivity/teach";
     "Workflow/code-review" = mattpocock + "/skills/engineering/code-review";
     "Workflow/codebase-design" = mattpocock + "/skills/engineering/codebase-design";
     "Workflow/research" = mattpocock + "/skills/engineering/research";
-    "Workflow/tdd" = mattpocock + "/skills/engineering/tdd";
     "Workflow/improve" = shadcnImprove + "/skills/improve";
     "Workflow/dry-refactoring" = jscpd + "/skills/dry-refactoring";
     "Workflow/antfu" = antfu + "/skills/antfu";
 
     "Writing/simple-english" = simpleEnglish + "/skills/simple-english";
-    "Writing/unslop" = cursorPlugins + "/pstack/skills/unslop";
-    "Writing/bro" = cursorPlugins + "/pstack/skills/bro";
     "Writing/i-have-adhd" = iHaveAdhd + "/skills/i-have-adhd";
 
     "Vue & Nuxt/vue-best-practices" = vuejs + "/skills/vue-best-practices";
@@ -97,9 +98,8 @@ in
         Apply Herdr instructions only when `HERDR_ENV=1`.
         Explicit restrictions from the human take precedence over these skill defaults.
         The `cowork` skill describes how to run other agents in Herdr. When the human asks for a team, the skill may create member panes, Herdr worktrees, and tab names.
-        Preloading applies instructions. It does not set pstack's stored mode state.
 
-        ${renderSkill "Poteto Mode" (pstack + "/skills/poteto-mode/SKILL.md")}
+        ${renderSkill "Poteto Mode" (backnotprop + "/skills/poteto-mode/SKILL.md")}
         ${renderSkill "Herdr" (herdr + "/skills/herdr/SKILL.md")}
       '';
     };

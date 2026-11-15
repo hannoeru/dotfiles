@@ -34,7 +34,6 @@ Update the skill inputs in `flake.nix` and `flake.lock` to change the preloaded 
 Relative references use the source paths in the generated prompt.
 Poteto Mode applies by default, but explicit mode off takes precedence.
 Herdr applies only when `HERDR_ENV=1`.
-The generated instructions do not change pstack's stored mode state.
 
 The preloaded-skills extension reads the generated file when the extension loads.
 Before each run, it places those instructions in a dedicated system-prompt section.

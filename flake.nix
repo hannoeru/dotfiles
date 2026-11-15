@@ -39,11 +39,6 @@
       flake = false;
     };
 
-    cursorPlugins = {
-      url = "github:cursor/plugins";
-      flake = false;
-    };
-
     iHaveAdhd = {
       url = "github:ayghri/i-have-adhd";
       flake = false;
@@ -84,9 +79,8 @@
       flake = false;
     };
 
-    # Keep equal to npm:@zenspc/pi-pstack@<version> in ~/.pi/agent/settings.json.
-    pstack = {
-      url = "https://registry.npmjs.org/@zenspc/pi-pstack/-/pi-pstack-0.9.0.tgz";
+    backnotprop = {
+      url = "github:backnotprop/pstack";
       flake = false;
     };
   };
@@ -109,7 +103,6 @@
           shadcnImprove
           jscpd
           simpleEnglish
-          cursorPlugins
           iHaveAdhd
           antfu
           cloudflare
@@ -118,7 +111,7 @@
           anthropics
           agentBrowser
           herdr
-          pstack
+          backnotprop
           ;
       };
 
