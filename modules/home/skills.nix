@@ -15,7 +15,7 @@ let
     cursorPlugins
     iHaveAdhd
     antfu
-    cloudflareSkills
+    cloudflare
     vuejs
     nuxt
     anthropics
@@ -66,7 +66,7 @@ let
     "Design/frontend-design" = anthropics + "/skills/frontend-design";
     "Browser/agent-browser" = agentBrowser + "/skills/agent-browser";
     "Terminal/herdr" = herdr + "/skills/herdr";
-    "Cloudflare/cf-cli" = cloudflareSkills + "/skills/cf-cli";
+    "Cloudflare/cf-cli" = cloudflare + "/skills/cf-cli";
 
     # Authored in this repository and linked for every machine.
     # Pi also scans ~/.pi/agent/skills; ~/.agents/skills is enough.

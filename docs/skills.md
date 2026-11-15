@@ -35,7 +35,7 @@ Home Manager does not install `~/.pi/agent/prompts`.
 
 The `antfu` pin provides `Workflow/antfu`.
 
-The `cloudflareSkills` pin provides `Cloudflare/cf-cli`. The link is the
+The `cloudflare` pin provides `Cloudflare/cf-cli`. The link is the
 whole `skills/cf-cli` directory, so its `references/` files resolve.
 
 Pi loads `~/.agents/skills` and `~/.pi/agent/skills`. This module uses the

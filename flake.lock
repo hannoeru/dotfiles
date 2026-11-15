@@ -48,7 +48,7 @@
         "type": "github"
       }
     },
-    "cloudflareSkills": {
+    "cloudflare": {
       "flake": false,
       "locked": {
         "lastModified": 1794310893,
@@ -250,7 +250,7 @@
         "agentBrowser": "agentBrowser",
         "antfu": "antfu",
         "anthropics": "anthropics",
-        "cloudflareSkills": "cloudflareSkills",
+        "cloudflare": "cloudflare",
         "cursorPlugins": "cursorPlugins",
         "herdr": "herdr",
         "home-manager": "home-manager",

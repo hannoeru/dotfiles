@@ -54,7 +54,7 @@
       flake = false;
     };
 
-    cloudflareSkills = {
+    cloudflare = {
       url = "github:cloudflare/skills";
       flake = false;
     };
@@ -112,7 +112,7 @@
           cursorPlugins
           iHaveAdhd
           antfu
-          cloudflareSkills
+          cloudflare
           vuejs
           nuxt
           anthropics
