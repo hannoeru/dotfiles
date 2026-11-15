@@ -48,6 +48,22 @@
         "type": "github"
       }
     },
+    "backnotprop": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794685355,
+        "narHash": "sha256-AODlJSVMfBIulV/nWX66yTR4f4QPuv4z40jCQPWmw0s=",
+        "owner": "backnotprop",
+        "repo": "pstack",
+        "rev": "f905b88ebdd877e6b36fcc791970d47f44d15a15",
+        "type": "github"
+      },
+      "original": {
+        "owner": "backnotprop",
+        "repo": "pstack",
+        "type": "github"
+      }
+    },
     "cloudflare": {
       "flake": false,
       "locked": {
@@ -61,22 +77,6 @@
       "original": {
         "owner": "cloudflare",
         "repo": "skills",
-        "type": "github"
-      }
-    },
-    "cursorPlugins": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1791938066,
-        "narHash": "sha256-oHxsrzvuQPGri0QFZpL0WVX++4a3OV2SEcuYRbkm4XU=",
-        "owner": "cursor",
-        "repo": "plugins",
-        "rev": "5108b719a7aa484ef1a9781f587c7bbeac793f92",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cursor",
-        "repo": "plugins",
         "type": "github"
       }
     },
@@ -250,8 +250,8 @@
         "agentBrowser": "agentBrowser",
         "antfu": "antfu",
         "anthropics": "anthropics",
+        "backnotprop": "backnotprop",
         "cloudflare": "cloudflare",
-        "cursorPlugins": "cursorPlugins",
         "herdr": "herdr",
         "home-manager": "home-manager",
         "iHaveAdhd": "iHaveAdhd",

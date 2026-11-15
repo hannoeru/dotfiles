@@ -12,7 +12,6 @@ let
     shadcnImprove
     jscpd
     simpleEnglish
-    cursorPlugins
     iHaveAdhd
     antfu
     cloudflare
@@ -21,6 +20,7 @@ let
     anthropics
     agentBrowser
     herdr
+    backnotprop
     pstack
     ;
 
@@ -34,8 +34,20 @@ let
     ${lib.concatStringsSep "\n---\n" (lib.tail (lib.splitString "\n---\n" (builtins.readFile path)))}
   '';
 
+  pstackDir = backnotprop + "/skills";
+  pstackDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir pstackDir);
+  # The catalogue already has tdd and teach from mattpocock.
+  pstackSkills =
+    lib.mapAttrs' (name: _: lib.nameValuePair "pstack/${name}" (pstackDir + "/${name}"))
+      (
+        lib.removeAttrs pstackDirs [
+          "tdd"
+          "teach"
+        ]
+      );
+
   # category/name -> skill directory
-  skills = {
+  skills = pstackSkills // {
     "Workflow/grill-me" = mattpocock + "/skills/productivity/grill-me";
     "Workflow/grilling" = mattpocock + "/skills/productivity/grilling";
     "Workflow/handoff" = mattpocock + "/skills/productivity/handoff";
@@ -51,8 +63,6 @@ let
     "Workflow/antfu" = antfu + "/skills/antfu";
 
     "Writing/simple-english" = simpleEnglish + "/skills/simple-english";
-    "Writing/unslop" = cursorPlugins + "/pstack/skills/unslop";
-    "Writing/bro" = cursorPlugins + "/pstack/skills/bro";
     "Writing/i-have-adhd" = iHaveAdhd + "/skills/i-have-adhd";
 
     "Vue & Nuxt/vue-best-practices" = vuejs + "/skills/vue-best-practices";
@@ -89,6 +99,9 @@ in
       }
     ) skills)
     // {
+      # Pi uses its own @zenspc/pi-pstack package, and ~/.agents/skills wins on a name collision.
+      ".agents/skills/.ignore".text = "/pstack/\n";
+
       ".pi/agent/APPEND_SYSTEM.md".text = ''
         # Preloaded skills
 

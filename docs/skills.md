@@ -11,9 +11,20 @@ remote skill, add an input, list it in `skillInputs` in `flake.nix` and in
 `skills.nix`, and point a category path at its subdirectory. To add a
 repository skill, point a category path at a directory in `home/skills`.
 
-`Writing/bro` is the upstream skill from the pinned `cursor/plugins` checkout
-at `pstack/skills/bro`, the same pin as `Writing/unslop`. The `home.file` link
-is `~/.agents/skills/Writing/bro`. This repository does not keep a copy.
+The `backnotprop` pin is `backnotprop/pstack`, a mirror of the pstack plugin
+in `cursor/plugins` for agents other than Cursor. Each directory in its
+`skills/` becomes `pstack/<name>`, so a new upstream skill appears on the next
+lock update. The mirror's `tdd` and `teach` are not linked, because
+`Workflow/tdd` and `Workflow/teach` already use those names. `poteto-help`
+links to `../teach/`, `../tdd/`, and to the mirror's `README.md` and `docs/`.
+These links do not resolve.
+
+Home Manager writes `~/.agents/skills/.ignore` with the line `/pstack/`. Pi
+reads `.ignore` files when it scans a skill directory, and a skill in
+`~/.agents/skills` wins over a package skill with the same name. Pi uses its own
+`@zenspc/pi-pstack` package, so the file keeps the mirror from hiding the Pi
+versions of `how`, `swarm`, and the other pstack skills. Other agents do not
+read the file and load `pstack/` as usual.
 
 `Terminal/herdr` is the upstream skill from the pinned `herdrdev/herdr`
 checkout at `skills/herdr`. The `home.file` link is
