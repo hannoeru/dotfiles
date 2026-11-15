@@ -83,12 +83,6 @@
       url = "github:backnotprop/pstack";
       flake = false;
     };
-
-    # Keep equal to npm:@zenspc/pi-pstack@<version> in ~/.pi/agent/settings.json.
-    pstack = {
-      url = "https://registry.npmjs.org/@zenspc/pi-pstack/-/pi-pstack-0.9.0.tgz";
-      flake = false;
-    };
   };
 
   outputs =
@@ -118,7 +112,6 @@
           agentBrowser
           herdr
           backnotprop
-          pstack
           ;
       };
 
