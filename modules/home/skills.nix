@@ -13,6 +13,7 @@ let
     jscpd
     simpleEnglish
     iHaveAdhd
+    sepia
     antfu
     cloudflare
     vuejs
@@ -55,6 +56,7 @@ let
 
     "Writing/simple-english" = simpleEnglish + "/skills/simple-english";
     "Writing/i-have-adhd" = iHaveAdhd + "/skills/i-have-adhd";
+    "Writing/sepia" = sepia + "/skills/sepia";
 
     "Vue & Nuxt/vue-best-practices" = vuejs + "/skills/vue-best-practices";
     "Vue & Nuxt/vue-router-best-practices" = vuejs + "/skills/vue-router-best-practices";

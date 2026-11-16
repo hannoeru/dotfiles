@@ -44,6 +44,11 @@
       flake = false;
     };
 
+    sepia = {
+      url = "github:Nanako0129/sepia";
+      flake = false;
+    };
+
     antfu = {
       url = "github:antfu/skills";
       flake = false;
@@ -104,6 +109,7 @@
           jscpd
           simpleEnglish
           iHaveAdhd
+          sepia
           antfu
           cloudflare
           vuejs

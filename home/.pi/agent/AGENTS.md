@@ -16,6 +16,7 @@ Work without human approval. Where a rule or a skill says to ask, pause, or wait
 - Make architectural decisions for the long term. Build only what you intend to keep.
 - When repository documentation and existing code disagree, follow the conventions in the existing code. Report each inconsistency in the final reply.
 - Always talk in ASD-STE100 Simplified Technical English. Always read CONTEXT.md files, and use their ubiquitous language.
+- Write human-facing prose (PR bodies, issues, docs, READMEs, release notes, review comments) with the `sepia` skill. Code, commit messages, and agent instructions keep their own rules.
 - Use short, descriptive branch names.
 - Always write commit messages and PR titles that follow the Conventional Commits specification.
 - Default to no code comments. Add one only to explain a constraint, workaround, or bug link that the code cannot express.
