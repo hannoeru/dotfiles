@@ -248,9 +248,26 @@
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
         "nuxt": "nuxt",
+        "sepia": "sepia",
         "shadcnImprove": "shadcnImprove",
         "simpleEnglish": "simpleEnglish",
         "vuejs": "vuejs"
+      }
+    },
+    "sepia": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793685226,
+        "narHash": "sha256-/gaS7UtiKKGzztoJqznNNVMPQbiR5qGuSWpY4iOcsEc=",
+        "owner": "Nanako0129",
+        "repo": "sepia",
+        "rev": "0eb11d6c64c962fcc35f596c167c6e38045d6cb8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Nanako0129",
+        "repo": "sepia",
+        "type": "github"
       }
     },
     "shadcnImprove": {

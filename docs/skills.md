@@ -46,6 +46,10 @@ The `antfu` pin provides `Workflow/antfu`.
 The `cloudflare` pin provides `Cloudflare/cf-cli`. The link is the
 whole `skills/cf-cli` directory, so its `references/` files resolve.
 
+The `sepia` pin is `Nanako0129/sepia` and provides `Writing/sepia`. The
+link is the whole `skills/sepia` directory, so its `references/` files
+resolve. The catalogue does not link the `sepia-*` wrapper skills.
+
 Pi loads `~/.agents/skills` and `~/.pi/agent/skills`. This module uses the
 first path. Pi walks category directories, so a second link is unnecessary.
 
