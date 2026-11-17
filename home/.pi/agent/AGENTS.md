@@ -33,6 +33,7 @@ Use the GitHub CLI (`gh`) for every GitHub-related task, including clones. Use a
 
 - Write to GitHub where other people see it (comments, reviews, labels, closes, merges) only when the task calls for it. Treat "check only", "plan first", and "do not post" as read-only instructions: draft, show, and change nothing.
 - Before you open or push a PR, review its full diff yourself. Validate each review finding before you act on it.
+- To put an image or video in an issue, PR, or comment, use `--attach <path>` on `gh issue create|edit|comment` or `gh pr create|edit|comment`. Write `![alt](<path>)` in the body with the same local path, and `gh` uploads the file and replaces the path with its URL. Do not upload files another way.
 - Keep the PR body current. After you push more work to an open PR, rewrite the body with `gh pr edit` in the same turn. The work is done when every summary item, note, and test result in the body matches the final diff.
 - Write review findings as short, direct comments. Explain the defect, when it occurs, and why it matters.
 - Write replies to review comments as short, factual responses. State the change made or the reason for disagreement.
