@@ -79,6 +79,11 @@
       flake = false;
     };
 
+    modernWebGuidance = {
+      url = "github:GoogleChrome/modern-web-guidance";
+      flake = false;
+    };
+
     herdr = {
       url = "github:herdrdev/herdr";
       flake = false;
@@ -116,6 +121,7 @@
           nuxt
           anthropics
           agentBrowser
+          modernWebGuidance
           herdr
           backnotprop
           ;

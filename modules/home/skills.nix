@@ -20,6 +20,7 @@ let
     nuxt
     anthropics
     agentBrowser
+    modernWebGuidance
     herdr
     backnotprop
     ;
@@ -68,6 +69,8 @@ let
 
     "Design/frontend-design" = anthropics + "/skills/frontend-design";
     "Browser/agent-browser" = agentBrowser + "/skills/agent-browser";
+    "Browser/modern-web-guidance" = modernWebGuidance + "/skills/modern-web-guidance";
+    "Browser/chrome-extensions" = modernWebGuidance + "/skills/chrome-extensions";
     "Terminal/herdr" = herdr + "/skills/herdr";
     "Cloudflare/cf-cli" = cloudflare + "/skills/cf-cli";
 

@@ -50,6 +50,11 @@ The `sepia` pin is `Nanako0129/sepia` and provides `Writing/sepia`. The
 link is the whole `skills/sepia` directory, so its `references/` files
 resolve. The catalogue does not link the `sepia-*` wrapper skills.
 
+The `modernWebGuidance` pin is `GoogleChrome/modern-web-guidance` and
+provides `Browser/modern-web-guidance` and `Browser/chrome-extensions`. Each
+link is the whole skill directory, so the `guides/` and `references/` files
+resolve.
+
 Pi loads `~/.agents/skills` and `~/.pi/agent/skills`. This module uses the
 first path. Pi walks category directories, so a second link is unnecessary.
 
