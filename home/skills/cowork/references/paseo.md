@@ -1,6 +1,6 @@
 # Paseo host
 
-A member is an agent that the Paseo daemon runs. The member ID is the agent ID that `paseo run` returns. When a Paseo agent runs `paseo run`, the new agent is its subagent in the same workspace, and the Commander gets a notification when the member finishes.
+A member is an agent that the Paseo daemon runs. The member ID is the agent ID that `paseo run` returns. When a Paseo agent runs `paseo run`, the new agent is its subagent in the same workspace.
 
 ## Manual
 
@@ -24,7 +24,7 @@ paseo run --no-wait --json --provider pi --title <role> \
 ```
 
 - Change `--provider` only when the human asks for another agent. Run `paseo provider ls` to see the providers that this host has enabled.
-- Put a long task in a file and send it with `paseo send <id> --prompt-file <path>`.
+- Write a long task to a file, and start the member with the prompt "Read <path> and do that task exactly." `paseo send <id> --prompt-file <path>` sends a file as a follow-up.
 - Confirm delivery with `paseo logs <id> --tail 20`: the task text must be in the log.
 
 ## Report line
@@ -33,13 +33,13 @@ paseo run --no-wait --json --provider pi --title <role> \
 When done or blocked: end your turn with a message that starts "REPORT from <role>:", with the result, changed files, check results, or the block.
 ```
 
-Paseo notifies the Commander when the member finishes, so the member does not send its report to the Commander.
+The member does not send its report to the Commander. The report is the member's last message, which `paseo wait` and `paseo logs` show.
 
 ## Wait, read, and stop
 
 - Wait with `paseo wait <id> --timeout <seconds> --json`. When the wait times out, inspect the member before you wait again.
 - Read the result with `paseo logs <id>` and `paseo inspect <id> --json`.
-- A member that waits on a permission request is blocked. List requests with `paseo permit ls`, and give each one to the human. Do not run `paseo permit allow` or `deny` yourself.
+- A member that waits on a permission request is blocked. After each wait, and before you wait again, run `paseo permit ls --json`. Give each request of a member to the human. Do not run `paseo permit allow` or `deny` yourself.
 - Send a follow-up with `paseo send <id> "<message>"`. To interrupt a member that you started, run `paseo stop <id>`, then read its log.
 
 ## Slow commands and other machines
