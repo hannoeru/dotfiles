@@ -1,9 +1,10 @@
 ---
 name: cowork
-description: Run a team of agents as the Commander in Herdr, Paseo, or T3 Code. Start, delegate to, track, verify, and clean up member agents through the host that runs this agent, and keep the repository's TEAM.md registry and roster current in global state. Use when the human asks to coordinate several agents, delegate development, test, or build tasks, form or take over an agent team, or maintain TEAM.md.
+description: Run a team of agents as the Commander in Herdr, the Herdr app, Paseo, or T3 Code. Start, delegate to, track, verify, and clean up member agents through the host that runs this agent, and keep the repository's TEAM.md registry and roster current in global state. Use when the human asks to coordinate several agents, delegate development, test, or build tasks, form or take over an agent team, or maintain TEAM.md.
 allowed-tools:
   - Bash(herdr *)
   - Bash(paseo *)
+  - Bash(hc *)
 ---
 
 # Cowork: an agent team
@@ -18,9 +19,10 @@ Find the host before team work. Use the first row that matches, unless the human
 | --- | --- | --- |
 | Tools from the `t3-code` MCP server are available (`delegate_task`, `t3_thread_*`) | T3 Code | [references/t3code.md](references/t3code.md) |
 | `PASEO_AGENT_ID` is set | Paseo | [references/paseo.md](references/paseo.md) |
+| `HC_TERMINAL_ID` is set | Herdr app (herdr-core, `hc`) | [references/herdr-app.md](references/herdr-app.md) |
 | `HERDR_ENV=1` | Herdr | [references/herdr.md](references/herdr.md) |
 
-Read only the matching host file. When no row matches, say that no agent host is available and do the task alone.
+The order matters: an `hc` terminal can inherit `HERDR_ENV` from the shell that started herdr-core, so check `HC_TERMINAL_ID` first. Read only the matching host file. When no row matches, say that no agent host is available and do the task alone.
 
 The installed host is the authority for command syntax. Each host file says where to get the current manual. When a command detail is not clear, look it up there. Do not guess from memory.
 
@@ -64,7 +66,7 @@ List the host's agents first. An agent with a matching name can belong to the hu
 When the human asks for a team, that request covers the members, the worktrees, and the display names that this skill creates.
 
 - Start each member with a unique name, the working directory, the exact scope, and the acceptance criteria. Start interactive or host-managed agents only, never a one-shot print mode such as `pi -p`. Use Pi, unless the human asks for another agent.
-- Give a member its own worktree when members change files in the same repository at the same time. Create worktrees only through the host. Do not run `git worktree add` or `git worktree remove`.
+- Give a member its own worktree when members change files in the same repository at the same time. Create and remove worktrees as the host file says. Use `git worktree add` or `git worktree remove` only when the host file tells you to.
 - Start and send work to every member before you wait on any of them. Confirm that each member received its task, as the host file says.
 - A timeout or a stall does not prove that the task was not delivered. Inspect the member before you send it again.
 

@@ -102,7 +102,7 @@ in
         Follow Poteto Mode by default unless the human disables it.
         Apply Herdr instructions only when `HERDR_ENV=1`.
         Explicit restrictions from the human take precedence over these skill defaults.
-        The `cowork` skill describes how to run other agents in Herdr, Paseo, or T3 Code. When the human asks for a team, the skill may create members, host worktrees, and display names.
+        The `cowork` skill describes how to run other agents in Herdr, the Herdr app, Paseo, or T3 Code. When the human asks for a team, the skill may create members, worktrees, and display names.
 
         ${renderSkill "Poteto Mode" (backnotprop + "/skills/poteto-mode/SKILL.md")}
         ${renderSkill "Herdr" (herdr + "/skills/herdr/SKILL.md")}

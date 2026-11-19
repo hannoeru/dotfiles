@@ -43,7 +43,7 @@ Use the GitHub CLI (`gh`) for every GitHub-related task, including clones. Use a
 Follow the preloaded Poteto Mode instructions by default. Respect explicit mode off and the human's restrictions on scope, worktrees, delegation, and external actions. The system prompt holds the Poteto Mode and Herdr skill bodies, so read only their task-specific references. Run `herdr --skill` only when the system prompt lacks the Herdr skill.
 
 - When `HERDR_ENV` is not `1`, do not run Herdr commands.
-- To run other agents, follow the `cowork` skill. It finds the host (Herdr, Paseo, or T3 Code). When it finds none, work alone in the current checkout, say that no agent host is available, and continue.
+- To run other agents, follow the `cowork` skill. It finds the host (Herdr, the Herdr app, Paseo, or T3 Code). When it finds none, work alone in the current checkout, say that no agent host is available, and continue.
 
 # Safety
 
