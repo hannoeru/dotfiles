@@ -20,6 +20,7 @@ let
     nuxt
     anthropics
     agentBrowser
+    modernWebGuidance
     herdr
     backnotprop
     ;
@@ -68,6 +69,8 @@ let
 
     "Design/frontend-design" = anthropics + "/skills/frontend-design";
     "Browser/agent-browser" = agentBrowser + "/skills/agent-browser";
+    "Browser/modern-web-guidance" = modernWebGuidance + "/skills/modern-web-guidance";
+    "Browser/chrome-extensions" = modernWebGuidance + "/skills/chrome-extensions";
     "Terminal/herdr" = herdr + "/skills/herdr";
     "Cloudflare/cf-cli" = cloudflare + "/skills/cf-cli";
 
@@ -99,7 +102,7 @@ in
         Follow Poteto Mode by default unless the human disables it.
         Apply Herdr instructions only when `HERDR_ENV=1`.
         Explicit restrictions from the human take precedence over these skill defaults.
-        The `cowork` skill describes how to run other agents in Herdr. When the human asks for a team, the skill may create member panes, Herdr worktrees, and tab names.
+        The `cowork` skill describes how to run other agents in Herdr, the Herdr app, Paseo, or T3 Code. When the human asks for a team, the skill may create members, worktrees, and display names.
 
         ${renderSkill "Poteto Mode" (backnotprop + "/skills/poteto-mode/SKILL.md")}
         ${renderSkill "Herdr" (herdr + "/skills/herdr/SKILL.md")}

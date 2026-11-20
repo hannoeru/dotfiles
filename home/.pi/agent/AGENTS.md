@@ -33,6 +33,7 @@ Use the GitHub CLI (`gh`) for every GitHub-related task, including clones. Use a
 
 - Write to GitHub where other people see it (comments, reviews, labels, closes, merges) only when the task calls for it. Treat "check only", "plan first", and "do not post" as read-only instructions: draft, show, and change nothing.
 - Before you open or push a PR, review its full diff yourself. Validate each review finding before you act on it.
+- To put an image or video in an issue, PR, or comment, use `--attach <path>` on `gh issue create|edit|comment` or `gh pr create|edit|comment`. Write `![alt](<path>)` in the body with the same local path, and `gh` uploads the file and replaces the path with its URL. Do not upload files another way.
 - Keep the PR body current. After you push more work to an open PR, rewrite the body with `gh pr edit` in the same turn. The work is done when every summary item, note, and test result in the body matches the final diff.
 - Write review findings as short, direct comments. Explain the defect, when it occurs, and why it matters.
 - Write replies to review comments as short, factual responses. State the change made or the reason for disagreement.
@@ -41,8 +42,8 @@ Use the GitHub CLI (`gh`) for every GitHub-related task, including clones. Use a
 
 Follow the preloaded Poteto Mode instructions by default. Respect explicit mode off and the human's restrictions on scope, worktrees, delegation, and external actions. The system prompt holds the Poteto Mode and Herdr skill bodies, so read only their task-specific references. Run `herdr --skill` only when the system prompt lacks the Herdr skill.
 
-- When `HERDR_ENV` is not `1`, work alone in the current checkout, say that Herdr is not available, and continue.
-- To run other agents, follow the `cowork` skill.
+- When `HERDR_ENV` is not `1`, do not run Herdr commands.
+- To run other agents, follow the `cowork` skill. It finds the host (Herdr, the Herdr app, Paseo, or T3 Code). When it finds none, work alone in the current checkout, say that no agent host is available, and continue.
 
 # Safety
 

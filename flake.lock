@@ -164,6 +164,22 @@
         "type": "github"
       }
     },
+    "modernWebGuidance": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794841069,
+        "narHash": "sha256-6AKPHsrv7uP0clLZaezrCP8lHXY5EB0hJwQ3gnk4+UI=",
+        "owner": "GoogleChrome",
+        "repo": "modern-web-guidance",
+        "rev": "64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65",
+        "type": "github"
+      },
+      "original": {
+        "owner": "GoogleChrome",
+        "repo": "modern-web-guidance",
+        "type": "github"
+      }
+    },
     "nanorc": {
       "flake": false,
       "locked": {
@@ -244,6 +260,7 @@
         "iHaveAdhd": "iHaveAdhd",
         "jscpd": "jscpd",
         "mattpocock": "mattpocock",
+        "modernWebGuidance": "modernWebGuidance",
         "nanorc": "nanorc",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
