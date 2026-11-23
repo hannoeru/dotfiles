@@ -80,6 +80,22 @@
         "type": "github"
       }
     },
+    "dmmulroy": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1795437278,
+        "narHash": "sha256-y2dWnrDyi684t9KT0/mmoF0AeLd9H8eH/rGyr+LWZaw=",
+        "owner": "dmmulroy",
+        "repo": ".dotfiles",
+        "rev": "73583de617f1598c6fcdad10992bfb00f87a4876",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dmmulroy",
+        "repo": ".dotfiles",
+        "type": "github"
+      }
+    },
     "herdr": {
       "flake": false,
       "locked": {
@@ -255,6 +271,7 @@
         "anthropics": "anthropics",
         "backnotprop": "backnotprop",
         "cloudflare": "cloudflare",
+        "dmmulroy": "dmmulroy",
         "herdr": "herdr",
         "home-manager": "home-manager",
         "iHaveAdhd": "iHaveAdhd",

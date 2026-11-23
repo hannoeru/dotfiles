@@ -8,6 +8,29 @@ A member is an interactive agent in a Herdr pane. The member ID is the agent nam
 - Run `herdr <group>` (for example `herdr agent`) for the commands of a group, and `herdr <group> <command> --help` for the exact options.
 - Read your own pane with `herdr pane current --current`.
 
+## Codemode tools
+
+Pi in Herdr has the `herdr-codemode` extension. When codemode has `tools.herdr_search`, prefer one codemode script for a sequence of steps, such as start, send, confirm, and name. The rules in this file stay the same. Only the calls change. Use the CLI when the tools are missing.
+
+| Step | Tool | CLI |
+| --- | --- | --- |
+| Find IDs | `herdr_session_snapshot`, `herdr_panes_current` | `herdr pane current --current` |
+| List and inspect | `herdr_agents_list`, `herdr_agents_get` | `herdr agent list`, `herdr agent get` |
+| Same checkout | `herdr_panes_split` | `herdr pane split` |
+| Separate checkout | `herdr_worktrees_create` | `herdr worktree create` |
+| Start | `herdr_agents_start({ name, kind: "pi", paneId })` | `herdr agent start` |
+| Send work | `herdr_agents_prompt({ name, text })` | `herdr agent prompt` |
+| Confirm or read | `herdr_agents_read({ name, source: "visible" })` | `herdr agent read` |
+| Wait | `herdr_agents_wait({ name, until: ["done", "blocked"], timeoutMs })` | `herdr agent wait --until done --until blocked` |
+| Display name | `herdr_tabs_rename({ tabId, label })` | `herdr tab rename` |
+| Slow command | `herdr_panes_sendText`, then `herdr_panes_waitForOutput` | `herdr pane run`, then `herdr pane wait-output` |
+| Cleanup | `herdr_panes_close`, `herdr_worktrees_remove` | `herdr pane close`, `herdr worktree remove` |
+
+- Get each signature with `describeTool(name)` in the same script. Return only the IDs and text that you need.
+- Waits need `timeoutMs`. `{ timedOut: true }` is not a failure: read the member before you wait again.
+- A failure starts with its SDK error tag. `HerdrRequestTimeout` and the `timeout` or `agent_prompt_stalled` codes of `herdr_agents_prompt` do not prove that the task was not delivered. Read the member before you send it again.
+- Do not use `herdr_agents_sendKeys` or `herdr_panes_sendInput` to answer a dialog. Do not call `herdr_server_stop` or `herdr_server_liveHandoff`.
+
 ## Roster fields
 
 Run `herdr agent list`, then `herdr agent get <name>` for each agent of this repository. Take the cwd from `foreground_cwd`. The display name is the tab name.

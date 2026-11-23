@@ -1,4 +1,5 @@
 allowBuilds:
   '@google/genai': true
   esbuild: true
+  msgpackr-extract: false
   protobufjs: true

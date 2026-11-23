@@ -13,5 +13,10 @@
     "@types/node": "^26.6.6",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "vitest": "^5.1.0"
+  },
+  "dependencies": {
+    "@effect/platform-node-shared": "4.0.0-beta.105",
+    "ajv": "^8.20.0",
+    "effect": "4.0.0-beta.105"
   }
 }

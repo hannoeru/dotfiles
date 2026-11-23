@@ -6,12 +6,24 @@
   lib,
   machine,
   nanorc,
+  dmmulroy,
   ...
 }:
 
 let
   darwin = machine.os == "darwin";
   onePassword = machine.onePassword or true;
+
+  herdrCodemodeSource = dmmulroy + "/home/.pi/agent/extensions/herdr-codemode";
+  herdrCodemodeDeps = (lib.importJSON (herdrCodemodeSource + "/package.json")).dependencies;
+  # Node resolves imports from a file's store path, so the store copy links
+  # node_modules to the dependencies that activation installs in ~/.pi.
+  herdrCodemode = pkgs.runCommand "pi-herdr-codemode" { } ''
+    cp -R ${herdrCodemodeSource} $out
+    chmod u+w $out
+    ln -s ${config.home.homeDirectory}/.pi/node_modules $out/node_modules
+  '';
+  piDeps = (lib.importJSON ../../home/.pi/package.json).dependencies or { };
 
   # Tools managed by their home-manager modules (zsh, starship, gh, mise,
   # neovim, vim, ghostty, zoxide, bash) are not repeated here.
@@ -66,6 +78,15 @@ in
   manual.manpages.enable = false;
 
   home.packages = sharedPackages;
+
+  assertions = [
+    {
+      assertion = lib.all (name: piDeps.${name} or null == herdrCodemodeDeps.${name}) (
+        lib.attrNames herdrCodemodeDeps
+      );
+      message = "home/.pi/package.json dependencies must match the herdr-codemode extension: ${builtins.toJSON herdrCodemodeDeps}";
+    }
+  ];
 
   home.sessionVariables = {
     DOCKER_BUILDKIT = "1";
@@ -127,6 +148,8 @@ in
       source = ../../home/.pi;
       recursive = true;
     };
+
+    ".pi/agent/extensions/herdr-codemode".source = herdrCodemode;
 
     ".config/herdr/config.toml".source = ../../home/.config/herdr/config.toml;
 

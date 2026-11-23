@@ -19,6 +19,12 @@
       flake = false;
     };
 
+    # Source of the herdr-codemode Pi extension.
+    dmmulroy = {
+      url = "github:dmmulroy/.dotfiles";
+      flake = false;
+    };
+
     mattpocock = {
       url = "github:mattpocock/skills";
       flake = false;
@@ -102,6 +108,7 @@
       nix-darwin,
       home-manager,
       nanorc,
+      dmmulroy,
       ...
     }:
     let
@@ -131,7 +138,14 @@
         { system, machine }:
         home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
-          extraSpecialArgs = { inherit machine nanorc skillInputs; };
+          extraSpecialArgs = {
+            inherit
+              machine
+              nanorc
+              dmmulroy
+              skillInputs
+              ;
+          };
           modules = [ ./modules/home ];
         };
     in
@@ -139,7 +153,14 @@
       darwinConfigurations = lib.mapAttrs (
         _name: machine:
         nix-darwin.lib.darwinSystem {
-          specialArgs = { inherit machine nanorc skillInputs; };
+          specialArgs = {
+            inherit
+              machine
+              nanorc
+              dmmulroy
+              skillInputs
+              ;
+          };
           modules = [
             ./modules/darwin.nix
             home-manager.darwinModules.home-manager
