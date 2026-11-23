@@ -139,6 +139,9 @@ in
     ".config/zsh-abbr/user-abbreviations".source = ../../home/.config/zsh-abbr/user-abbreviations;
   }
   // lib.optionalAttrs darwin {
+    # Rex keeps state in ~/.config/rex, so link only the config file.
+    ".config/rex/init.lua".source = ../../home/.config/rex/init.lua;
+
     ".config/karabiner" = {
       source = ../../home/.config/karabiner;
       recursive = true;

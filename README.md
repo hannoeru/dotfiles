@@ -124,5 +124,6 @@ on first use.
 - direnv with nix-direnv is enabled in Bash and Zsh. The whitelist uses the absolute home path with a `/projects/` suffix to automatically approve `.envrc` files under `~/projects`, including cloned repositories. The trailing slash excludes names such as `~/projects-other`. Files elsewhere are blocked unless explicitly approved with `direnv allow`; the whitelist is not a strict path restriction.
 - Personal Homebrew apps, including 1Password and its CLI, follow `personal` in `machines.nix`.
 - `onePassword` in `machines.nix` defaults to `true` and controls the SSH agent config, Git signing include, and secret lookups, not app installation. The work Mac sets it to `false`. When enabled, personal secrets (git signing key, SSH config) come from the [1Password CLI](https://developer.1password.com/docs/cli/) during activation; if it is missing, they are skipped. Run the switch a second time after installing it.
+- Rex reads key bindings from `home/.config/rex/init.lua`. It uses Ghostty-style `cmd` keys and Herdr-style `ctrl+b` sequences. Rex does not watch the file. After a switch, run `rex config reload`. `modules/darwin.nix` sets only the Rex app settings with a known stored format. Set the font, cursor, padding, Option key, and copy on select in Rex Settings.
 - Clean the Nix store occasionally: `nix-collect-garbage --delete-older-than 30d`.
 
