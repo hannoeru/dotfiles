@@ -101,6 +101,7 @@ in
     ./programs/git.nix
     ./programs/mise.nix
     ./programs/neovim.nix
+    ./programs/rex.nix
     ./programs/starship.nix
     ./programs/vim.nix
     ./programs/vscode.nix
@@ -139,9 +140,6 @@ in
     ".config/zsh-abbr/user-abbreviations".source = ../../home/.config/zsh-abbr/user-abbreviations;
   }
   // lib.optionalAttrs darwin {
-    # Rex keeps state in ~/.config/rex, so link only the config file.
-    ".config/rex/init.lua".source = ../../home/.config/rex/init.lua;
-
     ".config/karabiner" = {
       source = ../../home/.config/karabiner;
       recursive = true;
