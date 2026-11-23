@@ -8,10 +8,10 @@
     "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
   "devDependencies": {
-    "@earendil-works/pi-ai": "^1.5.2",
-    "@earendil-works/pi-coding-agent": "^1.5.2",
+    "@earendil-works/pi-ai": "^1.6.0",
+    "@earendil-works/pi-coding-agent": "^1.6.0",
     "@types/node": "^26.6.6",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   }
 }
