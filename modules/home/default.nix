@@ -6,7 +6,6 @@
   lib,
   machine,
   nanorc,
-  dmmulroy,
   ...
 }:
 
@@ -14,7 +13,8 @@ let
   darwin = machine.os == "darwin";
   onePassword = machine.onePassword or true;
 
-  herdrCodemodeSource = dmmulroy + "/home/.pi/agent/extensions/herdr-codemode";
+  piSource = ../../home/.pi;
+  herdrCodemodeSource = piSource + "/agent/extensions/herdr-codemode";
   herdrCodemodeDeps = (lib.importJSON (herdrCodemodeSource + "/package.json")).dependencies;
   # Node resolves imports from a file's store path, so the store copy links
   # node_modules to the dependencies that activation installs in ~/.pi.
@@ -23,7 +23,7 @@ let
     chmod u+w $out
     ln -s ${config.home.homeDirectory}/.pi/node_modules $out/node_modules
   '';
-  piDeps = (lib.importJSON ../../home/.pi/package.json).dependencies or { };
+  piDeps = (lib.importJSON (piSource + "/package.json")).dependencies or { };
 
   # Tools managed by their home-manager modules (zsh, starship, gh, mise,
   # neovim, vim, ghostty, zoxide, bash) are not repeated here.
@@ -145,7 +145,10 @@ in
     ".nano".source = nanorc;
 
     ".pi" = {
-      source = ../../home/.pi;
+      source = lib.fileset.toSource {
+        root = piSource;
+        fileset = lib.fileset.difference piSource herdrCodemodeSource;
+      };
       recursive = true;
     };
 

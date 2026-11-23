@@ -55,7 +55,7 @@ pnpm typecheck
 - `agent/extensions/git-interceptor.ts` prevents Git commands from opening an interactive editor and blocks Git hook bypass flags.
 - `agent/extensions/handoff.ts` creates a focused prompt for a new Pi session.
 - `agent/extensions/go.ts` adds `/go` to resume the agent loop without sending any new prompt text to the model.
-- `agent/extensions/herdr-codemode` gives codemode scripts one `tools.herdr_*` tool per `@herdr/sdk` operation, inside Herdr only. It is not in this directory. Home Manager links it from the pinned `dmmulroy` flake input (`dmmulroy/.dotfiles`, `home/.pi/agent/extensions/herdr-codemode`). Its runtime dependencies are in `package.json` here, and the store copy links `node_modules` to `~/.pi/node_modules`. Evaluation fails when those versions differ from the extension's own `package.json`.
+- `agent/extensions/herdr-codemode` gives codemode scripts one `tools.herdr_*` tool per `@herdr/sdk` operation, inside Herdr only. It is a copy of Dillon Mulroy's extension from `dmmulroy/.dotfiles` at `73583de` (`home/.pi/agent/extensions/herdr-codemode`), with only the files that Pi loads: `index.ts`, `herdr-tool-*.ts`, `package.json`, `README.md`, and the bundled SDK in `vendor/herdr-sdk`. To update it, copy the same files from a newer commit and change the commit here. Its runtime dependencies are in `package.json` here, and evaluation fails when they differ from the extension's own `package.json`. Node resolves imports from a file's real path, so Home Manager links this folder as one store copy that has `node_modules -> ~/.pi/node_modules`, not file by file with the rest of `~/.pi`.
 - `agent/extensions/preloaded-skills.ts` preserves the generated skill instructions when a project supplies its own append file.
 
 ## Themes
