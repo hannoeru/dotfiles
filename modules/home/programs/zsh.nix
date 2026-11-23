@@ -97,6 +97,14 @@
         # Deduplicate paths
         typeset -gU cdpath fpath mailpath path
       '')
+
+      # Rex puts its CLI first on PATH; the startup above reorders PATH.
+      # https://www.superlogical.com/rex/docs/automate/cli#nix
+      (lib.mkOrder 1500 ''
+        if [ -n "$REX_BIN_DIR" ]; then
+          export PATH="$REX_BIN_DIR:$PATH"
+        fi
+      '')
     ];
 
     profileExtra = ''
