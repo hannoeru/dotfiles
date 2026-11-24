@@ -5,7 +5,6 @@ allowed-tools:
   - Bash(herdr *)
   - Bash(paseo *)
   - Bash(hc *)
-  - Bash(rex *)
   - Bash(wt *)
 ---
 
