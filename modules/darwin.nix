@@ -171,6 +171,13 @@ in
       "com.apple.commerce".AutoUpdateRestartRequired = true;
       "com.google.Chrome".AppleEnableSwipeNavigateWithScrolls = false;
       "com.google.Chrome.canary".AppleEnableSwipeNavigateWithScrolls = false;
+      # Only keys whose stored values the app wrote itself. Set the other
+      # Rex settings in the app.
+      "com.superlogical.rex" = {
+        "Workspace.tabStyle" = "vertical";
+        "Workspace.sidebarPosition" = "left";
+        "Workspace.inactivePaneFadeMode" = "both";
+      };
     };
   };
 

@@ -101,6 +101,7 @@ in
     ./programs/git.nix
     ./programs/mise.nix
     ./programs/neovim.nix
+    ./programs/rex.nix
     ./programs/starship.nix
     ./programs/vim.nix
     ./programs/vscode.nix
