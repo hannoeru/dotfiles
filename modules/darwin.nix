@@ -160,10 +160,6 @@ in
       };
       "com.apple.dock".no-bouncing = true;
       "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
-      "com.apple.appstore" = {
-        WebKitDeveloperExtras = true;
-        ShowDebugMenu = true;
-      };
       "com.apple.SoftwareUpdate" = {
         # Daily, not the factory weekly.
         ScheduleFrequency = 1;
