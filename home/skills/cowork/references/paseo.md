@@ -26,7 +26,7 @@ Write a long task to a file, and start the member with the prompt "Read <path> a
 Tools route:
 
 - `create_agent` with `initialPrompt` and a `provider/model` pair. `create_agent` takes no profile. Use the Pi provider, unless the human asks for another one. Get its models with `paseo provider models pi`.
-- For a separate checkout, first create a worktree workspace with `create_workspace`, then pass its `workspaceId` to `create_agent`.
+- For a separate checkout, create the worktree with `wt`, as `SKILL.md` says. Register its path as a local workspace with `paseo workspace create --isolation local --path <worktree path> --title <role> --json`, and pass that workspace ID as `workspaceId` to `create_agent`.
 - Name the member after its role with `update_agent`.
 - Do not set `background: true` or `notifyOnFinish: false`. Without the notifications, you do not see when a member finishes or is blocked.
 
@@ -35,14 +35,14 @@ CLI route:
 ```sh
 # Same checkout.
 paseo run --no-wait --json --provider pi --title <role> --cwd "$PWD" "<first task>"
-# Separate checkout: a Paseo worktree.
-paseo run --no-wait --json --provider pi --title <role> \
-  --new-workspace worktree --worktree-mode branch-off --new-branch <branch> --base <ref> \
-  "<first task>"
+# Separate checkout: a wt worktree, registered as a local workspace.
+paseo workspace create --isolation local --path <worktree path> --title <role> --json
+paseo run --no-wait --json --provider pi --title <role> --workspace <workspace-id> "<first task>"
 ```
 
 - Change `--provider` only when the human asks for another agent. Run `paseo provider ls` to see the providers that this host has enabled.
 - `paseo send <id> --prompt-file <path>` sends a file as a follow-up.
+- Do not use Paseo's own worktrees (`--new-workspace worktree`, `--isolation worktree`). `wt` owns the worktrees.
 
 On both routes, confirm delivery in the member's activity (`get_agent_activity` or `paseo logs <id> --tail 20`): the task text must be there.
 
@@ -77,4 +77,4 @@ CLI route:
 
 ## Cleanup
 
-Archive a finished member with `archive_agent` or `paseo archive <id>`. Use `kill_agent` or `paseo delete <id>` only for a member that you started, after you saved the results that matter. Remove a worktree workspace that you created with `archive_workspace` or `paseo workspace archive <workspace-id>`, which also archives everything it owns. Never stop or restart the daemon.
+Archive a finished member with `archive_agent` or `paseo archive <id>`. Use `kill_agent` or `paseo delete <id>` only for a member that you started, after you saved the results that matter. Archive a workspace that you created with `archive_workspace` or `paseo workspace archive <workspace-id>`, which also archives the agents in it. Then remove its worktree with `wt`, as `SKILL.md` says. Never stop or restart the daemon.

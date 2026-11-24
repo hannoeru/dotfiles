@@ -13,8 +13,8 @@ Run `t3_thread_list` for this project, and `t3_thread_read` or `task_status` for
 
 ## Start
 
-- **Delegated member**: `delegate_task` with the task prompt, `mode: "async"`, and `isolation: "worktree"` when members change files at the same time. Without isolation, the member uses your checkout. Uncommitted edits are not copied to a worktree.
-- **Separate top-level thread**: `t3_thread_launch` with a `message` and an explicit `workspaceStrategy` (`worktree` with `baseRef`, `existing_worktree`, or `root`).
+- **Delegated member in your checkout**: `delegate_task` with the task prompt and `mode: "async"`. Do not set `isolation: "worktree"`, because `wt` owns the worktrees.
+- **Member in its own checkout**: create the worktree with `wt`, as `SKILL.md` says. Then call `t3_thread_launch` with a `message` and `workspaceStrategy` `existing_worktree` with `worktreePath` set to its path.
 - Use the Pi provider, unless the human asks for another one. Give each call a `clientRequestId` that stays the same when you retry the call. A launch has no retry key, so list the threads before you launch again.
 - The member gets only the task prompt, not your conversation. Put all the context in the task.
 - Confirm delivery with `task_status`, or with `t3_thread_read` on the member thread.
@@ -40,4 +40,4 @@ Rename a member thread after its role with `t3_thread_update`, action `rename`.
 
 ## Cleanup
 
-Cancel a running task that you started and do not need with `task_cancel`. T3 Code keeps finished threads. Leave them for the human unless the human asks you to remove them.
+Cancel a running task that you started and do not need with `task_cancel`. Interrupt a launched thread with `t3_thread_interrupt` before you remove its worktree with `wt`, as `SKILL.md` says. T3 Code keeps finished threads. Leave them for the human unless the human asks you to remove them.

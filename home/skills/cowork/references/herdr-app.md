@@ -21,7 +21,7 @@ hc run --bg --name <role> --cwd <dir> pi "Read <task file> and do that task exac
 - Always use `--bg`. Put the first task in `run`, because a message sent to an agent that is still starting can be lost. Change `pi` only when the human asks for another agent.
 - `hc templates` lists ready-made roles. Use one that fits: `hc run --bg --name <role> --cwd <dir> <template> "<task>"`. For a template launch, check `first_message.sent` in the result. When it is false, the task was not sent: read the terminal, fix the cause, then send the task.
 - Confirm delivery with `hc read <role> --lines 40`: the task text must be there.
-- **Worktrees.** herdr-core has no worktree command. For a separate checkout, run `git worktree add -b <branch> <repo>.worktrees/<branch> <base>` from the main checkout, and start the member with `--cwd` set to that path.
+- **Worktrees.** For a separate checkout, create the worktree with `wt`, as `SKILL.md` says, and start the member with `--cwd` set to its path.
 - Do not add `herdr.space` or `herdr.tab` labels. Members stay out of the window unless the human asks to see them.
 
 ## Report line
@@ -48,4 +48,4 @@ Fill the address with the value of `$HC_TERMINAL_ID` from your own shell. Report
 
 ## Cleanup
 
-End a member with `hc kill <t>`, then `hc rm <t>`. Remove a worktree that you created with `git worktree remove <path>` after its branch merges, or when the human drops the branch. Never run `hc server stop` or restart the core.
+End a member with `hc kill <t>`, then `hc rm <t>`. After the member ends, remove its worktree with `wt`, as `SKILL.md` says. Never run `hc server stop` or restart the core.
