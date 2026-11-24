@@ -37,20 +37,3 @@ for _, direction in ipairs({ "left", "down", "up", "right" }) do
   rex.bind("cmd+alt+" .. direction, "pane.focus", { direction = direction })
   rex.bind("cmd+ctrl+" .. direction, "pane.resize", { direction = direction })
 end
-
--- rex config check also runs this file; start the watcher only inside a server.
-do
-  local server = rex.exec({ "/bin/sh", "-c", "ps -o args= -p $PPID" }).stdout
-  local bin, endpoint = server:match("^(.-/rex) server run %-%-listen (%S+)")
-  if endpoint then
-    local config = server:match("%-%-config (%S+)")
-      or os.getenv("REX_CONFIG")
-      or (os.getenv("XDG_CONFIG_HOME") or os.getenv("HOME") .. "/.config") .. "/rex/init.lua"
-    local script = config:match("^(.*)/[^/]*$") .. "/agent-resume.lua"
-    local watcher = { bin, "-S", endpoint, "--autostart=false", "do", script, "--all" }
-    local pattern = table.concat(watcher, " ", 2):gsub("[%^%$%(%)%%%.%[%]%*%+%-%?|{}\\]", "\\%0")
-    if not rex.exec({ "pgrep", "-f", pattern }).ok then
-      rex.exec.start(watcher, { detach = true, stdout = false, stderr = false })
-    end
-  end
-end

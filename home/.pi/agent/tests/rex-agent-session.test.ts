@@ -36,17 +36,17 @@ function startSession(ctx: { mode: string; sessionFile: string | undefined; cwd:
 
 const recordPath = () => join(stateHome, "rex-agent-sessions", "0001");
 
-test("a TUI session in a Rex terminal records the agent, session file, cwd, and process for its block", () => {
+test("a TUI session in a Rex terminal records the agent, session file, and cwd for its block", () => {
 	startSession({ mode: "tui", sessionFile: "/sessions/a.jsonl", cwd: "/work" });
 
-	expect(readFileSync(recordPath(), "utf8")).toBe(`pi\n/sessions/a.jsonl\n/work\n${process.pid}\n`);
+	expect(readFileSync(recordPath(), "utf8")).toBe("pi\n/sessions/a.jsonl\n/work\n");
 });
 
 test("a later session in the same block replaces the record", () => {
 	startSession({ mode: "tui", sessionFile: "/sessions/a.jsonl", cwd: "/work" });
 	startSession({ mode: "tui", sessionFile: "/sessions/b.jsonl", cwd: "/work" });
 
-	expect(readFileSync(recordPath(), "utf8")).toBe(`pi\n/sessions/b.jsonl\n/work\n${process.pid}\n`);
+	expect(readFileSync(recordPath(), "utf8")).toBe("pi\n/sessions/b.jsonl\n/work\n");
 });
 
 test("headless modes and sessions without a file record nothing", () => {
