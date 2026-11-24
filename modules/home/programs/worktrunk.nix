@@ -6,8 +6,6 @@
 }:
 
 let
-  wt = lib.getExe pkgs.worktrunk;
-
   # herdr can be a Homebrew or curl-installed binary, so it may not be on PATH
   # during activation; find it the same way the 1Password helper does.
   findHerdr = ''
@@ -24,13 +22,10 @@ let
 in
 lib.mkMerge [
   {
-    home.packages = [ pkgs.worktrunk ];
-
-    # `wt config shell install` would append to the home-manager-generated
-    # .zshrc and be overwritten on the next rebuild, so declare it instead.
-    programs.zsh.initContent = ''
-      eval "$(${wt} config shell init zsh)"
-    '';
+    programs.worktrunk = {
+      enable = true;
+      settings.worktree-path = "~/projects/worktrees/{{ repo }}/{{ branch | sanitize }}";
+    };
 
     # The skills come from the source of the installed wt, so they describe
     # the same version.
