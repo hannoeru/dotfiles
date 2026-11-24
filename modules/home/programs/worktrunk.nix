@@ -22,8 +22,8 @@ let
     fi
   '';
 in
-{
-  config = lib.mkIf (machine.os == "darwin") {
+lib.mkMerge [
+  {
     home.packages = [ pkgs.worktrunk ];
 
     # `wt config shell install` would append to the home-manager-generated
@@ -32,6 +32,18 @@ in
       eval "$(${wt} config shell init zsh)"
     '';
 
+    # The skills come from the source of the installed wt, so they describe
+    # the same version.
+    home.file = lib.genAttrs' [ "worktrunk" "wt-switch-create" ] (
+      name:
+      lib.nameValuePair ".agents/skills/Terminal/${name}" {
+        source = pkgs.worktrunk.src + "/skills/${name}";
+        recursive = true;
+      }
+    );
+  }
+
+  (lib.mkIf (machine.os == "darwin") {
     home.file.".config/herdr/plugins/worktrunk" = {
       source = ../../../home/.config/herdr/plugins/worktrunk;
       recursive = true;
@@ -45,5 +57,5 @@ in
         $DRY_RUN_CMD "$herdr_bin" plugin link "$HOME/.config/herdr/plugins/worktrunk" >/dev/null 2>&1 || true
       fi
     '';
-  };
-}
+  })
+]

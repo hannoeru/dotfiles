@@ -27,6 +27,12 @@ The preloaded Poteto Mode in `~/.pi/agent/APPEND_SYSTEM.md` comes from
 checkout at `skills/herdr`. The `home.file` link is
 `~/.agents/skills/Terminal/herdr`. This repository does not keep a copy.
 
+`Terminal/worktrunk` and `Terminal/wt-switch-create` are the upstream skills
+from the source of the installed `worktrunk` package, at `skills/worktrunk` and
+`skills/wt-switch-create`. They describe the same `wt` version that
+[`modules/home/programs/worktrunk.nix`](../modules/home/programs/worktrunk.nix)
+installs, and they update with `nixpkgs`, not with a skill input.
+
 Repository skills linked from `home/skills`:
 
 | Category path | Directory |
