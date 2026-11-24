@@ -71,7 +71,8 @@ let
   rexTheme =
     appearance: id:
     let
-      ghostty = lib.mapAttrs (_: lib.last) config.programs.ghostty.themes."vitesse-${appearance}";
+      theme = config.programs.ghostty.themes."vitesse-${appearance}";
+      ghostty = lib.mapAttrs (_: lib.last) theme;
       ansi = lib.listToAttrs (
         map (
           entry:
@@ -79,7 +80,7 @@ let
             parts = lib.splitString "=" entry;
           in
           lib.nameValuePair (lib.head parts) (lib.last parts)
-        ) config.programs.ghostty.themes."vitesse-${appearance}".palette
+        ) theme.palette
       );
     in
     {
