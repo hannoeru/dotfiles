@@ -24,7 +24,15 @@ lib.mkMerge [
   {
     programs.worktrunk = {
       enable = true;
-      settings.worktree-path = "~/projects/worktrees/{{ repo }}/{{ branch | sanitize }}";
+      settings = {
+        # Checkouts can share a folder name (a fork and its upstream, or two
+        # clones without a remote), so the hash of the checkout path keeps
+        # their worktrees apart.
+        worktree-path = "~/projects/worktrees/{{ repo }}-{{ repo_path | hash }}/{{ branch | sanitize }}";
+        # Home Manager owns config.toml, so wt cannot save the answer to its
+        # first-run commit message question.
+        commit.generation.command = "MAX_THINKING_TOKENS=0 claude -p --no-session-persistence --model=haiku --tools='' --safe-mode --setting-sources='user' --system-prompt=''";
+      };
     };
 
     # The skills come from the source of the installed wt, so they describe
