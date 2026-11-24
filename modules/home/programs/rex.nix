@@ -29,6 +29,27 @@ let
   };
 
   hookCommand = "${config.home.profileDirectory}/bin/rex-claude-session-hook";
+
+  rexThemes = pkgs.writers.writePython3 "rex-themes" {
+    flakeIgnore = [ "E501" ];
+  } (builtins.readFile ./rex-themes.py);
+
+  # Fixed IDs let each switch replace the same two entries in Rex's theme list.
+  vitesse = {
+    dark = "custom-27F2B641-C9C6-4C3B-BE01-B664D821BD9F";
+    light = "custom-E118506D-0BF1-4E23-8F2D-C7ACBDEDED36";
+  };
+
+  themeSpec = pkgs.writeText "rex-themes.json" (
+    builtins.toJSON (
+      lib.mapAttrsToList (appearance: id: {
+        inherit id appearance;
+        name = "Vitesse ${lib.toSentenceCase appearance}";
+        fileName = "vitesse-${appearance}";
+        path = config.xdg.configFile."ghostty/themes/vitesse-${appearance}".source;
+      }) vitesse
+    )
+  );
 in
 {
   config = lib.mkIf (machine.os == "darwin") {
@@ -53,6 +74,18 @@ in
         fi
         rm -f "$tmp"
       fi
+    '';
+
+    # Rex keeps custom themes as a JSON list in its defaults, in the format that
+    # its Ghostty theme import writes. Add the Ghostty Vitesse themes to that
+    # list and select them, as Ghostty does.
+    home.activation.rexVitesseTheme = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      themes="$(${rexThemes} ${themeSpec})"
+      if [ -n "$themes" ]; then
+        $DRY_RUN_CMD /usr/bin/defaults write com.superlogical.rex Workspace.customThemes -data "$themes"
+      fi
+      $DRY_RUN_CMD /usr/bin/defaults write com.superlogical.rex Workspace.darkThemeID -string ${vitesse.dark}
+      $DRY_RUN_CMD /usr/bin/defaults write com.superlogical.rex Workspace.lightThemeID -string ${vitesse.light}
     '';
   };
 }
