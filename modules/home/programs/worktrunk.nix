@@ -29,9 +29,6 @@ lib.mkMerge [
         # clones without a remote), so the hash of the checkout path keeps
         # their worktrees apart.
         worktree-path = "~/projects/worktrees/{{ repo }}-{{ repo_path | hash }}/{{ branch | sanitize }}";
-        # Home Manager owns config.toml, so wt cannot save the answer to its
-        # first-run commit message question.
-        commit.generation.command = "MAX_THINKING_TOKENS=0 claude -p --no-session-persistence --model=haiku --tools='' --safe-mode --setting-sources='user' --system-prompt=''";
       };
     };
 
