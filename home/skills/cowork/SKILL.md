@@ -50,7 +50,7 @@ Outside a Git repository, the block stops. Run the team without TEAM.md, and put
 TEAM.md never goes into Git. The Commander alone maintains it. Read it at the start of each team task, and create it when it does not exist. It has two parts:
 
 1. **Agent registry** (stable roles): role name, host, how to start it, responsibility, working directory, and acceptance criteria. Update it when a role is added, renamed, or removed.
-2. **Current roster** (snapshot of live members): for each member, its name, host, member ID (the ID that the host file names), cwd, agent kind, current task, status, display name, and the time of the last check.
+2. **Current roster** (snapshot of live members): for each member, its name, host, member ID (the ID that the host file names), cwd, worktree branch (if any), agent kind, current task, status, display name, and the time of the last check.
 
 Roster rules:
 
@@ -105,7 +105,7 @@ wt -C <main-checkout> switch --create <branch> --base <ref> --no-cd --format=jso
 - Read the worktree's absolute path from `.path` in the JSON. Status lines go to standard error.
 - If the branch already exists and the task names it, run the command again without `--create`. Otherwise choose another branch name.
 - Do not pass `--yes`. When `wt` asks to approve project hooks, give the question to the human.
-- Record the branch and the path in the roster.
+- Record the branch in the roster. The path is the member's cwd.
 
 To remove a worktree, first close the member and its workspace, tab, or pane as the host file says, so that no process runs in the folder. Then run:
 
@@ -113,7 +113,9 @@ To remove a worktree, first close the member and its workspace, tab, or pane as 
 wt -C <main-checkout> remove <branch> --foreground
 ```
 
-`wt remove` deletes the branch only when it is merged. It stops when the worktree has uncommitted changes or the branch has unmerged commits. Do not pass `--force` or `--force-delete` unless the human asks.
+- `wt remove` deletes the branch only when it is merged, including a squash merge. For a branch with unmerged commits, it removes the worktree and keeps the branch.
+- It keeps a worktree that has uncommitted changes, and prints why. Check `wt list` afterwards, and report a kept worktree to the human.
+- Do not pass `--force` or `--force-delete` unless the human asks.
 
 ## Cleanup
 
