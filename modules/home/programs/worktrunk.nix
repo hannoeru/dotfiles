@@ -24,7 +24,12 @@ lib.mkMerge [
   {
     programs.worktrunk = {
       enable = true;
-      settings.worktree-path = "~/projects/worktrees/{{ repo }}/{{ branch | sanitize }}";
+      settings = {
+        # Checkouts can share a folder name (a fork and its upstream, or two
+        # clones without a remote), so the hash of the checkout path keeps
+        # their worktrees apart.
+        worktree-path = "~/projects/worktrees/{{ repo }}-{{ repo_path | hash }}/{{ branch | sanitize }}";
+      };
     };
 
     # The skills come from the source of the installed wt, so they describe
