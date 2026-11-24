@@ -1,10 +1,12 @@
 ---
 name: cowork
-description: Run a team of agents as the Commander in Herdr, the Herdr app, Paseo, or T3 Code. Start, delegate to, track, verify, and clean up member agents through the host that runs this agent, and keep the repository's TEAM.md registry and roster current in global state. Use when the human asks to coordinate several agents, delegate development, test, or build tasks, form or take over an agent team, or maintain TEAM.md.
+description: Run a team of agents as the Commander in Herdr, the Herdr app, Rex, Paseo, or T3 Code. Start, delegate to, track, verify, and clean up member agents through the host that runs this agent, and keep the repository's TEAM.md registry and roster current in global state. Use when the human asks to coordinate several agents, delegate development, test, or build tasks, form or take over an agent team, or maintain TEAM.md.
 allowed-tools:
   - Bash(herdr *)
   - Bash(paseo *)
   - Bash(hc *)
+  - Bash(rex *)
+  - Bash(wt *)
 ---
 
 # Cowork: an agent team
@@ -21,8 +23,9 @@ Find the host before team work. Use the first row that matches, unless the human
 | `PASEO_AGENT_ID` is set | Paseo | [references/paseo.md](references/paseo.md) |
 | `HC_TERMINAL_ID` is set | Herdr app (herdr-core, `hc`) | [references/herdr-app.md](references/herdr-app.md) |
 | `HERDR_ENV=1` | Herdr | [references/herdr.md](references/herdr.md) |
+| `REX_BLOCK` is set | Rex | [references/rex.md](references/rex.md) |
 
-The order matters: an `hc` terminal can inherit `HERDR_ENV` from the shell that started herdr-core, so check `HC_TERMINAL_ID` first. Read only the matching host file. When no row matches, say that no agent host is available and do the task alone.
+The order matters: a terminal inherits the variables of the shell that started its host. An `hc` terminal can have `HERDR_ENV`, and a Herdr pane can have `REX_BLOCK`, so the inner host comes first. Read only the matching host file. When no row matches, say that no agent host is available and do the task alone.
 
 The installed host is the authority for command syntax. Each host file says where to get the current manual. When a command detail is not clear, look it up there. Do not guess from memory.
 
@@ -47,7 +50,7 @@ Outside a Git repository, the block stops. Run the team without TEAM.md, and put
 TEAM.md never goes into Git. The Commander alone maintains it. Read it at the start of each team task, and create it when it does not exist. It has two parts:
 
 1. **Agent registry** (stable roles): role name, host, how to start it, responsibility, working directory, and acceptance criteria. Update it when a role is added, renamed, or removed.
-2. **Current roster** (snapshot of live members): for each member, its name, host, member ID (the ID that the host file names), cwd, agent kind, current task, status, display name, and the time of the last check.
+2. **Current roster** (snapshot of live members): for each member, its name, host, member ID (the ID that the host file names), cwd, worktree branch (if any), agent kind, current task, status, display name, and the time of the last check.
 
 Roster rules:
 
@@ -66,7 +69,7 @@ List the host's agents first. An agent with a matching name can belong to the hu
 When the human asks for a team, that request covers the members, the worktrees, and the display names that this skill creates.
 
 - Start each member with a unique name, the working directory, the exact scope, and the acceptance criteria. Start interactive or host-managed agents only, never a one-shot print mode such as `pi -p`. Use Pi, unless the human asks for another agent.
-- Give a member its own worktree when members change files in the same repository at the same time. Create and remove worktrees as the host file says. Use `git worktree add` or `git worktree remove` only when the host file tells you to.
+- Give a member its own worktree when members change files in the same repository at the same time. Create it with worktrunk, as [Worktrees](#worktrees) says, and start the member in its path as the host file says.
 - Start and send work to every member before you wait on any of them. Confirm that each member received its task, as the host file says.
 - A timeout or a stall does not prove that the task was not delivered. Inspect the member before you send it again.
 
@@ -90,6 +93,29 @@ Done when: <checkable criteria and the tests that prove them>
 <Report line from the host file>
 Long results: write them to a file and report its absolute path. Do not commit the report.
 ```
+
+## Worktrees
+
+Worktrunk (`wt`) creates and removes every member worktree, on every host. Do not use a host's own worktree command, and do not run `git worktree add` or `git worktree remove`. The `worktrunk` skill describes `wt`.
+
+```sh
+wt -C <main-checkout> switch --create <branch> --base <ref> --no-cd --format=json
+```
+
+- Read the worktree's absolute path from `.path` in the JSON. Status lines go to standard error.
+- If the branch already exists and the task names it, run the command again without `--create`. Otherwise choose another branch name.
+- Do not pass `--yes`. When `wt` asks to approve project hooks, give the question to the human.
+- Record the branch in the roster. The path is the member's cwd.
+
+To remove a worktree, first close the member and its workspace, tab, or pane as the host file says, so that no process runs in the folder. Then run:
+
+```sh
+wt -C <main-checkout> remove <branch> --foreground
+```
+
+- `wt remove` deletes the branch only when it is merged, including a squash merge. For a branch with unmerged commits, it removes the worktree and keeps the branch.
+- It keeps a worktree that has uncommitted changes, and prints why. Check `wt list` afterwards, and report a kept worktree to the human.
+- Do not pass `--force` or `--force-delete` unless the human asks.
 
 ## Cleanup
 

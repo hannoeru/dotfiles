@@ -17,13 +17,14 @@ Run `herdr agent list`, then `herdr agent get <name>` for each agent of this rep
 ```sh
 # Same checkout: a sibling pane. Read .result.pane.pane_id.
 herdr pane split --current --direction right --cwd "$PWD" --no-focus
-# Separate checkout: a Herdr worktree. Read .result.root_pane.pane_id.
-herdr worktree create --cwd <main-checkout> --branch <branch> --label <role> --no-focus
+# Separate checkout: open the wt worktree as a workspace. Read .result.root_pane.pane_id.
+herdr worktree open --cwd <main-checkout> --path <worktree path> --label <role> --no-focus
 
 herdr agent start <role> --kind pi --pane <pane-id>
 herdr agent prompt <role> "<first task>"
 ```
 
+- Create the worktree with `wt` first, as `SKILL.md` says, and save `.result.workspace.workspace_id` from `worktree open`. Do not use `herdr worktree create`.
 - Run `herdr pane list` before you start. Change `--kind` only when the human asks for another agent.
 - `agent prompt` returns when the text is submitted, and Herdr can still report `idle` while the member works. Run `herdr agent read <role> --source visible` and confirm that the task text is on the screen before you count it as sent.
 - If `agent start` returns `agent_not_ready`, read the pane with `herdr agent read <role>` and fix the cause before you send the task. If Pi asks whether to trust the folder, leave the dialog for the human and report the member as blocked.
@@ -61,4 +62,4 @@ Check every pane in a shared tab before you name it. Prompt a role by its agent 
 
 ## Cleanup
 
-Close a pane with `herdr pane close <pane-id>`, or a worktree with `herdr worktree remove --workspace <id>`, which also stops its agents. Never run `herdr server stop`.
+Close a pane with `herdr pane close <pane-id>`. For a member in a worktree, close its workspace with `herdr workspace close <workspace-id>`, which also stops its agents, and then remove the worktree with `wt`, as `SKILL.md` says. Do not use `herdr worktree remove`. Never run `herdr server stop`.
