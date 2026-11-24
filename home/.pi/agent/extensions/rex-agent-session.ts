@@ -4,8 +4,8 @@ import { join } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 /**
- * Records the Pi session that runs in a Rex terminal, so the shell in that
- * terminal can resume it after the Rex server restores its sessions.
+ * Records the Pi session that runs in a Rex terminal, so the Rex agent-resume
+ * watcher can resume it after the Rex server restores its sessions.
  * Herdr resumes its own panes, so a Pi inside Herdr is not recorded.
  */
 export default function rexAgentSessionExtension(pi: ExtensionAPI): void {
@@ -19,6 +19,6 @@ export default function rexAgentSessionExtension(pi: ExtensionAPI): void {
 		const sessionFile = ctx.sessionManager.getSessionFile();
 		if (!sessionFile) return;
 		mkdirSync(stateDir, { recursive: true });
-		writeFileSync(join(stateDir, block.replace(/^block:/, "")), `pi\n${sessionFile}\n${ctx.cwd}\n`);
+		writeFileSync(join(stateDir, block.replace(/^block:/, "")), `pi\n${sessionFile}\n${ctx.cwd}\n${process.pid}\n`);
 	});
 }
