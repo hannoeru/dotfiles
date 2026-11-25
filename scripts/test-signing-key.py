@@ -15,18 +15,30 @@ def main():
     activation = Path(sys.argv[1]).resolve(strict=True)
     bash = shutil.which("bash")
     git = shutil.which("git")
-    if not bash or not git:
-        sys.exit("bash (4.2 or later) and git must be on PATH")
+    ssh_keygen = shutil.which("ssh-keygen")
+    if not bash or not git or not ssh_keygen:
+        sys.exit("bash (4.2 or later), git, and ssh-keygen must be on PATH")
 
     with tempfile.TemporaryDirectory(prefix="signing-key-test-") as directory:
         root = Path(directory)
         bin_dir = root / "bin"
         bin_dir.mkdir()
-        for name in ("mkdir", "mktemp", "mv"):
+        for name in ("cut", "mkdir", "mktemp", "mv", "rm"):
             command = shutil.which(name)
             if not command:
                 sys.exit(f"{name} must be on PATH")
             (bin_dir / name).symlink_to(command)
+
+        keys = root / "keys"
+        keys.mkdir()
+        for name in ("signing", "other"):
+            subprocess.run(
+                [ssh_keygen, "-q", "-t", "ed25519", "-N", "", "-C", name, "-f", str(keys / name)],
+                check=True,
+            )
+        private = (keys / "signing").read_text()
+        public = (keys / "signing.pub").read_text().strip()
+
         op = bin_dir / "op"
         op.write_text(
             f"#!{sys.executable}\n"
@@ -36,27 +48,34 @@ def main():
             "    log.write(json.dumps(args) + '\\n')\n"
             "if args == ['account', 'get']:\n"
             "    sys.exit(1 if os.environ['TEST_MODE'] == 'no-account' else 0)\n"
-            "if args[:2] == ['item', 'get'] and args[3:] == ['--format', 'json']:\n"
+            "if args[:2] == ['item', 'get'] and args[3:] == ['--reveal', '--format', 'json']:\n"
             "    if os.environ['TEST_MODE'] == 'fetch-failure':\n"
             "        sys.exit(1)\n"
-            "    print(json.dumps({'fields': [{'label': 'public key',\n"
-            "                                 'value': os.environ['TEST_KEY']}]}))\n"
+            "    private = open(os.environ['TEST_PRIVATE']).read()\n"
+            "    print(json.dumps({'fields': [\n"
+            "        {'label': 'public key', 'value': os.environ['TEST_PUBLIC']},\n"
+            "        {'label': 'private key', 'value': '-----BEGIN PRIVATE KEY-----',\n"
+            "         'ssh_formats': {'openssh': {'value': private}}},\n"
+            "    ]}))\n"
             "else:\n"
             "    sys.exit('Unexpected fake op arguments')\n"
         )
         op.chmod(0o700)
 
-        def run(name, key="", mode="success", existing=False, dry_run=False):
+        def run(name, mode="success", existing=False, dry_run=False):
             home = root / name
-            home.mkdir()
+            ssh_dir = home / ".ssh"
+            ssh_dir.mkdir(parents=True)
             temporary = home / "tmp"
             temporary.mkdir()
             target = home / ".config/git/signing.gitconfig"
+            key_file = ssh_dir / "git-signing"
             previous = b"[user]\n\tsigningkey = previous-key\n"
             if existing:
                 target.parent.mkdir(parents=True)
                 target.write_bytes(previous)
             log = home / "op.log"
+            served = keys / ("other" if mode == "mismatch" else "signing")
             env = {
                 "HOME": str(home),
                 "PATH": str(bin_dir),
@@ -65,7 +84,8 @@ def main():
                 "GIT_CONFIG_GLOBAL": os.devnull,
                 "TEST_OP_LOG": str(log),
                 "TEST_MODE": mode,
-                "TEST_KEY": key,
+                "TEST_PUBLIC": public,
+                "TEST_PRIVATE": str(served),
             }
             if dry_run:
                 env["DRY_RUN"] = "1"
@@ -80,14 +100,22 @@ def main():
             else:
                 assert calls[0] == ["account", "get"], calls
                 assert len(calls) == (1 if mode == "no-account" else 2), calls
-            if dry_run or mode != "success" or not key:
+            assert private not in result.stdout + result.stderr, f"{name}: private key printed"
+
+            if dry_run or mode != "success":
                 if existing:
                     assert target.read_bytes() == previous, name
                 else:
-                    assert not target.parent.exists(), name
+                    assert not target.exists(), name
+                assert not list(ssh_dir.iterdir()), f"{name}: {list(ssh_dir.iterdir())}"
                 if not dry_run:
                     assert "warning:" in result.stderr, result
             else:
+                assert key_file.read_text().strip() == private.strip(), name
+                assert key_file.stat().st_mode & 0o777 == 0o600, oct(key_file.stat().st_mode)
+                assert (ssh_dir / "git-signing.pub").read_text().strip() == public, name
+                assert sorted(p.name for p in ssh_dir.iterdir()) == ["git-signing", "git-signing.pub"], name
+
                 def config(*args):
                     return subprocess.check_output(
                         [git, "config", "--file", str(target), *args], env=env,
@@ -95,23 +123,42 @@ def main():
 
                 names = config("--name-only", "--list").decode().splitlines()
                 assert sorted(names) == sorted([
-                    "user.signingkey", "commit.gpgsign", "gpg.format", "gpg.ssh.program",
+                    "user.signingkey", "commit.gpgsign", "gpg.format",
                 ]), f"{name}: unexpected config keys: {names}"
-                assert config("--null", "--get", "user.signingkey") == key.encode() + b"\0", name
+                assert config("--get", "user.signingkey") == f"{key_file}\n".encode(), name
                 assert config("--get", "commit.gpgsign") == b"true\n", name
                 assert config("--get", "gpg.format") == b"ssh\n", name
-                assert config("--get", "gpg.ssh.program").strip().endswith(b"op-ssh-sign"), name
+
+                repo = home / "repo"
+                git_env = {
+                    "HOME": str(home),
+                    "PATH": os.environ["PATH"],
+                    "GIT_CONFIG_NOSYSTEM": "1",
+                    "GIT_CONFIG_GLOBAL": str(target),
+                }
+                allowed = home / "allowed_signers"
+                allowed.write_text(f"t@example.invalid {public}\n")
+
+                def repo_git(*args):
+                    return subprocess.run(
+                        [git, "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@example.invalid", *args],
+                        env=git_env, capture_output=True, text=True, check=True,
+                    ).stdout
+
+                subprocess.run([git, "init", "-q", "-b", "main", str(repo)], env=git_env, check=True)
+                repo_git("commit", "-q", "--allow-empty", "-m", "signed")
+                status = repo_git("-c", f"gpg.ssh.allowedSignersFile={allowed}", "log", "-1", "--format=%G?")
+                assert status.strip() == "G", f"{name}: signature status {status!r}"
             assert not list(temporary.iterdir()), name
             print(f"PASS {name}")
 
-        run("ordinary", "ssh-ed25519 AAAAtest test@example.invalid")
-        run("multiline", "ssh-ed25519 AAAAtest\n[core]\n  hooksPath = /tmp/unwanted")
-        run("quoted", '  ssh-ed25519 AAAAtest "quoted" \\backslash\t#; comment')
+        run("fresh")
+        run("replace-existing", existing=True)
+        run("mismatch", mode="mismatch", existing=True)
         run("no-account", mode="no-account", existing=True)
         run("fetch-failure", mode="fetch-failure", existing=True)
-        run("empty-key", existing=True)
-        run("dry-run-existing", "ssh-ed25519 AAAAtest", existing=True, dry_run=True)
-        run("dry-run-absent", "ssh-ed25519 AAAAtest", dry_run=True)
+        run("dry-run-existing", existing=True, dry_run=True)
+        run("dry-run-absent", dry_run=True)
 
 
 if __name__ == "__main__":
