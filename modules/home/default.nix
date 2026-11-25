@@ -163,8 +163,8 @@ in
 
     signingKey = lib.hm.dag.entryAfter [ "sshSetup" ] (
       # The 1Password agent asks for approval for each new program and after
-      # each lock, which stops agents that commit. The key is a signing key only
-      # (it logs in nowhere), so keep a copy on disk and let ssh-keygen sign.
+      # each lock, which stops agents that commit, so keep a copy of the signing
+      # key on disk and let ssh-keygen sign.
       if onePassword && machine ? sshSigningKeyItem then
         ''
           if [[ -v DRY_RUN ]]; then
