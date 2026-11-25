@@ -51,11 +51,11 @@ def main():
             "if args[:2] == ['item', 'get'] and args[3:] == ['--reveal', '--format', 'json']:\n"
             "    if os.environ['TEST_MODE'] == 'fetch-failure':\n"
             "        sys.exit(1)\n"
-            "    private = open(os.environ['TEST_PRIVATE']).read()\n"
+            "    field = {'label': 'private key', 'value': '-----BEGIN PRIVATE KEY-----'}\n"
+            "    if os.environ['TEST_MODE'] != 'no-openssh-format':\n"
+            "        field['ssh_formats'] = {'openssh': {'value': open(os.environ['TEST_PRIVATE']).read()}}\n"
             "    print(json.dumps({'fields': [\n"
-            "        {'label': 'public key', 'value': os.environ['TEST_PUBLIC']},\n"
-            "        {'label': 'private key', 'value': '-----BEGIN PRIVATE KEY-----',\n"
-            "         'ssh_formats': {'openssh': {'value': private}}},\n"
+            "        {'label': 'public key', 'value': os.environ['TEST_PUBLIC']}, field,\n"
             "    ]}))\n"
             "else:\n"
             "    sys.exit('Unexpected fake op arguments')\n"
@@ -155,6 +155,7 @@ def main():
         run("fresh")
         run("replace-existing", existing=True)
         run("mismatch", mode="mismatch", existing=True)
+        run("no-openssh-format", mode="no-openssh-format", existing=True)
         run("no-account", mode="no-account", existing=True)
         run("fetch-failure", mode="fetch-failure", existing=True)
         run("dry-run-existing", existing=True, dry_run=True)
