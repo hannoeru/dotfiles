@@ -31,15 +31,6 @@ let
     zsh-completions
   ];
 
-  sshSignProgram =
-    if darwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else "op-ssh-sign";
-
-  signingKeyRead =
-    if machine ? sshSigningKeyItem then
-      ''"$op_bin" item get '${machine.sshSigningKeyItem}' --format json | ${pkgs.jq}/bin/jq -r '.fields[] | select(.label == "public key") | .value' ''
-    else
-      null;
-
   findOnePasswordCli = ''
     op_bin="$(command -v op || true)"
     if [ -z "$op_bin" ]; then
@@ -171,28 +162,33 @@ in
     '';
 
     signingKey = lib.hm.dag.entryAfter [ "sshSetup" ] (
-      if onePassword && signingKeyRead != null then
+      # The 1Password agent asks for approval for each new program and after
+      # each lock, which stops agents that commit, so keep a copy of the signing
+      # key on disk and let ssh-keygen sign.
+      if onePassword && machine ? sshSigningKeyItem then
         ''
           if [[ -v DRY_RUN ]]; then
-            echo "Would update $HOME/.config/git/signing.gitconfig from 1Password"
+            echo "Would update $HOME/.ssh/git-signing and $HOME/.config/git/signing.gitconfig from 1Password"
           else
             ${findOnePasswordCli}
             if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
               mkdir -p "$HOME/.config/git"
-              key="$(${signingKeyRead} || true)"
-              if [ -n "$key" ]; then
-                tmp="$(mktemp)"
-                {
-                  echo "[commit]"
-                  echo "  gpgsign = true"
-                  echo "[gpg]"
-                  echo "  format = ssh"
-                  echo "[gpg \"ssh\"]"
-                  echo "  program = ${sshSignProgram}"
-                } > "$tmp"
-                ${pkgs.git}/bin/git config --file "$tmp" user.signingkey "$key"
-                mv "$tmp" "$HOME/.config/git/signing.gitconfig"
+              item="$("$op_bin" item get '${machine.sshSigningKeyItem}' --reveal --format json || true)"
+              pub="$(${pkgs.jq}/bin/jq -r '.fields[] | select(.label == "public key") | .value' <<<"$item" 2>/dev/null || true)"
+              key="$HOME/.ssh/git-signing"
+              tmp="$(umask 077 && mktemp "$key.XXXXXX")"
+              ${pkgs.jq}/bin/jq -r '.fields[] | select(.label == "private key") | .ssh_formats.openssh.value' <<<"$item" >"$tmp" 2>/dev/null || true
+              unset item
+              if [ -n "$pub" ] && [ "$(${pkgs.openssh}/bin/ssh-keygen -y -f "$tmp" 2>/dev/null | cut -d' ' -f1-2)" = "$(cut -d' ' -f1-2 <<<"$pub")" ]; then
+                mv "$tmp" "$key"
+                printf '%s\n' "$pub" >"$key.pub"
+                cfg="$(mktemp)"
+                ${pkgs.git}/bin/git config --file "$cfg" commit.gpgsign true
+                ${pkgs.git}/bin/git config --file "$cfg" gpg.format ssh
+                ${pkgs.git}/bin/git config --file "$cfg" user.signingkey "$key"
+                mv "$cfg" "$HOME/.config/git/signing.gitconfig"
               else
+                rm -f "$tmp"
                 echo "warning: could not fetch git signing key from 1Password" >&2
               fi
             else
