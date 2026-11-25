@@ -51,14 +51,15 @@ def main():
             "if args[:2] == ['item', 'get'] and args[3:] == ['--reveal', '--format', 'json']:\n"
             "    if os.environ['TEST_MODE'] == 'fetch-failure':\n"
             "        sys.exit(1)\n"
-            "    field = {'label': 'private key', 'value': '-----BEGIN PRIVATE KEY-----'}\n"
+            "    field = {'id': 'private_key', 'label': '秘密鍵', 'value': '-----BEGIN PRIVATE KEY-----'}\n"
             "    if os.environ['TEST_MODE'] != 'no-openssh-format':\n"
             "        field['ssh_formats'] = {'openssh': {'value': open(os.environ['TEST_PRIVATE']).read()}}\n"
             "    print(json.dumps({'fields': [\n"
-            "        {'label': 'public key', 'value': os.environ['TEST_PUBLIC']}, field,\n"
+            "        {'id': 'public_key', 'label': '公開鍵', 'value': os.environ['TEST_PUBLIC']}, field,\n"
             "    ]}))\n"
             "else:\n"
-            "    sys.exit('Unexpected fake op arguments')\n"
+            "    sys.exit('Unexpected fake op arguments')\n",
+            encoding="utf-8",
         )
         op.chmod(0o700)
 
