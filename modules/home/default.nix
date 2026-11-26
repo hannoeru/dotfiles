@@ -174,10 +174,10 @@ in
             if [ -n "$op_bin" ] && "$op_bin" account get >/dev/null 2>&1; then
               mkdir -p "$HOME/.config/git"
               item="$("$op_bin" item get '${machine.sshSigningKeyItem}' --reveal --format json || true)"
-              pub="$(${pkgs.jq}/bin/jq -r '.fields[] | select(.label == "public key") | .value' <<<"$item" 2>/dev/null || true)"
+              pub="$(${pkgs.jq}/bin/jq -r '.fields[] | select(.id == "public_key") | .value' <<<"$item" 2>/dev/null || true)"
               key="$HOME/.ssh/git-signing"
               tmp="$(umask 077 && mktemp "$key.XXXXXX")"
-              ${pkgs.jq}/bin/jq -r '.fields[] | select(.label == "private key") | .ssh_formats.openssh.value' <<<"$item" >"$tmp" 2>/dev/null || true
+              ${pkgs.jq}/bin/jq -r '.fields[] | select(.id == "private_key") | .ssh_formats.openssh.value' <<<"$item" >"$tmp" 2>/dev/null || true
               unset item
               if [ -n "$pub" ] && [ "$(${pkgs.openssh}/bin/ssh-keygen -y -f "$tmp" 2>/dev/null | cut -d' ' -f1-2)" = "$(cut -d' ' -f1-2 <<<"$pub")" ]; then
                 mv "$tmp" "$key"
