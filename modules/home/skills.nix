@@ -17,7 +17,6 @@ let
     antfu
     cloudflare
     vuejs
-    nuxt
     anthropics
     agentBrowser
     modernWebGuidance
@@ -65,7 +64,6 @@ let
     "Vue & Nuxt/vue-testing-best-practices" = vuejs + "/skills/vue-testing-best-practices";
     "Vue & Nuxt/vue-debug-guides" = vuejs + "/skills/vue-debug-guides";
     "Vue & Nuxt/create-adaptable-composable" = vuejs + "/skills/create-adaptable-composable";
-    "Vue & Nuxt/nuxt-modules" = nuxt + "/skills/nuxt-modules";
 
     "Design/frontend-design" = anthropics + "/skills/frontend-design";
     "Browser/agent-browser" = agentBrowser + "/skills/agent-browser";
