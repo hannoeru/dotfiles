@@ -64,11 +64,6 @@
       flake = false;
     };
 
-    nuxt = {
-      url = "github:onmax/nuxt-skills";
-      flake = false;
-    };
-
     anthropics = {
       url = "github:anthropics/skills";
       flake = false;
@@ -118,7 +113,6 @@
           antfu
           cloudflare
           vuejs
-          nuxt
           anthropics
           agentBrowser
           modernWebGuidance

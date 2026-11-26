@@ -232,22 +232,6 @@
         "type": "github"
       }
     },
-    "nuxt": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1795189880,
-        "narHash": "sha256-WcASpQ7lSZSXmFj4SgisQTKFwpxZzyU36WasRSqsQoU=",
-        "owner": "onmax",
-        "repo": "nuxt-skills",
-        "rev": "b4e1a3fb0d25704a70becfe84fddcce3463ebf91",
-        "type": "github"
-      },
-      "original": {
-        "owner": "onmax",
-        "repo": "nuxt-skills",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "agentBrowser": "agentBrowser",
@@ -264,7 +248,6 @@
         "nanorc": "nanorc",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
-        "nuxt": "nuxt",
         "sepia": "sepia",
         "shadcnImprove": "shadcnImprove",
         "simpleEnglish": "simpleEnglish",
