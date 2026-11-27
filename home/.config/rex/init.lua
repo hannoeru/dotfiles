@@ -38,14 +38,5 @@ for _, direction in ipairs({ "left", "down", "up", "right" }) do
   rex.bind("cmd+ctrl+" .. direction, "pane.resize", { direction = direction })
 end
 
--- rex config check also runs this file. Outside Rex it has no REX_SERVER; inside
--- a Rex terminal the watcher's lock keeps one per server. Require looks beside
--- this file first, so the watcher is there.
-if os.getenv("REX_SERVER") then
-  local dir = package.path:match("^([^;]*)/%?%.lua;")
-  local bin = rex.exec({ "/bin/sh", "-c", "ps -o comm= -p $PPID" }).stdout:match("^(.-)%s*$")
-  rex.exec.start(
-    { bin, "--autostart=false", "do", dir .. "/agent-resume.lua", "--all" },
-    { detach = true, stdout = false, stderr = false }
-  )
-end
+-- Pi reports its resume command (OSC 7577), but Rex ships no rule that trusts it.
+rex.set("resume.trust.pi", { command = { "pi", "--session", rex.match.uuid } })
