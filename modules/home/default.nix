@@ -67,6 +67,12 @@ in
   // lib.optionalAttrs darwin {
     PNPM_HOME = "$HOME/Library/pnpm";
     ANDROID_HOME = "$HOME/Library/Android/sdk";
+  }
+  // lib.optionalAttrs (!darwin) {
+    # Nix's ncurses reads only its own terminfo. Terminals such as Rex install
+    # their entry (xterm-rex) in the distro's folders, and without it zsh has no
+    # key codes, so Backspace, the arrows, and Home do not work.
+    TERMINFO_DIRS = "${config.home.profileDirectory}/share/terminfo:/etc/terminfo:/lib/terminfo:/usr/share/terminfo";
   };
 
   home.sessionPath = [
