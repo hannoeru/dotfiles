@@ -9,22 +9,12 @@ the shared skills catalogue. This directory does not install `agent/prompts`.
 
 ## Default instructions
 
-`agent/AGENTS.md` holds the engineering, GitHub, Herdr, safety, and Notion Memory rules, and the table of rules that a tool checks.
+`agent/AGENTS.md` holds the engineering, GitHub, Herdr, safety, and Kioku Memory rules, and the table of rules that a tool checks.
 
-The Notion Memory rules apply only when Pi has Notion's MCP tools.
-To connect Notion, add its server and sign in:
+The Kioku Memory rules apply only when Pi has Kioku's MCP tools (`memory_*`).
+To connect Kioku, tell Pi `Read https://kioku.maint.workers.dev/setup and set up Kioku for me.`
+The setup guide adds the `kioku` server and signs in with OAuth.
 
-```sh
-pi mcp add notion --url https://mcp.notion.com/mcp
-pi mcp login notion
-```
-
-The memory tools have `codemode` exposure by default.
-To give them to the model directly, add this to the `notion` entry in `~/.pi/agent/mcp.json`:
-
-```json
-"toolExposure": { "notion-memory-search": "direct", "notion-fetch": "direct" }
-```
 Home Manager generates `~/.pi/agent/APPEND_SYSTEM.md` from the pinned Herdr
 and poteto-mode skills in `modules/home/skills.nix`.
 Pi receives both skill bodies before the first model request.
