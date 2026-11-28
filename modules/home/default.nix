@@ -31,6 +31,12 @@ let
     zsh-completions
   ];
 
+  # ssh-keygen asks the agent at SSH_AUTH_SOCK before it reads the key file, and a broken agent stops the signature.
+  gitSshSign = pkgs.writeShellScript "git-ssh-sign" ''
+    unset SSH_AUTH_SOCK
+    exec ${pkgs.openssh}/bin/ssh-keygen "$@"
+  '';
+
   findOnePasswordCli = ''
     op_bin="$(command -v op || true)"
     if [ -z "$op_bin" ]; then
@@ -192,6 +198,7 @@ in
                 ${pkgs.git}/bin/git config --file "$cfg" commit.gpgsign true
                 ${pkgs.git}/bin/git config --file "$cfg" gpg.format ssh
                 ${pkgs.git}/bin/git config --file "$cfg" user.signingkey "$key"
+                ${pkgs.git}/bin/git config --file "$cfg" gpg.ssh.program ${gitSshSign}
                 mv "$cfg" "$HOME/.config/git/signing.gitconfig"
               else
                 rm -f "$tmp"
