@@ -1,12 +1,43 @@
 #!/usr/bin/env python3
 
+import atexit
+import base64
 import json
 import os
 from pathlib import Path
 import shutil
+import socket
+import struct
 import subprocess
 import sys
 import tempfile
+import threading
+
+
+def frame(payload):
+    return struct.pack(">I", len(payload)) + payload
+
+
+def broken_agent(path, public_key):
+    # Lists the signing key, like the 1Password agent, then drops the sign request.
+    blob = base64.b64decode(public_key.split()[1])
+    server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    server.bind(path)
+    server.listen()
+
+    def answer(connection):
+        with connection:
+            while (head := connection.recv(4)) and len(head) == 4:
+                request = connection.recv(struct.unpack(">I", head)[0])
+                if request[:1] != b"\x0b":
+                    return
+                connection.sendall(frame(b"\x0c" + struct.pack(">I", 1) + frame(blob) + frame(b"git-signing")))
+
+    def serve():
+        while True:
+            answer(server.accept()[0])
+
+    threading.Thread(target=serve, daemon=True).start()
 
 
 def main():
@@ -124,18 +155,22 @@ def main():
 
                 names = config("--name-only", "--list").decode().splitlines()
                 assert sorted(names) == sorted([
-                    "user.signingkey", "commit.gpgsign", "gpg.format",
+                    "user.signingkey", "commit.gpgsign", "gpg.format", "gpg.ssh.program",
                 ]), f"{name}: unexpected config keys: {names}"
                 assert config("--get", "user.signingkey") == f"{key_file}\n".encode(), name
                 assert config("--get", "commit.gpgsign") == b"true\n", name
                 assert config("--get", "gpg.format") == b"ssh\n", name
 
                 repo = home / "repo"
+                agent = Path(tempfile.mkdtemp(prefix="agent-", dir="/tmp")) / "sock"
+                atexit.register(shutil.rmtree, agent.parent, True)
+                broken_agent(str(agent), public)
                 git_env = {
                     "HOME": str(home),
                     "PATH": os.environ["PATH"],
                     "GIT_CONFIG_NOSYSTEM": "1",
                     "GIT_CONFIG_GLOBAL": str(target),
+                    "SSH_AUTH_SOCK": str(agent),
                 }
                 allowed = home / "allowed_signers"
                 allowed.write_text(f"t@example.invalid {public}\n")
